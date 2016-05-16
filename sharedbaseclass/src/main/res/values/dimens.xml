@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="header_view_main_menu_margin_left">15dp</dimen>
+    <dimen name="header_view_add_new_task_margin_right">15dp</dimen>
+    <dimen name="header_view_margin_right_and_left_between_view">5dp</dimen>
+    <dimen name="header_view_image_button_size">30dp</dimen>
+    <dimen name="header_view_parent_view_padding_top_bottom">10dp</dimen>
+</resources>
