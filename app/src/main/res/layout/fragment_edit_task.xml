@@ -5,13 +5,129 @@
     android:orientation="vertical"
     tools:context="com.tt.reminder.fragment.EditTaskFragment">
 
-    <include
-        layout="@layout/shared_header_view"/>
+    <include layout="@layout/shared_header_view" />
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/tv_subtitle_what_to_do"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:text="@string/subtitle_what_to_do" />
+
+    <EditText
+        android:id="@+id/edt_subtitle_what_to_do"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_subtitle_what_to_do" />
+
+    <TextView
+        android:id="@+id/tv_subtitle_due_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/subtitle_due_date" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edt_alarm_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/hint_alarm_date_date_not_set" />
+
+        <ImageView
+            android:id="@+id/date_picker_dialog"
+            android:layout_width="@dimen/image_button_size"
+            android:layout_height="@dimen/image_button_size"
+            android:scaleType="fitCenter"
+            android:src="@drawable/datepicker" />
+
+        <ImageView
+            android:id="@+id/cross_to_clear_picked_date"
+            android:layout_width="@dimen/image_button_size"
+            android:layout_height="@dimen/image_button_size"
+            android:scaleType="fitCenter"
+            android:src="@drawable/cross" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edt_alarm_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="hint_alarm_time_not_set" />
+
+        <ImageView
+            android:id="@+id/time_picker_dialog"
+            android:layout_width="@dimen/image_button_size"
+            android:layout_height="@dimen/image_button_size"
+            android:scaleType="fitCenter"
+            android:src="@drawable/time_picker" />
+
+        <ImageView
+            android:id="@+id/cross_to_clear_picked_time"
+            android:layout_width="@dimen/image_button_size"
+            android:layout_height="@dimen/image_button_size"
+            android:scaleType="fitCenter"
+            android:src="@drawable/cross" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/subtitle_repeat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/subtitle_repeat" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spinner_interval_to_repeat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></Spinner>
+
+        <ImageView
+            android:id="@+id/new_interval"
+            android:layout_width="@dimen/image_button_size"
+            android:layout_height="@dimen/image_button_size"
+            android:src="@drawable/add" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/subtitle_add_to_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/subtitle_add_to_list" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spinner_group"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"></Spinner>
+
+        <ImageView
+            android:id="@+id/new_group"
+            android:layout_width="@dimen/image_button_size"
+            android:layout_height="@dimen/image_button_size"
+            android:src="@drawable/add" />
+
+    </LinearLayout>
+
 
 </LinearLayout>
