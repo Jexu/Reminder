@@ -5,4 +5,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="toast_double_click_to_exit">double click to exit</string>
     <string name="header_view_title_new_task">New Task</string>
+    <string name="subtitle_what_to_do">what is to be done</string>
+    <string name="hint_subtitle_what_to_do">Enter Task Here</string>
+    <string name="subtitle_due_date">Due Date</string>
+    <string name="hint_alarm_date_date_not_set">Date not set</string>
+    <string name="subtitle_repeat">subtitle_repeat</string>
+    <string name="subtitle_add_to_list">Add to list</string>
 </resources>
