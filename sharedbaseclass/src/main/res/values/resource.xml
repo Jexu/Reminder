@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="subtitle_style_in_layout_fragment_edit">
+        <item name="android:paddingStart">@dimen/subtitle_padding_start_in_layout_fragment_edit</item>
+        <item name="android:paddingEnd">@dimen/subtitle_padding_end_in_layout_fragment_edit</item>
+        <item name="android:paddingTop">@dimen/subtitle_padding_top_in_layout_fragment_edit</item>
+        <item name="android:textSize">@dimen/subtitle_text_size_in_layout_fragment_edit</item>
+        <item name="android:textColor">@android:color/holo_blue_dark</item>
+    </style>
+
+    <style name="edit_view_style_in_layout_fragment_edit"
+        parent="subtitle_style_in_layout_fragment_edit">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+</resources>

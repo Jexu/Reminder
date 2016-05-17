@@ -11,31 +11,43 @@
         android:id="@+id/tv_subtitle_what_to_do"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/subtitle_what_to_do" />
+        android:text="@string/subtitle_what_to_do"
+        android:paddingTop="@dimen/top_subtitle_padding_top_in_layout_fragment_edit"
+        style="@style/subtitle_style_in_layout_fragment_edit"
+        />
 
     <EditText
         android:id="@+id/edt_subtitle_what_to_do"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_subtitle_what_to_do" />
+        android:hint="@string/hint_subtitle_what_to_do"
+        style="@style/edit_view_style_in_layout_fragment_edit"
+        />
 
     <TextView
         android:id="@+id/tv_subtitle_due_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/subtitle_due_date" />
+        android:text="@string/subtitle_due_date"
+        style="@style/subtitle_style_in_layout_fragment_edit"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        style="@style/edit_view_style_in_layout_fragment_edit"
+        >
 
         <EditText
             android:id="@+id/edt_alarm_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="@string/hint_alarm_date_date_not_set" />
+            android:hint="@string/hint_alarm_date_date_not_set"
+            android:singleLine="true"
+            android:editable="false"
+            />
 
         <ImageView
             android:id="@+id/date_picker_dialog"
@@ -49,20 +61,27 @@
             android:layout_width="@dimen/image_button_size"
             android:layout_height="@dimen/image_button_size"
             android:scaleType="fitCenter"
-            android:src="@drawable/cross" />
+            android:src="@drawable/cross"
+            android:visibility="gone"
+            />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        style="@style/edit_view_style_in_layout_fragment_edit"
+        >
 
         <EditText
             android:id="@+id/edt_alarm_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="hint_alarm_time_not_set" />
+            android:hint="@string/hint_alarm_time_not_set"
+            android:singleLine="true"
+            android:editable="false"
+            />
 
         <ImageView
             android:id="@+id/time_picker_dialog"
@@ -76,19 +95,25 @@
             android:layout_width="@dimen/image_button_size"
             android:layout_height="@dimen/image_button_size"
             android:scaleType="fitCenter"
-            android:src="@drawable/cross" />
+            android:src="@drawable/cross"
+            android:visibility="gone"
+            />
     </LinearLayout>
 
     <TextView
         android:id="@+id/subtitle_repeat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/subtitle_repeat" />
+        android:text="@string/subtitle_repeat"
+        style="@style/subtitle_style_in_layout_fragment_edit"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        style="@style/edit_view_style_in_layout_fragment_edit"
+        >
 
         <Spinner
             android:id="@+id/spinner_interval_to_repeat"
@@ -108,12 +133,16 @@
         android:id="@+id/subtitle_add_to_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/subtitle_add_to_list" />
+        android:text="@string/subtitle_add_to_list"
+        style="@style/subtitle_style_in_layout_fragment_edit"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        style="@style/edit_view_style_in_layout_fragment_edit"
+        >
 
         <Spinner
             android:id="@+id/spinner_group"

@@ -5,4 +5,11 @@
     <dimen name="header_view_margin_right_and_left_between_view">5dp</dimen>
     <dimen name="image_button_size">30dp</dimen>
     <dimen name="header_view_parent_view_padding_top_bottom">10dp</dimen>
+    <dimen name="subtitle_padding_start_in_layout_fragment_edit">5dp</dimen>
+    <dimen name="subtitle_padding_end_in_layout_fragment_edit">5dp</dimen>
+    <dimen name="subtitle_padding_top_in_layout_fragment_edit">10dp</dimen>
+    <dimen name="top_subtitle_padding_top_in_layout_fragment_edit">15dp</dimen>
+    <dimen name="subtitle_text_size_in_layout_fragment_edit">15sp</dimen>
+
+
 </resources>

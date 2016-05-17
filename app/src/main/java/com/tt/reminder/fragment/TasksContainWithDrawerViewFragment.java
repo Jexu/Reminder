@@ -1,6 +1,5 @@
 package com.tt.reminder.fragment;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,30 +9,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.TextView;
 
 import com.tt.reminder.R;
 import com.tt.reminder.activity.MainActivity;
 import com.tt.sharedbaseclass.constant.Constant;
-import com.tt.sharedbaseclass.listener.OnFragmentInteractionListener;
+import com.tt.sharedbaseclass.fragment.FragmentBaseWithSharedHeaderView;
 
-public class TasksContainWithDrawerViewFragment extends Fragment implements View.OnClickListener, DrawerLayout.DrawerListener,
+public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHeaderView implements View.OnClickListener, DrawerLayout.DrawerListener,
         AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private static TasksContainWithDrawerViewFragment mTasksContainWithDrawerViewFragment;
 
-    private OnFragmentInteractionListener mListener;
     private DrawerLayout mDrawerLayout;
     private LinearLayout mLeftDrawer;
     private boolean mIsLeftDrawerOpened = false;
     private ListView mListView;
-    private ImageView mHeaderViewMainMenu, mHeaderViewLeftArrow, mHeaderViewVoiceInput, mHeaderViewAddNewTask;
-    private TextView mHeaderViewTitle;
-    private SearchView mHeaderViewSearch;
 
     public TasksContainWithDrawerViewFragment() {
         // Required empty public constructor
@@ -50,17 +42,11 @@ public class TasksContainWithDrawerViewFragment extends Fragment implements View
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         View contentView = inflater.inflate(R.layout.fragment_tasks_containt_with_drawer_view, container, false);
         mDrawerLayout = (DrawerLayout) contentView.findViewById(R.id.drawer_layout);
         mLeftDrawer = (LinearLayout) contentView.findViewById(R.id.left_drawer);
         mListView = (ListView) contentView.findViewById(R.id.list);
-        mHeaderViewMainMenu = (ImageView) contentView.findViewById(R.id.header_view_main_menu);
-        mHeaderViewLeftArrow = (ImageView) contentView.findViewById(R.id.header_view_left_arrow);
-        mHeaderViewTitle = (TextView) contentView.findViewById(R.id.header_view_title);
-        mHeaderViewVoiceInput = (ImageView) contentView.findViewById(R.id.header_view_voice_input);
-        mHeaderViewSearch = (SearchView) contentView.findViewById(R.id.header_view_search);
-        mHeaderViewAddNewTask = (ImageView) contentView.findViewById(R.id.header_view_add_new_task);
-        mHeaderViewLeftArrow.setVisibility(View.GONE);
         return contentView;
     }
 
@@ -71,6 +57,7 @@ public class TasksContainWithDrawerViewFragment extends Fragment implements View
         mListView.setOnItemClickListener(this);
         mListView.setOnItemLongClickListener(this);
         mHeaderViewMainMenu.setOnClickListener(this);
+        mHeaderViewLeftArrow.setVisibility(View.GONE);
         mHeaderViewVoiceInput.setOnClickListener(this);
         mHeaderViewAddNewTask.setOnClickListener(this);
     }
@@ -78,12 +65,6 @@ public class TasksContainWithDrawerViewFragment extends Fragment implements View
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
@@ -94,7 +75,7 @@ public class TasksContainWithDrawerViewFragment extends Fragment implements View
                 onMainMenuClick();
                 break;
             case R.id.header_view_add_new_task:
-                navivateToEditFragment(Constant.FragmentType.NEW_EDIT_TASK_FRAGMENT);
+                navigateToEditFragment(Constant.FragmentType.NEW_EDIT_TASK_FRAGMENT);
                 break;
         }
     }
@@ -109,7 +90,7 @@ public class TasksContainWithDrawerViewFragment extends Fragment implements View
         }
     }
 
-    private void navivateToEditFragment(int fragmentType) {
+    private void navigateToEditFragment(int fragmentType) {
         EditTaskFragment editTaskFragment = new EditTaskFragment();
         Bundle args = new Bundle();
         args.putInt(Constant.FragmentType.FRAGMENT_TYPE, fragmentType);
@@ -156,15 +137,12 @@ public class TasksContainWithDrawerViewFragment extends Fragment implements View
     }
 
     public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        super.onButtonPressed(uri);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
         if (mDrawerLayout != null) {
             mDrawerLayout.removeDrawerListener(this);
         }
