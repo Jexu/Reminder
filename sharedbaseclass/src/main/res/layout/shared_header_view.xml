@@ -68,8 +68,20 @@
         android:layout_height="@dimen/image_button_size"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="@dimen/header_view_add_new_task_margin_right"
+        android:layout_marginRight="@dimen/header_view_save_task_margin_right"
         android:scaleType="fitCenter"
         android:src="@drawable/add" />
+
+    <ImageView
+        android:id="@+id/header_view_save_task"
+        android:layout_width="@dimen/image_button_size"
+        android:layout_height="@dimen/image_button_size"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="@dimen/header_view_save_task_margin_right"
+        android:scaleType="fitCenter"
+        android:src="@drawable/save"
+        android:visibility="gone"
+      />
 
 </RelativeLayout>
