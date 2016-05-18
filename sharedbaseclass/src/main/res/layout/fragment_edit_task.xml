@@ -179,8 +179,5 @@
             android:layout_marginStart="@dimen/header_view_margin_right_and_left_between_view"
             android:layout_marginEnd="@dimen/header_view_margin_right_and_left_between_view"
           />
-
     </LinearLayout>
-
-
 </LinearLayout>

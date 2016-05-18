@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
     @Override
     public void onBackPressed() {
-        if (mFragmentCounter == IS_SEED_FRAGMENT) {
+        if (getFragmentManager().getBackStackEntryCount() == 1) {
             if (mFirstBackPressedTime == 0 || (System.currentTimeMillis() - mFirstBackPressedTime) >= INTERVAL_OF_DOUBLE_BACK_PRESSED_DOUBLE_CLICK) {
                 mFirstBackPressedTime = System.currentTimeMillis();
                 Toast.makeText(this, R.string.toast_double_click_to_exit, Toast.LENGTH_SHORT).show();
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     public static void navigateTo(android.app.Fragment fragment, android.app.FragmentManager fragmentManager) {
         android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         //fragmentTransaction.setCustomAnimations(R.animator.fragment_slide_in_bottom,R.animator.fragment_slide_out_top);
-        fragmentTransaction.replace(R.id.main_activity_frame_layout, fragment);
+        fragmentTransaction.add(R.id.main_activity_frame_layout, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         mFragmentCounter++;

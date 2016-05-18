@@ -9,10 +9,11 @@
     <dimen name="subtitle_padding_end_in_layout_fragment_edit">5dp</dimen>
     <dimen name="subtitle_padding_top_in_layout_fragment_edit">10dp</dimen>
     <dimen name="top_subtitle_padding_top_in_layout_fragment_edit">15dp</dimen>
-    <dimen name="subtitle_text_size_in_layout_fragment_edit">15sp</dimen>
+    <dimen name="subtitle_text_size_in_layout_fragment_edit">18sp</dimen>
     <dimen name="shared_divider_width">1000dp</dimen>
     <dimen name="shared_divider_height">3dp</dimen>
     <dimen name="shared_divider_stroke_width">2dp</dimen>
+    <dimen name="subtitle_text_size_in_shared_header_view">18sp</dimen>
 
 
 </resources>

@@ -46,6 +46,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="@string/header_view_title_my_tasks"
+        android:textSize="@dimen/subtitle_text_size_in_shared_header_view"
         android:textColor="@android:color/white"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/header_view_margin_right_and_left_between_view"
