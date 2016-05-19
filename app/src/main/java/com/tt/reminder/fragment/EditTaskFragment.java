@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mHeaderViewLeftArrow.setOnClickListener(this);
+        mHeaderViewSaveTask.setOnClickListener(this);
         mDatePickerBtn.setOnClickListener(this);
         mTimePickerBtn.setOnClickListener(this);
         mClearDateBtn.setOnClickListener(this);
@@ -62,6 +64,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
                 onBackPressed();
                 break;
             case R.id.header_view_save_task:
+                Log.i("TAG", "HHHHHHHH");
                 break;
             case R.id.date_picker_dialog:
                 datePickerDialog();
