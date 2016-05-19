@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.tt.reminder.R;
 import com.tt.sharedbaseclass.fragment.EditTashFragmentBase;
+import com.tt.sharedbaseclass.model.TaskBean;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -20,6 +21,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
         DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     private static EditTaskFragment mEditTaskFragment;
+    private TaskBean mTaskBean;
 
     public EditTaskFragment() {
         // Required empty public constructor
@@ -35,6 +37,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTaskBean = new TaskBean();
     }
 
     @Override
@@ -109,7 +112,10 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
         } else {
             mAlarmDate.setTextColor(getResources().getColor(android.R.color.black));
         }
-        updateEditedViewStatue(EDITED_VIEW.PICKED_DATE, mAlarmDate, new SimpleDateFormat("dd MM, yyyy").format(new Date(calendar.getTimeInMillis())));
+        mTaskBean.setYear(year);
+        mTaskBean.setMonth(monthOfYear+1);
+        mTaskBean.setDayOfMonth(dayOfMonth);
+        updateEditedViewStatue(EDITED_VIEW.PICKED_DATE, mAlarmDate, mTaskBean.getPickedDate());
     }
 
     @Override
