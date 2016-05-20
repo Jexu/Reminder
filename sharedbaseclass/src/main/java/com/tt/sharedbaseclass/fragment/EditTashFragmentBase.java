@@ -85,6 +85,7 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
     }
 
     private void setListener() {
+        mTaskContent.addTextChangedListener(this);
         mAlarmDate.addTextChangedListener(this);
         mAlarmTime.addTextChangedListener(this);
     }
@@ -141,6 +142,8 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
             } else if (!TextUtils.isEmpty(mAlarmTime.getText().toString()) && mClearTimeBtn.getVisibility() == View.GONE) {
                 mClearTimeBtn.animate().alpha(1).translationX(mAlarmTime.getX()).setDuration(100).setListener(this).start();
             }
+        } else {
+            mEditedView = EDITED_VIEW.TASK_CONTENT;
         }
     }
 

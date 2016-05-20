@@ -1,5 +1,6 @@
 package com.tt.reminder.activity;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 import com.tt.reminder.R;
 import com.tt.reminder.fragment.TasksContainWithDrawerViewFragment;
+import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.FragmentBaseWithSharedHeaderView;
 import com.tt.sharedbaseclass.listener.OnFragmentInteractionListener;
 
@@ -37,7 +39,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         FragmentManager mFragmentManager = getFragmentManager();
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
         mTasksContainWithDrawerViewFragment = TasksContainWithDrawerViewFragment.newInstance();
-        transaction.add(R.id.main_activity_frame_layout, mTasksContainWithDrawerViewFragment);
+        transaction.add(R.id.main_activity_frame_layout, mTasksContainWithDrawerViewFragment
+                , Constant.FRAGMENT_TYPE.TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT.toString());
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -64,7 +67,11 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     public static void navigateTo(android.app.Fragment fragment, android.app.FragmentManager fragmentManager) {
         android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         //fragmentTransaction.setCustomAnimations(R.animator.fragment_slide_in_bottom,R.animator.fragment_slide_out_top);
-        fragmentTransaction.add(R.id.main_activity_frame_layout, fragment);
+        Fragment f = fragmentManager.findFragmentByTag(Constant.FRAGMENT_TYPE.TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT.toString());
+        if (f != null && f.isAdded()) {
+            fragmentTransaction.hide(f);
+        }
+        fragmentTransaction.add(R.id.main_activity_frame_layout, fragment, fragment.getTag());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

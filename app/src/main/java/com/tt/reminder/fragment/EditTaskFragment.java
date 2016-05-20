@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +65,9 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
         mHeaderViewLeftArrow.setOnClickListener(this);
         mHeaderViewSaveTask.setOnClickListener(this);
         mDatePickerBtn.setOnClickListener(this);
+        mAlarmDate.setOnClickListener(this);
         mTimePickerBtn.setOnClickListener(this);
+        mAlarmTime.setOnClickListener(this);
         mClearDateBtn.setOnClickListener(this);
         mClearTimeBtn.setOnClickListener(this);
         mNewRepeatIntervalBtn.setOnClickListener(this);
@@ -82,9 +85,11 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
                 Log.i("TAG", "HHHHHHHH");
                 break;
             case R.id.date_picker_dialog:
+            case R.id.edt_alarm_date:
                 datePickerDialog();
                 break;
             case R.id.time_picker_dialog:
+            case R.id.edt_alarm_time:
                 timePickerDialog();
                 break;
             case R.id.cross_to_clear_picked_date:
@@ -154,7 +159,13 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
             mAlarmDate.setTextColor(getResources().getColor(android.R.color.tertiary_text_dark));
             mAlarmTime.setTextColor(getResources().getColor(android.R.color.tertiary_text_dark));
         }
-
+        if (mEditedView == EDITED_VIEW.TASK_CONTENT) {
+            if (TextUtils.isEmpty(mTaskContent.getText())) {
+                mTaskBean.setTaskContent("");
+            } else {
+                mTaskBean.setTaskContent(mTaskContent.getText().toString());
+            }
+        }
     }
 
     @Override
