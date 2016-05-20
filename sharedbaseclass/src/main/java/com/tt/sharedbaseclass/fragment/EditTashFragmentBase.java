@@ -76,7 +76,8 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
         mClearTimeBtn = (ImageView) view.findViewById(R.id.cross_to_clear_picked_time);
         mRepeatSpinner = (Spinner) view.findViewById(R.id.spinner_interval_to_repeat);
         mRepeatSpinner.setAdapter(new ArrayAdapter<>(getActivity()
-          , android.R.layout.simple_spinner_item
+          , R.layout.shared_simple_list_item
+          ,R.id.simple_list_item_view
           , getResources().getStringArray(R.array.repeat_interval_spinner_list)));
         mNewRepeatIntervalBtn = (ImageView) view.findViewById(R.id.new_interval);
         mGroupSpinner = (Spinner) view.findViewById(R.id.spinner_group);
@@ -84,6 +85,7 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
     }
 
     private void setListener() {
+        mTaskContent.addTextChangedListener(this);
         mAlarmDate.addTextChangedListener(this);
         mAlarmTime.addTextChangedListener(this);
     }
@@ -140,6 +142,8 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
             } else if (!TextUtils.isEmpty(mAlarmTime.getText().toString()) && mClearTimeBtn.getVisibility() == View.GONE) {
                 mClearTimeBtn.animate().alpha(1).translationX(mAlarmTime.getX()).setDuration(100).setListener(this).start();
             }
+        } else {
+            mEditedView = EDITED_VIEW.TASK_CONTENT;
         }
     }
 

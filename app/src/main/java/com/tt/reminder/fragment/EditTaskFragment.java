@@ -6,6 +6,10 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +68,9 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
         mHeaderViewLeftArrow.setOnClickListener(this);
         mHeaderViewSaveTask.setOnClickListener(this);
         mDatePickerBtn.setOnClickListener(this);
+        mAlarmDate.setOnClickListener(this);
         mTimePickerBtn.setOnClickListener(this);
+        mAlarmTime.setOnClickListener(this);
         mClearDateBtn.setOnClickListener(this);
         mClearTimeBtn.setOnClickListener(this);
         mNewRepeatIntervalBtn.setOnClickListener(this);
@@ -82,9 +88,11 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
                 Log.i("TAG", "HHHHHHHH");
                 break;
             case R.id.date_picker_dialog:
+            case R.id.edt_alarm_date:
                 datePickerDialog();
                 break;
             case R.id.time_picker_dialog:
+            case R.id.edt_alarm_time:
                 timePickerDialog();
                 break;
             case R.id.cross_to_clear_picked_date:
@@ -117,7 +125,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         mTaskBean.setYear(year);
-        mTaskBean.setMonth(monthOfYear + 1);
+        mTaskBean.setMonth(monthOfYear);
         mTaskBean.setDayOfMonth(dayOfMonth);
         updateEditedViewStatue(EDITED_VIEW.PICKED_DATE, mAlarmDate, mTaskBean.getPickedDate());
     }
@@ -151,10 +159,16 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
             mAlarmDate.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
             mAlarmTime.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
         } else {
-            mAlarmDate.setTextColor(getResources().getColor(android.R.color.black));
-            mAlarmTime.setTextColor(getResources().getColor(android.R.color.black));
+            mAlarmDate.setTextColor(getResources().getColor(android.R.color.tertiary_text_dark));
+            mAlarmTime.setTextColor(getResources().getColor(android.R.color.tertiary_text_dark));
         }
-
+        if (mEditedView == EDITED_VIEW.TASK_CONTENT) {
+            if (TextUtils.isEmpty(mTaskContent.getText())) {
+                mTaskBean.setTaskContent("");
+            } else {
+                mTaskBean.setTaskContent(mTaskContent.getText().toString());
+            }
+        }
     }
 
     @Override
@@ -185,8 +199,16 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
     }
 
     private void createNewGroup() {
-        new AlertDialog.Builder(getActivity()).setTitle("New Group")
-          .setMessage("Add a New Group")
+        String title = getResources().getString(R.string.alert_dialog_title_new_group);
+        String message = getResources().getString(R.string.alert_dialog_message_add_new_group);
+        SpannableString ssTitle = new SpannableString(title);
+        SpannableString ssMessage = new SpannableString(message);
+        ssTitle.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.holo_green_dark)),
+                0,title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ssMessage.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.holo_green_dark)),
+                0,message.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        new AlertDialog.Builder(getActivity()).setTitle(ssTitle)
+          .setMessage(ssMessage)
           .setView(new EditText(getActivity()))
           .setNegativeButton(R.string.edit_task_fragment_alert_dialog_calcel, null)
           .setPositiveButton(R.string.edit_task_fragment_alert_dialog_save, new DialogInterface.OnClickListener() {
@@ -202,9 +224,17 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
         if (mTaskBean.equals(mTaskBeanFromParent)) {
             getFragmentManager().popBackStack();
         } else {
+            String title = getResources().getString(R.string.edit_task_fragment_alert_dialog_title);
+            String message = getResources().getString(R.string.edit_task_fragment_alert_dialog_message);
+            SpannableString ssTitle = new SpannableString(title);
+            SpannableString ssMessage = new SpannableString(message);
+            ssTitle.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.holo_green_dark)),
+                    0,title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ssMessage.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.holo_green_dark)),
+                    0,message.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             new AlertDialog.Builder(getActivity())
-              .setTitle(R.string.edit_task_fragment_alert_dialog_title)
-              .setMessage(R.string.edit_task_fragment_alert_dialog_message)
+              .setTitle(ssTitle)
+              .setMessage(ssMessage)
               .setNegativeButton(R.string.edit_task_fragment_alert_dialog_calcel, null)
               .setPositiveButton(R.string.edit_task_fragment_alert_dialog_save, new DialogInterface.OnClickListener() {
                   @Override

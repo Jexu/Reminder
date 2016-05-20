@@ -14,6 +14,10 @@
     <dimen name="shared_divider_height">3dp</dimen>
     <dimen name="shared_divider_stroke_width">2dp</dimen>
     <dimen name="subtitle_text_size_in_shared_header_view">18sp</dimen>
+    <dimen name="shared_list_item_text_size">18sp</dimen>
+    <dimen name="shared_list_item_padding_top">2dp</dimen>
+    <dimen name="shared_list_item_padding_bottom">2dp</dimen>
+    <dimen name="shared_list_item_padding_start">5dp</dimen>
 
 
 </resources>
