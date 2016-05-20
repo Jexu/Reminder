@@ -1,4 +1,20 @@
 <resources>
     <string name="app_name">SharedBaseClass</string>
+    <string name="header_view_title_new_task">New Task</string>
     <string name="header_view_title_my_tasks">My Tasks</string>
+    <string name="subtitle_what_to_do">WHAT IS TO BE DONE</string>
+    <string name="hint_subtitle_what_to_do">Enter Task Here</string>
+    <string name="subtitle_due_date">DUE DATE</string>
+    <string name="hint_alarm_date_date_not_set">Date not set</string>
+    <string name="subtitle_repeat">REPEAT</string>
+    <string name="subtitle_add_to_list">ADD TO LIST</string>
+    <string name="hint_alarm_time_not_set">Time not set</string>
+
+    <string-array name="repeat_interval_spinner_list">
+        <item>No Repeat</item>
+        <item>Once a Day</item>
+        <item>Once a Week</item>
+        <item>Once a Month</item>
+        <item>Once a Year</item>
+    </string-array>
 </resources>

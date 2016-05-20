@@ -4,12 +4,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="toast_double_click_to_exit">double click to exit</string>
-    <string name="header_view_title_new_task">New Task</string>
-    <string name="subtitle_what_to_do">WHAT IS TO BE DONE</string>
-    <string name="hint_subtitle_what_to_do">Enter Task Here</string>
-    <string name="subtitle_due_date">DUE DATE</string>
-    <string name="hint_alarm_date_date_not_set">Date not set</string>
-    <string name="subtitle_repeat">REPEAT</string>
-    <string name="subtitle_add_to_list">ADD TO LIST</string>
-    <string name="hint_alarm_time_not_set">Time not set</string>
+    <string name="edit_task_fragment_alert_dialog_title">Are you sure?</string>
+    <string name="edit_task_fragment_alert_dialog_message">Quit without saving?</string>
+    <string name="edit_task_fragment_alert_dialog_calcel">Cancel</string>
+    <string name="edit_task_fragment_alert_dialog_save">Save</string>
 </resources>
