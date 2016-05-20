@@ -6,7 +6,10 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -196,8 +199,16 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
     }
 
     private void createNewGroup() {
-        new AlertDialog.Builder(getActivity()).setTitle("New Group")
-          .setMessage("Add a New Group")
+        String title = getResources().getString(R.string.alert_dialog_title_new_group);
+        String message = getResources().getString(R.string.alert_dialog_message_add_new_group);
+        SpannableString ssTitle = new SpannableString(title);
+        SpannableString ssMessage = new SpannableString(message);
+        ssTitle.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.holo_green_dark)),
+                0,title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ssMessage.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.holo_green_dark)),
+                0,message.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        new AlertDialog.Builder(getActivity()).setTitle(ssTitle)
+          .setMessage(ssMessage)
           .setView(new EditText(getActivity()))
           .setNegativeButton(R.string.edit_task_fragment_alert_dialog_calcel, null)
           .setPositiveButton(R.string.edit_task_fragment_alert_dialog_save, new DialogInterface.OnClickListener() {
@@ -213,9 +224,17 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
         if (mTaskBean.equals(mTaskBeanFromParent)) {
             getFragmentManager().popBackStack();
         } else {
+            String title = getResources().getString(R.string.edit_task_fragment_alert_dialog_title);
+            String message = getResources().getString(R.string.edit_task_fragment_alert_dialog_message);
+            SpannableString ssTitle = new SpannableString(title);
+            SpannableString ssMessage = new SpannableString(message);
+            ssTitle.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.holo_green_dark)),
+                    0,title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ssMessage.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.holo_green_dark)),
+                    0,message.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             new AlertDialog.Builder(getActivity())
-              .setTitle(R.string.edit_task_fragment_alert_dialog_title)
-              .setMessage(R.string.edit_task_fragment_alert_dialog_message)
+              .setTitle(ssTitle)
+              .setMessage(ssMessage)
               .setNegativeButton(R.string.edit_task_fragment_alert_dialog_calcel, null)
               .setPositiveButton(R.string.edit_task_fragment_alert_dialog_save, new DialogInterface.OnClickListener() {
                   @Override
