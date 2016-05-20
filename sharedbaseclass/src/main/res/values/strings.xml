@@ -9,4 +9,12 @@
     <string name="subtitle_repeat">REPEAT</string>
     <string name="subtitle_add_to_list">ADD TO LIST</string>
     <string name="hint_alarm_time_not_set">Time not set</string>
+
+    <string-array name="repeat_interval_spinner_list">
+        <item>No Repeat</item>
+        <item>Once a Day</item>
+        <item>Once a Week</item>
+        <item>Once a Month</item>
+        <item>Once a Year</item>
+    </string-array>
 </resources>

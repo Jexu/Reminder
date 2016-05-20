@@ -9,9 +9,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Spinner;
+import android.widget.*;
 import com.tt.sharedbaseclass.R;
 
 /**
@@ -77,6 +75,9 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
         mClearDateBtn = (ImageView) view.findViewById(R.id.cross_to_clear_picked_date);
         mClearTimeBtn = (ImageView) view.findViewById(R.id.cross_to_clear_picked_time);
         mRepeatSpinner = (Spinner) view.findViewById(R.id.spinner_interval_to_repeat);
+        mRepeatSpinner.setAdapter(new ArrayAdapter<>(getActivity()
+          , android.R.layout.simple_spinner_item
+          , getResources().getStringArray(R.array.repeat_interval_spinner_list)));
         mNewRepeatIntervalBtn = (ImageView) view.findViewById(R.id.new_interval);
         mGroupSpinner = (Spinner) view.findViewById(R.id.spinner_group);
         mNewGroupBtn = (ImageView) view.findViewById(R.id.new_group);

@@ -26,6 +26,7 @@ public class TaskBean implements Serializable {
   Calendar mCalendar;
 
   private static int DEFAULT_VALUE_OF_DATE_TIME = -1;
+  private static int DEFAULT_VALUE_OF_INTERVAL = 0;
 
 
   public TaskBean() {
@@ -36,7 +37,7 @@ public class TaskBean implements Serializable {
     this.mHour = DEFAULT_VALUE_OF_DATE_TIME;
     this.mMinuse = DEFAULT_VALUE_OF_DATE_TIME;
     mTaskContent = "";
-    mRepeatIntervalDays = DEFAULT_VALUE_OF_DATE_TIME;
+    mRepeatIntervalDays = DEFAULT_VALUE_OF_INTERVAL;
     mGroup = "";
     mCalendar = Calendar.getInstance(Locale.ENGLISH);
   }
