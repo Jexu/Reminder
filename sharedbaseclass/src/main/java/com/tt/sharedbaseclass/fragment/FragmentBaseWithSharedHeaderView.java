@@ -1,15 +1,13 @@
 package com.tt.sharedbaseclass.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
-
 import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.listener.OnFragmentInteractionListener;
 
@@ -18,9 +16,9 @@ import static com.tt.sharedbaseclass.R.id.header_view_save_task;
 /**
  * Created by zhengguo on 2016/5/17.
  */
-public class FragmentBaseWithSharedHeaderView extends Fragment  {
+public abstract class FragmentBaseWithSharedHeaderView extends Fragment  {
 
-    private OnFragmentInteractionListener mListener;
+    protected OnFragmentInteractionListener mListener;
     protected ImageView mHeaderViewMainMenu, mHeaderViewLeftArrow, mHeaderViewVoiceInput, mHeaderViewAddNewTask, mHeaderViewSaveTask;
     protected TextView mHeaderViewTitle;
     protected SearchView mHeaderViewSearch;
@@ -41,22 +39,20 @@ public class FragmentBaseWithSharedHeaderView extends Fragment  {
         mHeaderViewSaveTask = (ImageView) view.findViewById(header_view_save_task);
     }
 
+
+
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (activity instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) activity;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            throw new RuntimeException(activity.toString()
+              + " must implement OnFragmentInteractionListener");
         }
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+    public abstract void onBackPressed();
 
     @Override
     public void onDetach() {

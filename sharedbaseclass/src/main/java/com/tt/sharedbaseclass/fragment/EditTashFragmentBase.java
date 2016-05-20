@@ -6,20 +6,18 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-
 import com.tt.sharedbaseclass.R;
 
 /**
  * Created by Administrator on 2016/5/18.
  */
-public class EditTashFragmentBase extends FragmentBaseWithSharedHeaderView implements
+public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderView implements
          TextWatcher, Animator.AnimatorListener {
 
     protected EditText mTaskContent;
@@ -147,5 +145,13 @@ public class EditTashFragmentBase extends FragmentBaseWithSharedHeaderView imple
     @Override
     public void afterTextChanged(Editable s) {
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mListener != null) {
+            mListener.onFragmentSelected(this);
+        }
     }
 }

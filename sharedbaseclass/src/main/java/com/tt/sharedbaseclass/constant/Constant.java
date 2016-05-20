@@ -1,7 +1,7 @@
 package com.tt.sharedbaseclass.constant;
 
 /**
- * Created by lab307 on 2016/5/16.
+ * Created by zhengguo on 2016/5/16.
  */
 public class Constant {
     public enum FRAGMENT_TYPE {
@@ -14,6 +14,8 @@ public class Constant {
         public static int EDIT_TASK_FRAGMENT = 1;
         public static int NEW_EDIT_TASK_FRAGMENT = 2;
     }
+
+    public static String EXTRA_TASK_BEAN = "extra_task_bean";
 
     public enum WEEK {
         MON(1), TUE(2), WEN(3), THU(4), FRI(5), STA(6), SUN(7);

@@ -1,7 +1,6 @@
 package com.tt.reminder.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
@@ -11,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-
 import com.tt.reminder.R;
 import com.tt.reminder.activity.MainActivity;
 import com.tt.sharedbaseclass.constant.Constant;
@@ -65,6 +63,11 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 
     @Override
@@ -136,8 +139,12 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
         return false;
     }
 
-    public void onButtonPressed(Uri uri) {
-        super.onButtonPressed(uri);
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mListener != null) {
+            mListener.onFragmentSelected(this);
+        }
     }
 
     @Override

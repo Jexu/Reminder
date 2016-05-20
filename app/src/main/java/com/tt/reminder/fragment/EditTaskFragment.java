@@ -1,20 +1,23 @@
 package com.tt.reminder.fragment;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TimePicker;
 import com.tt.reminder.R;
+import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.EditTashFragmentBase;
 import com.tt.sharedbaseclass.model.TaskBean;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class EditTaskFragment extends EditTashFragmentBase implements View.OnClickListener,
@@ -22,6 +25,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
 
     private static EditTaskFragment mEditTaskFragment;
     private TaskBean mTaskBean;
+    private TaskBean mTaskBeanFromParent;
 
     public EditTaskFragment() {
         // Required empty public constructor
@@ -37,6 +41,15 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null) {
+            mTaskBeanFromParent = (TaskBean) args.getSerializable(Constant.EXTRA_TASK_BEAN);
+            if (mTaskBeanFromParent == null) {
+                mTaskBeanFromParent = new TaskBean();
+            }
+        } else {
+            mTaskBeanFromParent = new TaskBean();
+        }
         mTaskBean = new TaskBean();
     }
 
@@ -103,31 +116,26 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, monthOfYear, dayOfMonth);
-        long currentTimeMill = System.currentTimeMillis();
-        if (calendar.getTimeInMillis() <= currentTimeMill) {
-            mAlarmDate.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-        } else {
-            mAlarmDate.setTextColor(getResources().getColor(android.R.color.black));
-        }
         mTaskBean.setYear(year);
-        mTaskBean.setMonth(monthOfYear+1);
+        mTaskBean.setMonth(monthOfYear + 1);
         mTaskBean.setDayOfMonth(dayOfMonth);
         updateEditedViewStatue(EDITED_VIEW.PICKED_DATE, mAlarmDate, mTaskBean.getPickedDate());
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        updateEditedViewStatue(EDITED_VIEW.PICKED_TIME, mAlarmTime, hourOfDay + ":" + minute);
+        mTaskBean.setHour(hourOfDay);
+        mTaskBean.setMinuse(minute);
+        updateEditedViewStatue(EDITED_VIEW.PICKED_TIME, mAlarmTime, mTaskBean.getPickedTime());
     }
 
     private void clearPickedDate() {
+        mTaskBean.clearPickedDate();
         updateEditedViewStatue(EDITED_VIEW.PICKED_DATE, mAlarmDate, "");
     }
 
     private void clearPickedTime() {
+        mTaskBean.clearPickedTime();
         updateEditedViewStatue(EDITED_VIEW.PICKED_TIME, mAlarmTime, "");
     }
 
@@ -136,9 +144,35 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
         editView.setText(editViewStr);
     }
 
-    protected boolean onBackPressed() {
-        getFragmentManager().popBackStack();
-        return true;
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        super.onTextChanged(s, start, before, count);
+        if (mTaskBean.isDeadline()) {
+            mAlarmDate.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+            mAlarmTime.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+        } else {
+            mAlarmDate.setTextColor(getResources().getColor(android.R.color.black));
+            mAlarmTime.setTextColor(getResources().getColor(android.R.color.black));
+        }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mTaskBean.equals(mTaskBeanFromParent)) {
+            getFragmentManager().popBackStack();
+        } else {
+            new AlertDialog.Builder(getActivity())
+              .setTitle(R.string.edit_task_fragment_alert_dialog_title)
+              .setMessage(R.string.edit_task_fragment_alert_dialog_message)
+              .setNegativeButton(R.string.edit_task_fragment_alert_dialog_calcel, null)
+              .setPositiveButton(R.string.edit_task_fragment_alert_dialog_save, new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialog, int which) {
+
+                  }
+              }).show();
+        }
     }
 
 }

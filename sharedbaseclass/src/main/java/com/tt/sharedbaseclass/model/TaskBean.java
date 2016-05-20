@@ -1,16 +1,15 @@
 package com.tt.sharedbaseclass.model;
 
-import android.text.TextUtils;
-
 import com.tt.sharedbaseclass.constant.Constant;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Locale;
 
 /**
  * Created by zhengguo on 5/19/16.
  */
-public class TaskBean {
+public class TaskBean implements Serializable {
   private String mTaskContent;
   private int mYear;
   private int mMonth;
@@ -24,11 +23,22 @@ public class TaskBean {
   private boolean mIsFinished;
   private String mPickedDate;
   private String mPickedTime;
+  Calendar mCalendar;
 
+  private static int DEFAULT_VALUE_OF_DATE_TIME = -1;
 
 
   public TaskBean() {
 
+    this.mYear = DEFAULT_VALUE_OF_DATE_TIME;
+    this.mMonth = DEFAULT_VALUE_OF_DATE_TIME;
+    this.mDayOfMonth = DEFAULT_VALUE_OF_DATE_TIME;
+    this.mHour = DEFAULT_VALUE_OF_DATE_TIME;
+    this.mMinuse = DEFAULT_VALUE_OF_DATE_TIME;
+    mTaskContent = "";
+    mRepeatIntervalDays = DEFAULT_VALUE_OF_DATE_TIME;
+    mGroup = "";
+    mCalendar = Calendar.getInstance(Locale.ENGLISH);
   }
 
   public String getTaskContent() {
@@ -51,8 +61,8 @@ public class TaskBean {
     this.mDayOfMonth = dayOfMonth;
   }
 
-  public void setHour(int mHour) {
-    this.mHour = mHour;
+  public void setHour(int hour) {
+    this.mHour = hour;
   }
 
   public void setMinuse(int minuse) {
@@ -75,25 +85,45 @@ public class TaskBean {
     this.mGroup = group;
   }
 
-  public boolean ismIsDeadline() {
-    return mIsDeadline;
+  public boolean isDeadline() {
+    boolean isDeadLine = false;
+    if (isClearedPickedTime() && !isClearedPickedDate()) {
+      mCalendar.set(mYear, mMonth, mDayOfMonth);
+      if (mCalendar.getTimeInMillis() <= System.currentTimeMillis()) {
+        isDeadLine = true;
+      } else {
+        isDeadLine = false;
+      }
+    } else if (!isClearedPickedTime() && !isClearedPickedDate()){
+      mCalendar.set(mYear, mMonth, mDayOfMonth, mHour, mMinuse);
+      if (mCalendar.getTimeInMillis() <= System.currentTimeMillis()) {
+        isDeadLine = true;
+      } else {
+        isDeadLine = false;
+      }
+    } else {
+      isDeadLine = false;
+    }
+    return isDeadLine;
   }
 
-  public boolean ismIsRepeat() {
+  public boolean isIsRepeat() {
     return mIsRepeat;
   }
 
-  public boolean ismIsFinished() {
+  public boolean isFinished() {
     return mIsFinished;
   }
 
   public String getPickedDate() {
-    Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
-    calendar.set(this.mYear, this.mMonth, this.mDayOfMonth);
+    if (isClearedPickedDate()) {
+      return null;
+    }
+    mCalendar.set(this.mYear, this.mMonth, this.mDayOfMonth);
     StringBuffer sb = new StringBuffer();
-    sb.append(Constant.WEEK.valueOf(calendar.get(Calendar.DAY_OF_WEEK)))
+    sb.append(Constant.WEEK.valueOf(mCalendar.get(Calendar.DAY_OF_WEEK)))
             .append(", ")
-            .append(Constant.MONTH.valueOf(calendar.get(Calendar.MONTH)))
+            .append(Constant.MONTH.valueOf(mCalendar.get(Calendar.MONTH)))
             .append(" ")
             .append(this.mDayOfMonth)
             .append(", ")
@@ -101,8 +131,57 @@ public class TaskBean {
     return sb.toString();
   }
 
-  public String getPickedTime() {
-    return mPickedTime;
+  public void clearPickedDate() {
+    mYear = DEFAULT_VALUE_OF_DATE_TIME;
+    mMonth = DEFAULT_VALUE_OF_DATE_TIME;
+    mDayOfMonth = DEFAULT_VALUE_OF_DATE_TIME;
   }
 
+  public boolean isClearedPickedDate() {
+    return (mYear == DEFAULT_VALUE_OF_DATE_TIME
+      || mMonth == DEFAULT_VALUE_OF_DATE_TIME
+      || mDayOfMonth == DEFAULT_VALUE_OF_DATE_TIME);
+  }
+
+  public String getPickedTime() {
+    if (isClearedPickedTime()) {
+      return null;
+    }
+    StringBuffer sb = new StringBuffer();
+    if (mHour < 10) {
+      sb.append("0").append(mHour);
+    } else {
+      sb.append(mHour);
+    }
+    sb.append(":");
+    if (mMinuse < 10) {
+      sb.append("0").append(mMinuse);
+    } else {
+      sb.append(mMinuse);
+    }
+    return sb.toString();
+  }
+
+  public void clearPickedTime() {
+    mHour = DEFAULT_VALUE_OF_DATE_TIME;
+    mMinuse = DEFAULT_VALUE_OF_DATE_TIME;
+  }
+
+  public boolean isClearedPickedTime() {
+    return (mHour == DEFAULT_VALUE_OF_DATE_TIME
+      || mMinuse ==DEFAULT_VALUE_OF_DATE_TIME);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    TaskBean taskBean = (TaskBean)o;
+    return (taskBean.mTaskContent.equals(mTaskContent)
+      && taskBean.mYear == mYear
+      && taskBean.mMonth == mMonth
+      && taskBean.mDayOfMonth == mDayOfMonth
+      && taskBean.mHour == mHour
+      && taskBean.mMinuse == mMinuse
+      && taskBean.mRepeatIntervalDays == mRepeatIntervalDays
+      && taskBean.mGroup.equals(mGroup));
+  }
 }
