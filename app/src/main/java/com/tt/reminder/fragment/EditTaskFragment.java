@@ -151,8 +151,8 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
             mAlarmDate.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
             mAlarmTime.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
         } else {
-            mAlarmDate.setTextColor(getResources().getColor(android.R.color.black));
-            mAlarmTime.setTextColor(getResources().getColor(android.R.color.black));
+            mAlarmDate.setTextColor(getResources().getColor(android.R.color.tertiary_text_dark));
+            mAlarmTime.setTextColor(getResources().getColor(android.R.color.tertiary_text_dark));
         }
 
     }

@@ -76,7 +76,8 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
         mClearTimeBtn = (ImageView) view.findViewById(R.id.cross_to_clear_picked_time);
         mRepeatSpinner = (Spinner) view.findViewById(R.id.spinner_interval_to_repeat);
         mRepeatSpinner.setAdapter(new ArrayAdapter<>(getActivity()
-          , android.R.layout.simple_spinner_item
+          , R.layout.shared_simple_list_item
+          ,R.id.simple_list_item_view
           , getResources().getStringArray(R.array.repeat_interval_spinner_list)));
         mNewRepeatIntervalBtn = (ImageView) view.findViewById(R.id.new_interval);
         mGroupSpinner = (Spinner) view.findViewById(R.id.spinner_group);
