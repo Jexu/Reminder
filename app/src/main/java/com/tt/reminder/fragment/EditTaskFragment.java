@@ -117,7 +117,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         mTaskBean.setYear(year);
-        mTaskBean.setMonth(monthOfYear + 1);
+        mTaskBean.setMonth(monthOfYear);
         mTaskBean.setDayOfMonth(dayOfMonth);
         updateEditedViewStatue(EDITED_VIEW.PICKED_DATE, mAlarmDate, mTaskBean.getPickedDate());
     }
