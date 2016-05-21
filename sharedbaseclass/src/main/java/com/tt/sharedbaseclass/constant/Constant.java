@@ -1,5 +1,10 @@
 package com.tt.sharedbaseclass.constant;
 
+import android.app.DownloadManager;
+
+import java.net.PortUnreachableException;
+import java.security.PublicKey;
+
 /**
  * Created by zhengguo on 2016/5/16.
  */
@@ -13,6 +18,24 @@ public class Constant {
         public static int TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT = 0;
         public static int EDIT_TASK_FRAGMENT = 1;
         public static int NEW_EDIT_TASK_FRAGMENT = 2;
+    }
+
+    public static class RenderDbHelper {
+
+        public static String EXTRA_TABLE_TASKS_COLUM_ID = "_id";
+        public static String EXTRA_TABLE_NAME_TASKS = "table_tasks";
+        public static String EXTRA_TABLE_TASKS_COLUM_CONTENT = "colum_content";
+        public static String EXTRA_TABLE_TASKS_COLUM_YEAR = "colum_year";
+        public static String EXTRA_TABLE_TASKS_COLUM_MONTH = "colum_month";
+        public static String EXTRA_TABLE_TASKS_COLUM_DAY_OF_MONTH = "colum_day_of_month";
+        public static String EXTRA_TABLE_TASKS_COLUM_HOUR = "colum_hour";
+        public static String EXTRA_TABLE_TASKS_COLUM_MINUTE = "colum_minute";
+        public static String EXTRA_TABLE_TASKS_COLUM_REPEAT_INTERVAL = "colum_repeat_interval";
+        public static String EXTRA_TABLE_TASKS_COLUM_REPEAT_UNIT = "colum_repeat_unit";
+
+        public static String EXTRA_TABLE_GROUP_COLUM_ID = "_id";
+        public static String EXTRA_TABLE_NAME_GROUP = "table_group";
+        public static String EXTRA_TABLE_GROUP_COLUM_GROUP = "colum_group";
     }
 
     public static String EXTRA_TASK_BEAN = "extra_task_bean";
@@ -103,7 +126,41 @@ public class Constant {
             }
             return result;
         }
+        public int value() {
+            return this.value;
+        }
+    }
 
+    public enum REPEAT_UNIT {
+        MINUTE(0), HOUR(1), DAY(2), WEEK(3), MONTH(4), YEAR(5);
+        private int value = 0;
+        REPEAT_UNIT(int value) {
+            this.value = value;
+        }
+        public static REPEAT_UNIT valueOf(int value) {
+            REPEAT_UNIT result = MINUTE;
+            switch (value) {
+                case 1:
+                    result = HOUR;
+                    break;
+                case 2:
+                    result = DAY;
+                    break;
+                case 3:
+                    result = WEEK;
+                    break;
+                case 4:
+                    result = MONTH;
+                    break;
+                case 5:
+                    result = YEAR;
+                    break;
+                default:
+                    result = MINUTE;
+                    break;
+            }
+            return result;
+        }
         public int value() {
             return this.value;
         }
