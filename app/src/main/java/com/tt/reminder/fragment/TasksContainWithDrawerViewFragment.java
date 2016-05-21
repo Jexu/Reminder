@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,12 @@ import com.tt.reminder.R;
 import com.tt.reminder.activity.MainActivity;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.FragmentBaseWithSharedHeaderView;
+import com.tt.sharedbaseclass.listener.OnFragmentFinishedListener;
 
-public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHeaderView implements View.OnClickListener, DrawerLayout.DrawerListener,
-        AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHeaderView
+        implements View.OnClickListener, DrawerLayout.DrawerListener,
+        AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener,
+        OnFragmentFinishedListener{
 
     private static TasksContainWithDrawerViewFragment mTasksContainWithDrawerViewFragment;
 
@@ -98,7 +102,7 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
         Bundle args = new Bundle();
         args.putInt(Constant.FragmentType.FRAGMENT_TYPE, fragmentType);
         editTaskFragment.setArguments(args);
-        MainActivity.navigateTo(editTaskFragment, getFragmentManager());
+        MainActivity.navigateToForResultCode(editTaskFragment, getFragmentManager(), 1);
     }
 
     @Override
@@ -137,6 +141,11 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
         return false;
+    }
+
+    @Override
+    public void onFinishedWithResult(int requestCode, int resultCode, Bundle bundle) {
+        Log.i("Render", "finishedWithRequestCode");
     }
 
     @Override
