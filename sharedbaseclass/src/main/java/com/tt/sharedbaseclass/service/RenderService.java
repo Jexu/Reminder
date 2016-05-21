@@ -60,7 +60,7 @@ public class RenderService {
                 + " = ? order by "
                 + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS, new String[]{groupName});
         if (cursor.moveToFirst()) {
-            List<TaskBean> renderObjectBeans = new RenderObjectBeans<>();
+            List<TaskBean> renderObjectBeans = new RenderObjectBeans<TaskBean>();
             while (cursor.moveToNext()) {
                 TaskBean taskBean = new TaskBean();
                 taskBean.setTaskContent(cursor.getString(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_CONTENT)));
@@ -104,7 +104,7 @@ public class RenderService {
                 + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
                 + " <> ?", new String[R.string.remder_db_helper_group_finished]);
         if (cursor.moveToFirst()) {
-            List<String> renderObjectBeans  = new RenderObjectBeans<>();
+            List<String> renderObjectBeans  = new RenderObjectBeans<String>();
             while(cursor.moveToNext()) {
                 renderObjectBeans.add(cursor.getString(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP)));
             }
