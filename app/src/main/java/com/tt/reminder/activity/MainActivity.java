@@ -10,6 +10,7 @@ import com.tt.reminder.R;
 import com.tt.reminder.fragment.TasksContainWithDrawerViewFragment;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.FragmentBaseWithSharedHeaderView;
+import com.tt.sharedbaseclass.listener.OnFragmentFinishedListener;
 import com.tt.sharedbaseclass.listener.OnFragmentInteractionListener;
 
 public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
@@ -17,7 +18,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     private static long INTERVAL_OF_DOUBLE_BACK_PRESSED_DOUBLE_CLICK = 500;
     private long mFirstBackPressedTime = 0;
 
-    private TasksContainWithDrawerViewFragment mTasksContainWithDrawerViewFragment;
+    private static TasksContainWithDrawerViewFragment mTasksContainWithDrawerViewFragment;
     private FragmentBaseWithSharedHeaderView mSelectedFragment;
 
     @Override
@@ -71,6 +72,19 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         if (f != null && f.isAdded()) {
             fragmentTransaction.hide(f);
         }
+        fragmentTransaction.add(R.id.main_activity_frame_layout, fragment, fragment.getTag());
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    public static void navigateToForResultCode(android.app.Fragment fragment, android.app.FragmentManager fragmentManager, int requestCode) {
+        android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        //fragmentTransaction.setCustomAnimations(R.animator.fragment_slide_in_bottom,R.animator.fragment_slide_out_top);
+        Fragment f = fragmentManager.findFragmentByTag(Constant.FRAGMENT_TYPE.TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT.toString());
+        if (f != null && f.isAdded()) {
+            fragmentTransaction.hide(f);
+        }
+        ((FragmentBaseWithSharedHeaderView)fragment).navigateToFragmentForResultCode(mTasksContainWithDrawerViewFragment, requestCode);
         fragmentTransaction.add(R.id.main_activity_frame_layout, fragment, fragment.getTag());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();

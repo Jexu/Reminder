@@ -173,24 +173,24 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        int repeatIntervalDays = 0;
+        int repeatInterval = 0;
         switch (position) {
             case 1:
-                repeatIntervalDays = 1;
+                repeatInterval = 1;
                 break;
             case 2:
-                repeatIntervalDays = 7;
+                repeatInterval = 7;
                 break;
             case 3:
-                repeatIntervalDays = 30;
+                repeatInterval = 30;
                 break;
             case 4:
-                repeatIntervalDays = 365;
+                repeatInterval = 365;
                 break;
             default:
-                repeatIntervalDays = 0;
+                repeatInterval = 0;
         }
-        mTaskBean.setRepeatIntervalDays(repeatIntervalDays);
+        mTaskBean.setmRepeatInterval(repeatInterval);
     }
 
     @Override
@@ -222,7 +222,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
     @Override
     public void onBackPressed() {
         if (mTaskBean.equals(mTaskBeanFromParent)) {
-            getFragmentManager().popBackStack();
+            finish();
         } else {
             String title = getResources().getString(R.string.edit_task_fragment_alert_dialog_title);
             String message = getResources().getString(R.string.edit_task_fragment_alert_dialog_message);
@@ -239,7 +239,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
               .setPositiveButton(R.string.edit_task_fragment_alert_dialog_save, new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialog, int which) {
-
+                    finishWithResultCode(1, new Bundle());
                   }
               }).show();
         }

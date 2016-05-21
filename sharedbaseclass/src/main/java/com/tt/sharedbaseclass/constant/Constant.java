@@ -1,9 +1,5 @@
 package com.tt.sharedbaseclass.constant;
 
-import android.app.DownloadManager;
-
-import java.net.PortUnreachableException;
-import java.security.PublicKey;
 
 /**
  * Created by zhengguo on 2016/5/16.
@@ -20,8 +16,21 @@ public class Constant {
         public static int NEW_EDIT_TASK_FRAGMENT = 2;
     }
 
+    public static class RenderServiceHelper {
+        public static final String ACTION_GET_TASKS_BY_GROUP_NAME = "action_get_tasks_by_group_name";
+        public static final String ACTION_GET_GROUPS = "action_get_groups";
+        public static final int REQUEST_CODE_DEFAULT = 0;
+        public static final int RESULT_CODE_GET_TASKS_SUCCESS = 0;
+        public static final int RESULT_CODE_GET_TASKS_FAIL_NO_TASKS = 1;
+        public static final int RESULT_CODE_GET_TASKS_FAIL_ERROR = 2;
+        public static final int RESULT_CODE_GET_GROUPS_SUCCESS = 3;
+        public static final int RESULT_CODE_GET_GROUPS_FAIL_NO_GROUPS = 4;
+        public static final int RESULT_CODE_GET_GROUPS_FAIL_ERROR = 5;
+    }
+
     public static class RenderDbHelper {
 
+        public static final String EXTRA_TABLE_TASKS_COLUM_TIMILLS = "colum_timills";
         public static String EXTRA_TABLE_TASKS_COLUM_ID = "_id";
         public static String EXTRA_TABLE_NAME_TASKS = "table_tasks";
         public static String EXTRA_TABLE_TASKS_COLUM_CONTENT = "colum_content";
