@@ -15,29 +15,27 @@ public class TaskBean implements Serializable {
   private int mMonth;
   private int mDayOfMonth;
   private int mHour;
-  private int mMinuse;
-  private int mRepeatIntervalDays;
+  private int mMinute;
+  private int mRepeatInterval;
+  private int mRepeatUnit;
   private String mGroup;
-  private boolean mIsDeadline;
-  private boolean mIsRepeat;
   private boolean mIsFinished;
-  private String mPickedDate;
-  private String mPickedTime;
-  Calendar mCalendar;
+  private Calendar mCalendar;
 
-  private static int DEFAULT_VALUE_OF_DATE_TIME = -1;
-  private static int DEFAULT_VALUE_OF_INTERVAL = 0;
+  public static int DEFAULT_VALUE_OF_DATE_TIME = -1;
+  public static int DEFAULT_VALUE_OF_INTERVAL = 0;
 
 
   public TaskBean() {
 
+    mTaskContent = "";
     this.mYear = DEFAULT_VALUE_OF_DATE_TIME;
     this.mMonth = DEFAULT_VALUE_OF_DATE_TIME;
     this.mDayOfMonth = DEFAULT_VALUE_OF_DATE_TIME;
     this.mHour = DEFAULT_VALUE_OF_DATE_TIME;
-    this.mMinuse = DEFAULT_VALUE_OF_DATE_TIME;
-    mTaskContent = "";
-    mRepeatIntervalDays = DEFAULT_VALUE_OF_INTERVAL;
+    this.mMinute = DEFAULT_VALUE_OF_DATE_TIME;
+    mRepeatInterval = DEFAULT_VALUE_OF_INTERVAL;
+    mRepeatUnit = Constant.REPEAT_UNIT.MINUTE.value();
     mGroup = "";
     mCalendar = Calendar.getInstance(Locale.ENGLISH);
   }
@@ -67,15 +65,23 @@ public class TaskBean implements Serializable {
   }
 
   public void setMinuse(int minuse) {
-    this.mMinuse = minuse;
+    this.mMinute = minuse;
   }
 
-  public int getRepeatIntervalDays() {
-    return mRepeatIntervalDays;
+  public void setmRepeatInterval(int repeatInterval) {
+    this.mRepeatInterval = repeatInterval;
   }
 
-  public void setRepeatIntervalDays(int repeatIntervalDays) {
-    this.mRepeatIntervalDays = repeatIntervalDays;
+  public int getRepeatInterval() {
+    return mRepeatInterval;
+  }
+
+  public int getmRepeatUnit() {
+    return mRepeatUnit;
+  }
+
+  public void setmRepeatUnit(int mRepeatUnit) {
+    this.mRepeatUnit = mRepeatUnit;
   }
 
   public String getGroup() {
@@ -96,7 +102,7 @@ public class TaskBean implements Serializable {
         isDeadLine = false;
       }
     } else if (!isClearedPickedTime() && !isClearedPickedDate()){
-      mCalendar.set(mYear, mMonth, mDayOfMonth, mHour, mMinuse);
+      mCalendar.set(mYear, mMonth, mDayOfMonth, mHour, mMinute);
       if (mCalendar.getTimeInMillis() <= System.currentTimeMillis()) {
         isDeadLine = true;
       } else {
@@ -106,10 +112,6 @@ public class TaskBean implements Serializable {
       isDeadLine = false;
     }
     return isDeadLine;
-  }
-
-  public boolean isIsRepeat() {
-    return mIsRepeat;
   }
 
   public boolean isFinished() {
@@ -155,22 +157,22 @@ public class TaskBean implements Serializable {
       sb.append(mHour);
     }
     sb.append(":");
-    if (mMinuse < 10) {
-      sb.append("0").append(mMinuse);
+    if (mMinute < 10) {
+      sb.append("0").append(mMinute);
     } else {
-      sb.append(mMinuse);
+      sb.append(mMinute);
     }
     return sb.toString();
   }
 
   public void clearPickedTime() {
     mHour = DEFAULT_VALUE_OF_DATE_TIME;
-    mMinuse = DEFAULT_VALUE_OF_DATE_TIME;
+    mMinute = DEFAULT_VALUE_OF_DATE_TIME;
   }
 
   public boolean isClearedPickedTime() {
     return (mHour == DEFAULT_VALUE_OF_DATE_TIME
-      || mMinuse ==DEFAULT_VALUE_OF_DATE_TIME);
+      || mMinute ==DEFAULT_VALUE_OF_DATE_TIME);
   }
 
   @Override
@@ -181,8 +183,9 @@ public class TaskBean implements Serializable {
       && taskBean.mMonth == mMonth
       && taskBean.mDayOfMonth == mDayOfMonth
       && taskBean.mHour == mHour
-      && taskBean.mMinuse == mMinuse
-      && taskBean.mRepeatIntervalDays == mRepeatIntervalDays
+      && taskBean.mMinute == mMinute
+      && taskBean.mRepeatInterval == mRepeatInterval
+      && taskBean.mRepeatUnit == mRepeatUnit
       && taskBean.mGroup.equals(mGroup));
   }
 }

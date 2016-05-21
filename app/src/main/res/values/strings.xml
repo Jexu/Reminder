@@ -10,4 +10,6 @@
     <string name="edit_task_fragment_alert_dialog_save">Save</string>
     <string name="alert_dialog_title_new_group">New Group</string>
     <string name="alert_dialog_message_add_new_group">Add a New Group</string>
+    <string name="render_db_helper_group_my_task">MyTasks</string>
+    <string name="remder_db_helper_group_finished">Finished</string>
 </resources>
