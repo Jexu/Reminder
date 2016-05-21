@@ -1,9 +1,5 @@
 package com.tt.sharedbaseclass.constant;
 
-import android.app.DownloadManager;
-
-import java.net.PortUnreachableException;
-import java.security.PublicKey;
 
 /**
  * Created by zhengguo on 2016/5/16.
