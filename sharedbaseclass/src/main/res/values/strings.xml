@@ -9,6 +9,8 @@
     <string name="subtitle_repeat">REPEAT</string>
     <string name="subtitle_add_to_list">ADD TO LIST</string>
     <string name="hint_alarm_time_not_set">Time not set</string>
+    <string name="render_db_helper_group_my_task">MyTasks</string>
+    <string name="remder_db_helper_group_finished">Finished</string>
 
     <string-array name="repeat_interval_spinner_list">
         <item>No Repeat</item>

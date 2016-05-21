@@ -1,4 +1,4 @@
-package com.tt.reminder.db;
+package com.tt.sharedbaseclass.service;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.tt.reminder.R;
+import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.model.TaskBean;
 
@@ -15,7 +15,7 @@ import com.tt.sharedbaseclass.model.TaskBean;
  */
 public class RenderDbHelper extends SQLiteOpenHelper {
     public RenderDbHelper(Context context) {
-        super(context, "RenderDb", null, 1);
+        super(context, "RenderDb", null, 2);
     }
 
     @Override
@@ -47,6 +47,9 @@ public class RenderDbHelper extends SQLiteOpenHelper {
                 .append(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_MINUTE)
                 .append(" integer default ")
                 .append(TaskBean.DEFAULT_VALUE_OF_DATE_TIME).append(", ")
+                .append(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS)
+                .append(" integer default ")
+                .append(TaskBean.DEFAULT_VALUE_OF_DATE_TIME).append(", ")
                 .append(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_REPEAT_INTERVAL)
                 .append(" integer default ")
                 .append(TaskBean.DEFAULT_VALUE_OF_INTERVAL).append(", ")
@@ -75,7 +78,7 @@ public class RenderDbHelper extends SQLiteOpenHelper {
                 .append(" text not null )");
         db.execSQL(createGroup.toString());
         ContentValues cvGroup = new ContentValues();
-        cvGroup.put(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP,R.string.render_db_helper_group_my_task);
+        cvGroup.put(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP, R.string.render_db_helper_group_my_task);
         cvGroup.put(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP, R.string.remder_db_helper_group_finished);
         db.insertOrThrow(Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP, null, cvGroup);
         Log.i("Render", "create group table successfully");
