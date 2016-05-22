@@ -109,7 +109,7 @@ public class Constant {
     public static String EXTRA_TASK_BEAN = "extra_task_bean";
 
     public enum WEEK {
-        MON(1), TUE(2), WEN(3), THU(4), FRI(5), STA(6), SUN(7);
+        SUN(0), MON(1), TUE(2), WEN(3), THU(4), FRI(5), STA(6), ;
         private int value = 1;
         WEEK(int value) {
             this.value = value;
@@ -135,7 +135,7 @@ public class Constant {
                 case 6:
                     result = STA;
                     break;
-                case 7:
+                case 0:
                     result = SUN;
                     break;
             }
