@@ -10,12 +10,14 @@ import java.util.Locale;
  * Created by zhengguo on 5/19/16.
  */
 public class TaskBean implements Serializable {
+  private int mId;
   private String mTaskContent;
   private int mYear;
   private int mMonth;
   private int mDayOfMonth;
   private int mHour;
   private int mMinute;
+  private long mTimeInMillis;
   private int mRepeatInterval;
   private int mRepeatUnit;
   private String mGroup;
@@ -40,6 +42,14 @@ public class TaskBean implements Serializable {
     mCalendar = Calendar.getInstance(Locale.ENGLISH);
   }
 
+  public int getId() {
+    return mId;
+  }
+
+  public void setId(int id) {
+    this.mId = id;
+  }
+
   public String getTaskContent() {
     return mTaskContent;
   }
@@ -52,23 +62,51 @@ public class TaskBean implements Serializable {
     this.mYear = year;
   }
 
+  public int getYear() {
+    return this.mYear;
+  }
+
   public void setMonth(int month) {
     this.mMonth = month;
+  }
+
+  public int getMonth() {
+    return this.mMonth;
   }
 
   public void setDayOfMonth(int dayOfMonth) {
     this.mDayOfMonth = dayOfMonth;
   }
 
+  public int getDayOfMonth() {
+    return this.mDayOfMonth;
+  }
+
   public void setHour(int hour) {
     this.mHour = hour;
+  }
+
+  public int getHour() {
+    return this.mHour;
   }
 
   public void setMinuse(int minuse) {
     this.mMinute = minuse;
   }
 
-  public void setmRepeatInterval(int repeatInterval) {
+  public int getMinute() {
+    return this.mMinute;
+  }
+
+  public long getTimeInMillis() {
+    if (isClearedPickedDate() || isClearedPickedTime()) {
+      return DEFAULT_VALUE_OF_DATE_TIME;
+    }
+    mCalendar.set(mYear, mMonth, mDayOfMonth, mHour, mMinute);
+    return mCalendar.getTimeInMillis();
+  }
+
+  public void setRepeatInterval(int repeatInterval) {
     this.mRepeatInterval = repeatInterval;
   }
 
@@ -76,12 +114,12 @@ public class TaskBean implements Serializable {
     return mRepeatInterval;
   }
 
-  public int getmRepeatUnit() {
+  public int getRepeatUnit() {
     return mRepeatUnit;
   }
 
-  public void setmRepeatUnit(int mRepeatUnit) {
-    this.mRepeatUnit = mRepeatUnit;
+  public void setRepeatUnit(int repeatUnit) {
+    this.mRepeatUnit = repeatUnit;
   }
 
   public String getGroup() {

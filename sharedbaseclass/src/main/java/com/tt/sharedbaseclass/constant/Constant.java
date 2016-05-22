@@ -17,15 +17,74 @@ public class Constant {
     }
 
     public static class RenderServiceHelper {
-        public static final String ACTION_GET_TASKS_BY_GROUP_NAME = "action_get_tasks_by_group_name";
-        public static final String ACTION_GET_GROUPS = "action_get_groups";
+
+        public enum ACTION {
+            ACTION_DEFAULT(0), ACTION_GET_ALL_TASKS_BY_GROUP_NAME(1),
+            ACTION_GET_ALL_GROUPS(2), ACTION__ADD_NEW_GROUP(3),
+            ACTION_ADD_NEW_TASK(4), ACTION_UPDATE_GROUP_NAME(5),
+            ACTION_UPDATE_TASK(6), ACTION_DELETE_GROUP(7),
+            ACTION_DELETE_TASK(8);
+            int value = 0;
+            ACTION(int value) {
+                this.value = value;
+            }
+
+            public static ACTION valueOf(int value) {
+                ACTION result = ACTION_DEFAULT;
+                switch (value) {
+                    case 1:
+                        result = ACTION_GET_ALL_TASKS_BY_GROUP_NAME;
+                        break;
+                    case 2:
+                        result = ACTION_GET_ALL_GROUPS;
+                        break;
+                    case 3:
+                        result = ACTION__ADD_NEW_GROUP;
+                        break;
+                    case 4:
+                        result = ACTION_ADD_NEW_TASK;
+                        break;
+                    case 5:
+                        result = ACTION_UPDATE_GROUP_NAME;
+                        break;
+                    case 6:
+                        result = ACTION_UPDATE_TASK;
+                        break;
+                    case 7:
+                        result = ACTION_DELETE_GROUP;
+                        break;
+                    case 8:
+                        result = ACTION_DELETE_TASK;
+                        break;
+                }
+                return result;
+            }
+            public int value() {
+                return this.value;
+            }
+        }
+
         public static final int REQUEST_CODE_DEFAULT = 0;
+        public static final int REQUEST_CODE_INSERT_TASK_BEAN = 1;
+        public static final int REQUEST_CODE__INSERT_NEW_GROUP = 2;
+        public static final int REQUEST_CODE_UPDATE_TASK_BEAN = 3;
+        public static final int REQUEST_CODE_UPDATE_GROUP_NAME = 4;
+        public static final int REQUEST_CODE_DELETE_TASK_BEAN = 5;
+        public static final int REQUEST_CODE_DELETE_GROUP = 6;
+        public static final int REQUEST_CODE_GET_TASK_BEANS = 7;
+        public static final int REQUEST_CODE_GET_GROUPS = 8;
+
+
+
         public static final int RESULT_CODE_GET_TASKS_SUCCESS = 0;
         public static final int RESULT_CODE_GET_TASKS_FAIL_NO_TASKS = 1;
         public static final int RESULT_CODE_GET_TASKS_FAIL_ERROR = 2;
         public static final int RESULT_CODE_GET_GROUPS_SUCCESS = 3;
         public static final int RESULT_CODE_GET_GROUPS_FAIL_NO_GROUPS = 4;
         public static final int RESULT_CODE_GET_GROUPS_FAIL_ERROR = 5;
+        public static final int RESULT_CODE_UPDATE_SUCCESS = 6;
+        public static final int RESULT_CODE_UPDATE_FAIL = 7;
+
     }
 
     public static class RenderDbHelper {

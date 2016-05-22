@@ -190,7 +190,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
             default:
                 repeatInterval = 0;
         }
-        mTaskBean.setmRepeatInterval(repeatInterval);
+        mTaskBean.setRepeatInterval(repeatInterval);
     }
 
     @Override
