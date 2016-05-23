@@ -1,16 +1,24 @@
 package com.tt.sharedbaseclass.fragment;
 
 import android.animation.Animator;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.tt.sharedbaseclass.R;
+import com.tt.sharedbaseclass.constant.Constant;
+import com.tt.sharedbaseclass.model.TaskBean;
+import com.tt.sharedbaseclass.service.RenderService;
 
 /**
  * Created by Administrator on 2016/5/18.
@@ -30,6 +38,7 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
     protected  ImageView mNewRepeatIntervalBtn;
     protected ImageView mNewGroupBtn;
     protected EDITED_VIEW mEditedView;
+    protected RenderService mRenderService;
 
     protected enum EDITED_VIEW {
         TASK_CONTENT, PICKED_DATE, PICKED_TIME, DEFAULT;
@@ -90,6 +99,56 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
         mAlarmTime.addTextChangedListener(this);
     }
 
+    protected void initServices() {
+        mRenderService = new RenderService(getActivity());
+    }
+
+    protected void destroyServices() {
+        if (mRenderService != null) {
+            mRenderService.removeAllHandlers();
+            mRenderService.destoryService();
+        }
+    }
+
+    protected void showAddNewGroupDialog() {
+        String title = getResources().getString(R.string.alert_dialog_title_new_group);
+        String message = getResources().getString(R.string.alert_dialog_message_add_new_group);
+        SpannableString ssTitle = new SpannableString(title);
+        SpannableString ssMessage = new SpannableString(message);
+        ssTitle.setSpan(new ForegroundColorSpan(getResources()
+                        .getColor(android.R.color.holo_green_dark)),
+                0,title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ssMessage.setSpan(new ForegroundColorSpan(getResources()
+                        .getColor(android.R.color.holo_green_dark)),
+                0,message.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        final EditText editText = new EditText(getActivity());
+        editText.setSingleLine(true);
+        new AlertDialog.Builder(getActivity()).setTitle(ssTitle)
+                .setMessage(ssMessage)
+                .setView(editText)
+                .setNegativeButton(R.string.edit_task_fragment_alert_dialog_calcel, null)
+                .setPositiveButton(R.string.edit_task_fragment_alert_dialog_save, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        addNewGroup(editText);
+                    }
+                }).show();
+    }
+
+    protected void addNewGroup(EditText editText) {
+        if (!TextUtils.isEmpty(editText.getText().toString().trim())) {
+            TaskBean taskBean = new TaskBean();
+            taskBean.setGroup(editText.getText().toString());
+            mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.value(),
+                    Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP, null, taskBean, null,
+                    Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP);
+            // TODO: 2016/5/23 show loading view
+        } else {
+            Toast.makeText(getActivity(), R.string.edit_task_add_new_group_please_input_new_group_name,
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     public void onAnimationStart(Animator animation) {
         if (!TextUtils.isEmpty(mAlarmDate.getText().toString()) && mClearDateBtn.getVisibility() == View.GONE) {
@@ -121,6 +180,12 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
     @Override
     public void onAnimationRepeat(Animator animation) {
 
+    }
+
+    protected void updateEditedViewStatue(EDITED_VIEW edited_view, EditText editView,
+                                        String editViewStr) {
+        mEditedView = edited_view;
+        editView.setText(editViewStr);
     }
 
     @Override
@@ -158,5 +223,11 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
         if (mListener != null) {
             mListener.onFragmentSelected(this);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        destroyServices();
     }
 }

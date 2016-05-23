@@ -32,7 +32,6 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
     private static EditTaskFragment mEditTaskFragment;
     private TaskBean mTaskBean;
     private TaskBean mTaskBeanFromParent;
-    private RenderService mRenderService;
     private AddNewGroupCallBack mAddNewGroupCallBack;
 
     public EditTaskFragment() {
@@ -85,18 +84,12 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
         mRepeatSpinner.setOnItemSelectedListener(this);
     }
 
-    private void initServices() {
-        mRenderService = new RenderService(getActivity());
+    @Override
+    protected void initServices() {
+        super.initServices();
         mAddNewGroupCallBack = new AddNewGroupCallBack();
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.toString(),
                 mAddNewGroupCallBack);
-    }
-
-    private void destroyServices() {
-        if (mRenderService != null) {
-            mRenderService.removeAllHandlers();
-            mRenderService.destoryService();
-        }
     }
 
     @Override
@@ -169,12 +162,6 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
         updateEditedViewStatue(EDITED_VIEW.PICKED_TIME, mAlarmTime, "");
     }
 
-    private void updateEditedViewStatue(EDITED_VIEW edited_view, EditText editView,
-                                        String editViewStr) {
-        mEditedView = edited_view;
-        editView.setText(editViewStr);
-    }
-
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         super.onTextChanged(s, start, before, count);
@@ -221,45 +208,6 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
 
     }
 
-    private void showAddNewGroupDialog() {
-        String title = getResources().getString(R.string.alert_dialog_title_new_group);
-        String message = getResources().getString(R.string.alert_dialog_message_add_new_group);
-        SpannableString ssTitle = new SpannableString(title);
-        SpannableString ssMessage = new SpannableString(message);
-        ssTitle.setSpan(new ForegroundColorSpan(getResources()
-                .getColor(android.R.color.holo_green_dark)),
-                0,title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ssMessage.setSpan(new ForegroundColorSpan(getResources()
-                .getColor(android.R.color.holo_green_dark)),
-                0,message.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        final EditText editText = new EditText(getActivity());
-        editText.setSingleLine(true);
-        new AlertDialog.Builder(getActivity()).setTitle(ssTitle)
-          .setMessage(ssMessage)
-          .setView(editText)
-          .setNegativeButton(R.string.edit_task_fragment_alert_dialog_calcel, null)
-          .setPositiveButton(R.string.edit_task_fragment_alert_dialog_save, new DialogInterface.OnClickListener() {
-              @Override
-              public void onClick(DialogInterface dialog, int which) {
-                  addNewGroup(editText);
-              }
-          }).show();
-    }
-
-    private void addNewGroup(EditText editText) {
-        if (!TextUtils.isEmpty(editText.getText().toString().trim())) {
-            TaskBean taskBean = new TaskBean();
-            taskBean.setGroup(editText.getText().toString());
-            mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.value(),
-                    Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP, null, taskBean, null,
-                    Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP);
-            // TODO: 2016/5/23 show loading view
-        } else {
-            Toast.makeText(getActivity(), R.string.edit_task_add_new_group_please_input_new_group_name,
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
-
     @Override
     public void onBackPressed() {
         if (mTaskBean.equals(mTaskBeanFromParent)) {
@@ -286,12 +234,6 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
                   }
               }).show();
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        destroyServices();
     }
 
     private static class AddNewGroupCallBack implements RenderCallback {
