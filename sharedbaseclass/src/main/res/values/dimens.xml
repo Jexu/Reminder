@@ -8,6 +8,7 @@
     <dimen name="subtitle_padding_start_in_layout_fragment_edit">5dp</dimen>
     <dimen name="subtitle_padding_end_in_layout_fragment_edit">5dp</dimen>
     <dimen name="subtitle_padding_top_in_layout_fragment_edit">10dp</dimen>
+    <dimen name="textview_padding_start_in_layout_fragment_edit">5dp</dimen>
     <dimen name="top_subtitle_padding_top_in_layout_fragment_edit">15dp</dimen>
     <dimen name="subtitle_text_size_in_layout_fragment_edit">18sp</dimen>
     <dimen name="shared_divider_width">1000dp</dimen>
@@ -18,6 +19,9 @@
     <dimen name="shared_list_item_padding_top">2dp</dimen>
     <dimen name="shared_list_item_padding_bottom">2dp</dimen>
     <dimen name="shared_list_item_padding_start">5dp</dimen>
+    <dimen name="shared_divider_height_2dp">2dp</dimen>
+    <dimen name="shared_divider_width_1000dp">1000dp</dimen>
+    <dimen name="shared_divider_stroke_width_1dp">1dp</dimen>
 
 
 </resources>

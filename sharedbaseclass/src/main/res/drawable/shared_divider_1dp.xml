@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="line">
+    <size android:width="@dimen/shared_divider_width_1000dp"
+          android:height="@dimen/shared_divider_height_2dp"/>
+    <solid android:color="@android:color/darker_gray"/>
+    <stroke android:color="@android:color/darker_gray"
+            android:width="@dimen/shared_divider_stroke_width_1dp"/>
+</shape>

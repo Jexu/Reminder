@@ -15,7 +15,7 @@ import com.tt.sharedbaseclass.model.TaskBean;
  */
 public class RenderDbHelper extends SQLiteOpenHelper {
     public RenderDbHelper(Context context) {
-        super(context, "RenderDb", null, 2);
+        super(context, "RenderDb", null, 3);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class RenderDbHelper extends SQLiteOpenHelper {
                 .append(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_ID)
                 .append(" integer primary key autoincrement,")
                 .append(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP)
-                .append(" text not null )");
+                .append(" text not null unique )");
         db.execSQL(createGroup.toString());
         ContentValues cvGroup = new ContentValues();
         cvGroup.put(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP, R.string.render_db_helper_group_my_task);

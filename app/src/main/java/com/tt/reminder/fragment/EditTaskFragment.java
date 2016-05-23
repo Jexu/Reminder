@@ -6,10 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,16 +15,21 @@ import android.widget.*;
 import com.tt.reminder.R;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.EditTashFragmentBase;
+import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
+import com.tt.sharedbaseclass.service.RenderCallback;
+import com.tt.sharedbaseclass.view.WheelView;
 
 import java.util.Calendar;
 
 public class EditTaskFragment extends EditTashFragmentBase implements View.OnClickListener,
-        DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, Spinner.OnItemSelectedListener {
+        DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener,
+        Spinner.OnItemSelectedListener {
 
     private static EditTaskFragment mEditTaskFragment;
     private TaskBean mTaskBean;
     private TaskBean mTaskBeanFromParent;
+    private AddNewGroupCallBack mAddNewGroupCallBack;
 
     public EditTaskFragment() {
         // Required empty public constructor
@@ -53,11 +55,13 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
             mTaskBeanFromParent = new TaskBean();
         }
         mTaskBean = new TaskBean();
+        initServices();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         View contentView = inflater.inflate(R.layout.fragment_edit_task, container, false);
         return contentView;
     }
@@ -74,8 +78,16 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
         mClearDateBtn.setOnClickListener(this);
         mClearTimeBtn.setOnClickListener(this);
         mNewRepeatIntervalBtn.setOnClickListener(this);
+        mTvRepeatInterval.setOnClickListener(this);
         mNewGroupBtn.setOnClickListener(this);
-        mRepeatSpinner.setOnItemSelectedListener(this);
+    }
+
+    @Override
+    protected void initServices() {
+        super.initServices();
+        mAddNewGroupCallBack = new AddNewGroupCallBack();
+        mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.toString(),
+                mAddNewGroupCallBack);
     }
 
     @Override
@@ -102,9 +114,11 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
                 clearPickedTime();
                 break;
             case R.id.new_interval:
+            case R.id.repeat_interval:
+                showSetRepeatIntervalDialog();
                 break;
             case R.id.new_group:
-                createNewGroup();
+                showAddNewGroupDialog();
                 break;
             default:
                 break;
@@ -119,7 +133,44 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
 
     private void timePickerDialog() {
         Calendar calendar = Calendar.getInstance();
-        new TimePickerDialog(getActivity(), this, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true ).show();
+        new TimePickerDialog(getActivity(), this, calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE), true ).show();
+    }
+
+    protected AlertDialog.Builder showSetRepeatIntervalDialog() {
+        AlertDialog.Builder builder = super.showSetRepeatIntervalDialog();
+        mRepeatUnitWheel.setOnWheelViewListener(new WheelView.OnWheelViewListener() {
+            @Override
+            public void onSelected(int selectedIndex, String item) {
+                super.onSelected(selectedIndex, item);
+                mSelectedWheelItemIndex = selectedIndex;
+                Log.i("Render", selectedIndex+"");
+                Log.i("Render", item+"");
+            }
+        });
+        mRepeatUnitWheel.setSeletion(2);
+        builder.setView(mRepeatIntervalDialogView).setNegativeButton("cancel", null)
+                .setPositiveButton("save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (mSelectedWheelItemIndex != Constant.REPEAT_UNIT.NO_REPEAT.value()
+                            && !TextUtils.isEmpty(mEdtRepeatInterval.getText().toString().trim())) {
+                            mTaskBean.setRepeatInterval(Integer.parseInt(mEdtRepeatInterval.getText().toString()));
+                            mTaskBean.setRepeatUnit(mSelectedWheelItemIndex);
+                            // TODO: 2016/5/23 set textview
+                            mTvRepeatInterval.setText(getResources().getString(R.string.repeat_every_interval_unit,
+                                    mTaskBean.getRepeatInterval(),mRepeatUnits[mSelectedWheelItemIndex - 1]));
+                        }else if(mSelectedWheelItemIndex != Constant.REPEAT_UNIT.NO_REPEAT.value()
+                                && TextUtils.isEmpty(mEdtRepeatInterval.getText().toString().trim())) {
+                            Toast.makeText(getActivity(), "Please input repeat interval", Toast.LENGTH_SHORT).show();
+                        } else if (mSelectedWheelItemIndex == Constant.REPEAT_UNIT.NO_REPEAT.value()) {
+                            mTaskBean.setRepeatInterval(TaskBean.DEFAULT_VALUE_OF_INTERVAL);
+                            mTaskBean.setRepeatUnit(mSelectedWheelItemIndex);
+                            mTvRepeatInterval.setText(mRepeatUnits[mSelectedWheelItemIndex - 1]);
+                        }
+                    }
+                }).show();
+        return builder;
     }
 
     @Override
@@ -145,11 +196,6 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
     private void clearPickedTime() {
         mTaskBean.clearPickedTime();
         updateEditedViewStatue(EDITED_VIEW.PICKED_TIME, mAlarmTime, "");
-    }
-
-    private void updateEditedViewStatue(EDITED_VIEW edited_view, EditText editView, String editViewStr) {
-        mEditedView = edited_view;
-        editView.setText(editViewStr);
     }
 
     @Override
@@ -190,33 +236,12 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
             default:
                 repeatInterval = 0;
         }
-        mTaskBean.setmRepeatInterval(repeatInterval);
+        mTaskBean.setRepeatInterval(repeatInterval);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
-    }
-
-    private void createNewGroup() {
-        String title = getResources().getString(R.string.alert_dialog_title_new_group);
-        String message = getResources().getString(R.string.alert_dialog_message_add_new_group);
-        SpannableString ssTitle = new SpannableString(title);
-        SpannableString ssMessage = new SpannableString(message);
-        ssTitle.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.holo_green_dark)),
-                0,title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ssMessage.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.holo_green_dark)),
-                0,message.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        new AlertDialog.Builder(getActivity()).setTitle(ssTitle)
-          .setMessage(ssMessage)
-          .setView(new EditText(getActivity()))
-          .setNegativeButton(R.string.edit_task_fragment_alert_dialog_calcel, null)
-          .setPositiveButton(R.string.edit_task_fragment_alert_dialog_save, new DialogInterface.OnClickListener() {
-              @Override
-              public void onClick(DialogInterface dialog, int which) {
-
-              }
-          }).show();
     }
 
     @Override
@@ -226,22 +251,64 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
         } else {
             String title = getResources().getString(R.string.edit_task_fragment_alert_dialog_title);
             String message = getResources().getString(R.string.edit_task_fragment_alert_dialog_message);
-            SpannableString ssTitle = new SpannableString(title);
-            SpannableString ssMessage = new SpannableString(message);
-            ssTitle.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.holo_green_dark)),
-                    0,title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            ssMessage.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.holo_green_dark)),
-                    0,message.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            new AlertDialog.Builder(getActivity())
-              .setTitle(ssTitle)
-              .setMessage(ssMessage)
-              .setNegativeButton(R.string.edit_task_fragment_alert_dialog_calcel, null)
+            AlertDialog.Builder builder = getDefaultAlertDialogBuilder(title, message);
+            builder.setNegativeButton(R.string.edit_task_fragment_alert_dialog_calcel, null)
               .setPositiveButton(R.string.edit_task_fragment_alert_dialog_save, new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialog, int which) {
                     finishWithResultCode(1, new Bundle());
                   }
               }).show();
+        }
+    }
+
+    private static class AddNewGroupCallBack implements RenderCallback {
+
+        @Override
+        public void onHandleSelectSuccess(RenderObjectBeans renderObjectBeans,
+                                          int requestCode, int resultCode) {
+
+        }
+
+        @Override
+        public void onHandleUpdateSuccess(long row, int requestCode, int resultCode) {
+            if (requestCode == Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP
+                    && resultCode == Constant.RenderServiceHelper.RESULT_CODE_UPDATE_SUCCESS) {
+                // TODO: 2016/5/23  update group list
+                Log.i("Render", "add new group successfully");
+            } else {
+                Log.e("Render", "error request code or result code");
+            }
+        }
+
+        @Override
+        public void onHandleFail(int requestCode, int resultCode) {
+            if (requestCode == Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP
+                    && resultCode == Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL) {
+                // TODO: 2016/5/23 dismiss loading view
+                Log.i("Render", "fail to add new group");
+            } else {
+                Log.e("Render", "error request code or result code");
+            }
+        }
+    }
+
+    private static class SaveTaskBeanCallback implements RenderCallback {
+
+        @Override
+        public void onHandleSelectSuccess(RenderObjectBeans renderObjectBeans,
+                                          int requestCode, int resultCode) {
+
+        }
+
+        @Override
+        public void onHandleUpdateSuccess(long row, int requestCode, int resultCode) {
+
+        }
+
+        @Override
+        public void onHandleFail(int requestCode, int resultCode) {
+
         }
     }
 }

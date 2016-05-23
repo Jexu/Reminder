@@ -11,5 +11,7 @@
     <style name="edit_view_style_in_layout_fragment_edit"
         parent="subtitle_style_in_layout_fragment_edit">
         <item name="android:textColor">@android:color/tertiary_text_dark</item>
+        <item name="android:paddingTop">@dimen/subtitle_padding_top_in_layout_fragment_edit</item>
+        <item name="android:paddingStart">@dimen/textview_padding_start_in_layout_fragment_edit</item>
     </style>
 </resources>

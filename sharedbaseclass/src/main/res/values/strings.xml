@@ -11,12 +11,21 @@
     <string name="hint_alarm_time_not_set">Time not set</string>
     <string name="render_db_helper_group_my_task">MyTasks</string>
     <string name="remder_db_helper_group_finished">Finished</string>
+    <string name="edit_task_fragment_alert_dialog_calcel">Cancel</string>
+    <string name="edit_task_fragment_alert_dialog_save">Save</string>
+    <string name="alert_dialog_title_new_group">New Group</string>
+    <string name="alert_dialog_message_add_new_group">Add a New Group</string>
+    <string name="edit_task_add_new_group_please_input_new_group_name">Please input new group name</string>
+    <string name="fragment_edit_tasi_no_repeat">No Repeat</string>
+    <string name="set_repeat_interval_dialog_title_set_repeat">Set Repeat</string>
 
-    <string-array name="repeat_interval_spinner_list">
-        <item>No Repeat</item>
-        <item>Once a Day</item>
-        <item>Once a Week</item>
-        <item>Once a Month</item>
-        <item>Once a Year</item>
+    <string-array name="repeat_interval_units">
+        <item>No repeat</item>
+        <item>Year(s)</item>
+        <item>Month(s)</item>
+        <item>Week(s)</item>
+        <item>Day(s)</item>
+        <item>Hour(s)</item>
+        <item>Minute(s)</item>
     </string-array>
 </resources>
