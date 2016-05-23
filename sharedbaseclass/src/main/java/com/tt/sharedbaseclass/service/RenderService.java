@@ -52,7 +52,7 @@ public class RenderService {
     }
 
     public void addHandler(String action, RenderCallback handler) {
-        if (mHandlers != null && mHandlers.containsKey(action)) {
+        if (mHandlers != null && !mHandlers.containsKey(action)) {
             mHandlers.put(action, handler);
         }
     }
@@ -158,7 +158,7 @@ public class RenderService {
         } else {
             if (handler != null) {
                 handler.onHandleFail(requestCode
-                        , Constant.RenderServiceHelper.RESULT_CODE_UPDATE_SUCCESS);
+                        , Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL);
             }
         }
     }

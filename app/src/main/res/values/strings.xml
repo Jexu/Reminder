@@ -10,4 +10,5 @@
     <string name="edit_task_fragment_alert_dialog_save">Save</string>
     <string name="alert_dialog_title_new_group">New Group</string>
     <string name="alert_dialog_message_add_new_group">Add a New Group</string>
+    <string name="edit_task_add_new_group_please_input_new_group_name">Please input new group name</string>
 </resources>
