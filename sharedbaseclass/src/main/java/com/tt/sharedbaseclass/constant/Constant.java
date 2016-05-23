@@ -200,31 +200,34 @@ public class Constant {
     }
 
     public enum REPEAT_UNIT {
-        MINUTE(0), HOUR(1), DAY(2), WEEK(3), MONTH(4), YEAR(5);
+        MINUTE(7), HOUR(6), DAY(5), WEEK(4), MONTH(3), YEAR(2), NO_REPEAT(1);
         private int value = 0;
         REPEAT_UNIT(int value) {
             this.value = value;
         }
         public static REPEAT_UNIT valueOf(int value) {
-            REPEAT_UNIT result = MINUTE;
+            REPEAT_UNIT result = NO_REPEAT;
             switch (value) {
-                case 1:
-                    result = HOUR;
-                    break;
                 case 2:
-                    result = DAY;
-                    break;
-                case 3:
-                    result = WEEK;
-                    break;
-                case 4:
-                    result = MONTH;
-                    break;
-                case 5:
                     result = YEAR;
                     break;
-                default:
+                case 3:
+                    result = MONTH;
+                    break;
+                case 4:
+                    result = WEEK;
+                    break;
+                case 5:
+                    result = DAY;
+                    break;
+                case 6:
+                    result = HOUR;
+                    break;
+                case 7:
                     result = MINUTE;
+                    break;
+                default:
+                    result = NO_REPEAT;
                     break;
             }
             return result;

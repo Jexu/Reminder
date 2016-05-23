@@ -6,19 +6,20 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
 import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.model.TaskBean;
 import com.tt.sharedbaseclass.service.RenderService;
+import com.tt.sharedbaseclass.view.WheelView;
+
+import java.util.Arrays;
 
 /**
  * Created by Administrator on 2016/5/18.
@@ -27,9 +28,9 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
          TextWatcher, Animator.AnimatorListener {
 
     protected EditText mTaskContent;
-    protected EditText mAlarmDate;
-    protected EditText mAlarmTime;
-    protected Spinner mRepeatSpinner;
+    protected TextView mAlarmDate;
+    protected TextView mAlarmTime;
+    protected TextView mTvRepeatInterval;
     protected Spinner mGroupSpinner;
     protected ImageView mDatePickerBtn;
     protected ImageView mTimePickerBtn;
@@ -38,7 +39,10 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
     protected  ImageView mNewRepeatIntervalBtn;
     protected ImageView mNewGroupBtn;
     protected EDITED_VIEW mEditedView;
+    protected EditText mEdtRepeatInterval;
+    protected WheelView mRepeatUnitWheel;
     protected RenderService mRenderService;
+    protected String [] mRepeatUnits;
 
     protected enum EDITED_VIEW {
         TASK_CONTENT, PICKED_DATE, PICKED_TIME, DEFAULT;
@@ -77,17 +81,13 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
         mHeaderViewSaveTask.setVisibility(View.VISIBLE);
 
         mTaskContent = (EditText) view.findViewById(R.id.edt_subtitle_what_to_do);
-        mAlarmDate = (EditText) view.findViewById(R.id.edt_alarm_date);
-        mAlarmTime = (EditText) view.findViewById(R.id.edt_alarm_time);
+        mAlarmDate = (TextView) view.findViewById(R.id.edt_alarm_date);
+        mAlarmTime = (TextView) view.findViewById(R.id.edt_alarm_time);
         mDatePickerBtn = (ImageView) view.findViewById(R.id.date_picker_dialog);
         mTimePickerBtn  = (ImageView) view.findViewById(R.id.time_picker_dialog);
         mClearDateBtn = (ImageView) view.findViewById(R.id.cross_to_clear_picked_date);
         mClearTimeBtn = (ImageView) view.findViewById(R.id.cross_to_clear_picked_time);
-        mRepeatSpinner = (Spinner) view.findViewById(R.id.spinner_interval_to_repeat);
-        mRepeatSpinner.setAdapter(new ArrayAdapter<>(getActivity()
-          , R.layout.shared_simple_list_item
-          ,R.id.simple_list_item_view
-          , getResources().getStringArray(R.array.repeat_interval_spinner_list)));
+        mTvRepeatInterval = (TextView) view.findViewById(R.id.repeat_interval);
         mNewRepeatIntervalBtn = (ImageView) view.findViewById(R.id.new_interval);
         mGroupSpinner = (Spinner) view.findViewById(R.id.spinner_group);
         mNewGroupBtn = (ImageView) view.findViewById(R.id.new_group);
@@ -110,22 +110,28 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
         }
     }
 
+    protected View mRepeatIntervalDialogView;
+    protected int mSelectedWheelItemIndex = 2;
+    protected AlertDialog.Builder showSetRepeatIntervalDialog() {
+        AlertDialog.Builder builder = getDefaultAlertDialogBuilder(
+                getResources().getString(R.string.set_repeat_interval_dialog_title_set_repeat), "");
+        mRepeatIntervalDialogView = getActivity().getLayoutInflater().inflate(R.layout.shared_wheel_view, null, false);
+        mEdtRepeatInterval = (EditText) mRepeatIntervalDialogView.findViewById(R.id.edt_repeat_interval);
+        mRepeatUnitWheel = (WheelView) mRepeatIntervalDialogView.findViewById(R.id.wheel_repeat_unit);
+        if (mRepeatUnits == null) {
+            mRepeatUnits = getResources().getStringArray(R.array.repeat_interval_units);
+        }
+        mRepeatUnitWheel.setItems(Arrays.asList(mRepeatUnits));
+        return  builder;
+    }
+
     protected void showAddNewGroupDialog() {
         String title = getResources().getString(R.string.alert_dialog_title_new_group);
         String message = getResources().getString(R.string.alert_dialog_message_add_new_group);
-        SpannableString ssTitle = new SpannableString(title);
-        SpannableString ssMessage = new SpannableString(message);
-        ssTitle.setSpan(new ForegroundColorSpan(getResources()
-                        .getColor(android.R.color.holo_green_dark)),
-                0,title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ssMessage.setSpan(new ForegroundColorSpan(getResources()
-                        .getColor(android.R.color.holo_green_dark)),
-                0,message.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        AlertDialog.Builder builder = getDefaultAlertDialogBuilder(title, message);
         final EditText editText = new EditText(getActivity());
         editText.setSingleLine(true);
-        new AlertDialog.Builder(getActivity()).setTitle(ssTitle)
-                .setMessage(ssMessage)
-                .setView(editText)
+        builder.setView(editText)
                 .setNegativeButton(R.string.edit_task_fragment_alert_dialog_calcel, null)
                 .setPositiveButton(R.string.edit_task_fragment_alert_dialog_save, new DialogInterface.OnClickListener() {
                     @Override
@@ -182,7 +188,7 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
 
     }
 
-    protected void updateEditedViewStatue(EDITED_VIEW edited_view, EditText editView,
+    protected void updateEditedViewStatue(EDITED_VIEW edited_view, TextView editView,
                                         String editViewStr) {
         mEditedView = edited_view;
         editView.setText(editViewStr);

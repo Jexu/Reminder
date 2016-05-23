@@ -2,10 +2,14 @@ package com.tt.sharedbaseclass.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,6 +18,7 @@ import android.widget.TextView;
 import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.listener.OnFragmentFinishedListener;
 import com.tt.sharedbaseclass.listener.OnFragmentInteractionListener;
+import com.tt.sharedutils.StringUtil;
 
 import static com.tt.sharedbaseclass.R.id.header_view_save_task;
 
@@ -51,7 +56,26 @@ public abstract class FragmentBaseWithSharedHeaderView extends Fragment {
         mHeaderViewSaveTask = (ImageView) view.findViewById(header_view_save_task);
     }
 
-
+    protected AlertDialog.Builder getDefaultAlertDialogBuilder(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        SpannableString ssTitle = null;
+        if (!StringUtil.isEmpty(title)) {
+            ssTitle = new SpannableString(title);
+            ssTitle.setSpan(new ForegroundColorSpan(getResources()
+                            .getColor(android.R.color.holo_green_dark)),
+                    0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.setTitle(ssTitle);
+        }
+        SpannableString ssMessage = null;
+        if (!StringUtil.isEmpty(message)) {
+            ssMessage = new SpannableString(message);
+            ssMessage.setSpan(new ForegroundColorSpan(getResources()
+                            .getColor(android.R.color.holo_green_dark)),
+                    0, message.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.setMessage(ssMessage);
+        }
+        return builder;
+    }
 
     @Override
     public void onAttach(Activity activity) {
