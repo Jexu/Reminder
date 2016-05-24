@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center_vertical"
+  >
+  <LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_weight="1"
+    android:gravity="end|center_vertical"
+    >
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="2015/12/1"
+      />
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="2015/12/1"
+      />
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="2015/12/1"
+      />
+
+  </LinearLayout>
+
+  <RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_weight="4"
+    android:gravity="center_vertical|center_horizontal"
+    android:background="@drawable/tasks_list_item_background"
+    >
+
+    <TextView
+      android:id="@+id/shared_list_item_task_group_name"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="2015/12/1"
+      />
+    <CheckBox
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_toRightOf="@+id/shared_list_item_task_group_name"
+      />
+    <TextView
+      android:id="@+id/shared_list_item_task_content"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="2015/12/1"
+      android:layout_below="@+id/shared_list_item_task_group_name"
+      />
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="2015/12/1"
+      android:layout_below="@+id/shared_list_item_task_content"
+      />
+
+  </RelativeLayout>
+
+</LinearLayout>
