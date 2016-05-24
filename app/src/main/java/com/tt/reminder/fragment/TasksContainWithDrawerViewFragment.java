@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import com.tt.reminder.R;
@@ -62,6 +63,14 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
         mHeaderViewLeftArrow.setVisibility(View.GONE);
         mHeaderViewVoiceInput.setOnClickListener(this);
         mHeaderViewAddNewTask.setOnClickListener(this);
+        testListView();
+    }
+
+    private void testListView() {
+        mListView.setDivider(null);
+        mListView.setDividerHeight(-1);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.shared_list_item_view,R.id.shared_list_item_task_group_name, new String[]{"Work", "Shop"});
+        mListView.setAdapter(adapter);
     }
 
     @Override

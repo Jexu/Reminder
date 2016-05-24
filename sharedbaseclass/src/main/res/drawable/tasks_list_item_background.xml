@@ -1,29 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-        android:width="200dp"
-        android:height="100dp"
-        android:viewportHeight="100"
-        android:viewportWidth="100"
-  >
-  <path android:fillColor="@android:color/holo_green_dark"
-        android:strokeColor="@android:color/holo_green_dark"
-        android:strokeWidth="5"
-        android:pathData="M 7 0 l 0 40 Z"
-    />
-  <path
-    android:strokeColor="@android:color/holo_green_dark"
-    android:strokeWidth="5"
-    android:pathData="M2,50,A5,10,0,1,1,2,50.01Z"
-    />
-  <path android:fillColor="@android:color/holo_green_dark"
-        android:strokeColor="@android:color/holo_green_dark"
-        android:strokeWidth="5"
-        android:pathData="M 7 60 l 0 100 Z"
-    />
-  <path android:fillColor="@android:color/holo_green_dark"
-        android:strokeWidth="5"
-        android:pathData="M13 50, l 5 -10, l 0 -25, l 70 0, l 0 70, l -70 0, l 0 -25, l -5 -10 Z"
-    />
+    android:width="100dp"
+    android:height="130dp"
+    android:viewportHeight="100"
+    android:viewportWidth="100">
+    <path
+        android:fillColor="#eeddee"
+        android:pathData="M0 45, l 0 -35, l 100 0, l 0 80, l -100 0, l 0 -35"
+        android:strokeWidth="2" />
 
 </vector>
 

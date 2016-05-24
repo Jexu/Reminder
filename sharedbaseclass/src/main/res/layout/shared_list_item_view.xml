@@ -1,69 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="center_vertical"
-  >
-  <LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_weight="1"
-    android:gravity="end|center_vertical"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end|center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            android:text="2015/12/1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            android:text="2015/12/1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            android:text="2015/12/1" />
+
+    </LinearLayout>
 
     <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="2015/12/1"
-      />
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="2015/12/1"
-      />
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="2015/12/1"
-      />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableRight="@drawable/task_list_item_background_left" />
 
-  </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/shared_list_item_right"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/tasks_list_item_background"
+        >
 
-  <RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_weight="4"
-    android:gravity="center_vertical|center_horizontal"
-    android:background="@drawable/tasks_list_item_background"
-    >
+        <TextView
+            android:id="@+id/shared_list_item_task_group_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:layout_margin="10dp"
+            android:drawableBottom="@drawable/shared_divider_1dp"
+            android:text="2015/12/1"
+            android:textSize="25sp" />
 
-    <TextView
-      android:id="@+id/shared_list_item_task_group_name"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="2015/12/1"
-      />
-    <CheckBox
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_toRightOf="@+id/shared_list_item_task_group_name"
-      />
-    <TextView
-      android:id="@+id/shared_list_item_task_content"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="2015/12/1"
-      android:layout_below="@+id/shared_list_item_task_group_name"
-      />
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="2015/12/1"
-      android:layout_below="@+id/shared_list_item_task_content"
-      />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/shared_list_item_task_group_name"
+            android:layout_alignParentEnd="true" />
 
-  </RelativeLayout>
+        <TextView
+            android:id="@+id/shared_list_item_task_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_below="@+id/shared_list_item_task_group_name"
+            android:text="2015/12/1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_below="@+id/shared_list_item_task_content"
+            android:text="2015/12/1" />
+
+    </RelativeLayout>
 
 </LinearLayout>
