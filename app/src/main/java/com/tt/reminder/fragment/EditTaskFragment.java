@@ -83,7 +83,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
     }
 
     @Override
-    protected void initServices() {
+    public void initServices() {
         super.initServices();
         mAddNewGroupCallBack = new AddNewGroupCallBack();
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.toString(),
@@ -245,7 +245,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
     }
 
     @Override
-    public void onBackPressed() {
+    public boolean onBackPressed() {
         if (mTaskBean.equals(mTaskBeanFromParent)) {
             finish();
         } else {
@@ -260,6 +260,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
                   }
               }).show();
         }
+        return true;
     }
 
     @Override

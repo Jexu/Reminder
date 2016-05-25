@@ -15,7 +15,7 @@ import com.tt.sharedbaseclass.model.TaskBean;
  */
 public class RenderDbHelper extends SQLiteOpenHelper {
     public RenderDbHelper(Context context) {
-        super(context, "RenderDb", null, 4);
+        super(context, "RenderDb", null, 6);
     }
 
     @Override
@@ -88,5 +88,6 @@ public class RenderDbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("drop table if exists " + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS);
         db.execSQL("drop table if exists " + Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP);
+        onCreate(db);
     }
 }

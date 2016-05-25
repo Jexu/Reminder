@@ -17,11 +17,11 @@ import android.widget.TextView;
 import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.listener.OnFragmentFinishedListener;
 import com.tt.sharedbaseclass.listener.OnFragmentInteractionListener;
-import com.tt.sharedbaseclass.listener.RenderFragmentBase;
 import com.tt.sharedbaseclass.service.RenderService;
 import com.tt.sharedutils.StringUtil;
 
 import static com.tt.sharedbaseclass.R.id.header_view_save_task;
+import static com.tt.sharedbaseclass.R.id.submit_area;
 
 /**
  * Created by zhengguo on 2016/5/17.
@@ -44,6 +44,8 @@ public abstract class FragmentBaseWithSharedHeaderView extends Fragment implemen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initServices();
+        Log.e("Render", "Oncreate");
     }
 
     @Override
@@ -56,13 +58,15 @@ public abstract class FragmentBaseWithSharedHeaderView extends Fragment implemen
         mHeaderViewSearch = (SearchView) view.findViewById(R.id.header_view_search);
         mHeaderViewAddNewTask = (ImageView) view.findViewById(R.id.header_view_add_new_task);
         mHeaderViewSaveTask = (ImageView) view.findViewById(header_view_save_task);
+        Log.e("Render", "onViewCreated");
+
     }
 
-    protected void initServices() {
+    public void initServices() {
         mRenderService = new RenderService(getActivity());
     }
 
-    protected void destroyServices() {
+    public void destroyServices() {
         if (mRenderService != null) {
             mRenderService.removeAllHandlers();
             mRenderService.destoryService();
@@ -94,6 +98,31 @@ public abstract class FragmentBaseWithSharedHeaderView extends Fragment implemen
     public void onStart() {
         super.onStart();
         fetchData();
+        Log.e("Render", "onStart");
+        if (mListener != null) {
+            mListener.onFragmentSelected(this);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("Render", "onResume");
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.e("Render", "onPause");
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.e("Render", "onStop");
+
     }
 
     @Override
@@ -105,6 +134,8 @@ public abstract class FragmentBaseWithSharedHeaderView extends Fragment implemen
             throw new RuntimeException(activity.toString()
               + " must implement OnFragmentInteractionListener");
         }
+        Log.e("Render", "onAttach");
+
     }
 
     public void navigateToFragmentForResultCode(OnFragmentFinishedListener context, int requestCode) {
@@ -115,7 +146,7 @@ public abstract class FragmentBaseWithSharedHeaderView extends Fragment implemen
     }
 
     public void finish() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
+        if (getFragmentManager().getBackStackEntryCount() > 1) {
             getFragmentManager().popBackStack();
         }
     }
@@ -131,7 +162,6 @@ public abstract class FragmentBaseWithSharedHeaderView extends Fragment implemen
         }
     }
 
-    public abstract void onBackPressed();
 
     @Override
     public void onDetach() {

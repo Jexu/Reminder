@@ -12,6 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.tt.reminder.R;
 import com.tt.reminder.activity.MainActivity;
 import com.tt.sharedbaseclass.constant.Constant;
@@ -26,6 +28,9 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
         OnFragmentFinishedListener{
 
     private static TasksContainWithDrawerViewFragment mTasksContainWithDrawerViewFragment;
+
+    private static long INTERVAL_OF_DOUBLE_BACK_PRESSED_DOUBLE_CLICK = 500;
+    private long mFirstBackPressedTime = 0;
 
     private DrawerLayout mDrawerLayout;
     private LinearLayout mLeftDrawer;
@@ -71,7 +76,7 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
     }
 
     @Override
-    protected void initServices() {
+    public void initServices() {
         super.initServices();
         mGetTasksByGroupNameCallback = new GetTasksByGroupNameCallback();
         mGetGroupsCallback = new GetGroupsCallback();
@@ -119,8 +124,14 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
     }
 
     @Override
-    public void onBackPressed() {
-
+    public boolean onBackPressed() {
+        if (mFirstBackPressedTime == 0
+                || System.currentTimeMillis() - mFirstBackPressedTime >= INTERVAL_OF_DOUBLE_BACK_PRESSED_DOUBLE_CLICK) {
+            mFirstBackPressedTime = System.currentTimeMillis();
+            Toast.makeText(getActivity(), R.string.toast_double_click_to_exit, Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -200,9 +211,6 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
     @Override
     public void onStart() {
         super.onStart();
-        if (mListener != null) {
-            mListener.onFragmentSelected(this);
-        }
     }
 
     @Override

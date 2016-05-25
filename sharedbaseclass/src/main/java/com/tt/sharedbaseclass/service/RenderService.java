@@ -131,7 +131,7 @@ public class RenderService {
                 + Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP
                 + " where "
                 + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
-                + " <> ?", new String[R.string.remder_db_helper_group_finished]);
+                + " <> ?", new String[]{Constant.RenderDbHelper.GROUP_NAME_FINISHED});
         if (cursor.moveToFirst()) {
             List<String> renderObjectBeans  = new RenderObjectBeans<String>();
             while(cursor.moveToNext()) {
