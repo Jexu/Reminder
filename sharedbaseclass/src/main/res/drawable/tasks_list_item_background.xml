@@ -4,7 +4,11 @@
     android:height="130dp"
     android:viewportHeight="100"
     android:viewportWidth="100">
-    <path
+  <path
+    android:fillColor="#aaaaaa"
+    android:pathData="M0 89, l 100 0, 0 2，l -100 0 Z"
+    android:strokeWidth="2" />
+  <path
         android:fillColor="#eeddee"
         android:pathData="M0 45, l 0 -35, l 100 0, l 0 80, l -100 0, l 0 -35"
         android:strokeWidth="2" />

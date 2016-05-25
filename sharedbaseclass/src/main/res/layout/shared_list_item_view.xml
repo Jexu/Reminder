@@ -6,31 +6,24 @@
     android:orientation="horizontal">
 
     <LinearLayout
+      android:id="@+id/shared_list_item_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="end|center_vertical"
         android:orientation="vertical">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@android:color/black"
-            android:text="2015/12/1" />
+            style="@style/shared_list_item_left_textview_style"
+            />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@android:color/black"
-            android:text="2015/12/1" />
+          style="@style/shared_list_item_left_textview_style"
+          android:layout_gravity="center_horizontal"
+          android:text="~" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@android:color/black"
-            android:text="2015/12/1" />
+          style="@style/shared_list_item_left_textview_style"
+          />
 
     </LinearLayout>
 
@@ -43,45 +36,36 @@
         android:id="@+id/shared_list_item_right"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="@dimen/shared_list_item_right_margin_end"
         android:layout_weight="1"
+        android:gravity="center_vertical"
         android:background="@drawable/tasks_list_item_background"
         >
 
         <TextView
             android:id="@+id/shared_list_item_task_group_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/shared_list_item_right_textview_style"
             android:textColor="@android:color/black"
-            android:layout_margin="10dp"
+            android:layout_margin="@dimen/shared_list_item_task_group_name_margin"
             android:drawableBottom="@drawable/shared_divider_1dp"
-            android:text="2015/12/1"
-            android:textSize="25sp" />
+            android:textSize="@dimen/shared_list_item_task_group_name_textsize" />
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
             android:layout_alignBaseline="@+id/shared_list_item_task_group_name"
             android:layout_alignParentEnd="true" />
 
         <TextView
             android:id="@+id/shared_list_item_task_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            style="@style/shared_list_item_right_textview_style"
             android:layout_below="@+id/shared_list_item_task_group_name"
-            android:text="2015/12/1" />
+            android:textSize="16sp"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_below="@+id/shared_list_item_task_content"
-            android:text="2015/12/1" />
+          style="@style/shared_list_item_right_textview_style"
+          android:layout_below="@+id/shared_list_item_task_content"/>
 
     </RelativeLayout>
 

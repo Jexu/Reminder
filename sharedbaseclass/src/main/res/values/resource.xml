@@ -14,4 +14,23 @@
         <item name="android:paddingTop">@dimen/subtitle_padding_top_in_layout_fragment_edit</item>
         <item name="android:paddingStart">@dimen/textview_padding_start_in_layout_fragment_edit</item>
     </style>
+
+    <style name="shared_list_item_left_textview_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/shared_list_item_left_textview_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/shared_list_item_left_textview_margin_bottom</item>
+        <item name="android:layout_marginStart">@dimen/shared_list_item_left_textview_margin_start</item>
+        <item name="android:textSize">@dimen/shared_list_item_left_textview_textsize</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="shared_list_item_right_textview_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/shared_list_item_right_textview_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/shared_list_item_right_textview_margin_bottom</item>
+        <item name="android:layout_marginStart">@dimen/shared_list_item_right_textview_margin_start</item>
+        <item name="android:maxLines">2</item>
+    </style>
 </resources>
