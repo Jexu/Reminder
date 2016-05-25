@@ -91,7 +91,7 @@ public class Constant {
     public static class RenderDbHelper {
 
         public static final String GROUP_NAME_FINISHED = "Finished";
-        public static final String GROUP_NAME_MY_TASK = "My Tasks";
+        public static final String GROUP_NAME_MY_TASK = "MyTasks";
 
         public static final String EXTRA_TABLE_TASKS_COLUM_TIMILLS = "colum_timills";
         public static String EXTRA_TABLE_TASKS_COLUM_ID = "_id";
@@ -110,7 +110,10 @@ public class Constant {
         public static String EXTRA_TABLE_GROUP_COLUM_GROUP = "colum_group";
     }
 
-    public static String EXTRA_TASK_BEAN = "extra_task_bean";
+    public static class BundelExtra {
+        public static final String EXTRA_TASK_BEAN = "extra_task_bean";
+        public static final String EXTRAL_GROUPS_BEANS = "extra_groups_beans";
+    }
 
     public enum WEEK {
         SUN(0), MON(1), TUE(2), WEN(3), THU(4), FRI(5), STA(6), ;

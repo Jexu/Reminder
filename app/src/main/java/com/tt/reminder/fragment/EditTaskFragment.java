@@ -29,6 +29,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
     private static EditTaskFragment mEditTaskFragment;
     private TaskBean mTaskBean;
     private TaskBean mTaskBeanFromParent;
+    private RenderObjectBeans<String> mGroupsBean;
     private AddNewGroupCallBack mAddNewGroupCallBack;
 
     public EditTaskFragment() {
@@ -47,15 +48,15 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            mTaskBeanFromParent = (TaskBean) args.getSerializable(Constant.EXTRA_TASK_BEAN);
+            mTaskBeanFromParent = (TaskBean) args.getSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN);
             if (mTaskBeanFromParent == null) {
                 mTaskBeanFromParent = new TaskBean();
             }
+            mGroupsBean = (RenderObjectBeans<String>) args.getSerializable(Constant.BundelExtra.EXTRAL_GROUPS_BEANS);
         } else {
             mTaskBeanFromParent = new TaskBean();
         }
         mTaskBean = new TaskBean();
-        initServices();
     }
 
     @Override
@@ -80,6 +81,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
         mNewRepeatIntervalBtn.setOnClickListener(this);
         mTvRepeatInterval.setOnClickListener(this);
         mNewGroupBtn.setOnClickListener(this);
+        mGroupSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mGroupsBean));
     }
 
     @Override

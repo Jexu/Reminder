@@ -16,6 +16,10 @@ import android.view.WindowManager;
  */
 public class DeviceUtil {
 
+    public static long getMaxMemory() {
+        return Runtime.getRuntime().maxMemory()/1024;
+    }
+
     public static int getScreenWidth( Context context ) {
         WindowManager windowManager = ( WindowManager ) context.getSystemService( Context.WINDOW_SERVICE );
         Display display = windowManager.getDefaultDisplay();
