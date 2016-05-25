@@ -17,6 +17,8 @@ import com.tt.reminder.activity.MainActivity;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.FragmentBaseWithSharedHeaderView;
 import com.tt.sharedbaseclass.listener.OnFragmentFinishedListener;
+import com.tt.sharedbaseclass.model.RenderObjectBeans;
+import com.tt.sharedbaseclass.service.RenderCallback;
 
 public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHeaderView
         implements View.OnClickListener, DrawerLayout.DrawerListener,
@@ -29,6 +31,8 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
     private LinearLayout mLeftDrawer;
     private boolean mIsLeftDrawerOpened = false;
     private ListView mListView;
+    private GetTasksByGroupNameCallback mGetTasksByGroupNameCallback;
+    private GetGroupsCallback mGetGroupsCallback;
 
     public TasksContainWithDrawerViewFragment() {
         // Required empty public constructor
@@ -64,6 +68,42 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
         mHeaderViewVoiceInput.setOnClickListener(this);
         mHeaderViewAddNewTask.setOnClickListener(this);
         testListView();
+    }
+
+    @Override
+    protected void initServices() {
+        super.initServices();
+        mGetTasksByGroupNameCallback = new GetTasksByGroupNameCallback();
+        mGetGroupsCallback = new GetGroupsCallback();
+        mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_TASKS_BY_GROUP_NAME.toString(),
+          mGetTasksByGroupNameCallback);
+        mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_GROUPS.toString(),
+          mGetGroupsCallback);
+    }
+
+    @Override
+    public void fetchData() {
+        Log.i("Render", "fetchData");
+        mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_TASKS_BY_GROUP_NAME.value(),
+          Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS,
+          null,
+          null,
+          null,
+          Constant.RenderServiceHelper.REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED);
+        mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_GROUPS.value(),
+          Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP,
+          null,
+          null,
+          null,
+          0);
+    }
+    
+    private void getTasksSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
+        // TODO: 5/25/16 update lrucache; update listview 
+    }
+    
+    private void getGroupsSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
+        // TODO: 5/25/16 update lrucache; update groups view 
     }
 
     private void testListView() {
@@ -170,6 +210,42 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
         super.onDetach();
         if (mDrawerLayout != null) {
             mDrawerLayout.removeDrawerListener(this);
+        }
+    }
+
+    private static class GetTasksByGroupNameCallback implements RenderCallback {
+
+        @Override
+        public void onHandleSelectSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
+
+        }
+
+        @Override
+        public void onHandleUpdateSuccess(long row, int requestCode, int resultCode) {
+
+        }
+
+        @Override
+        public void onHandleFail(int requestCode, int resultCode) {
+
+        }
+    }
+
+    private static class GetGroupsCallback implements RenderCallback {
+
+        @Override
+        public void onHandleSelectSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
+
+        }
+
+        @Override
+        public void onHandleUpdateSuccess(long row, int requestCode, int resultCode) {
+
+        }
+
+        @Override
+        public void onHandleFail(int requestCode, int resultCode) {
+
         }
     }
 

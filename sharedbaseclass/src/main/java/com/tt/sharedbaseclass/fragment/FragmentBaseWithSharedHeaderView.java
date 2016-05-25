@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Spannable;
@@ -18,6 +17,8 @@ import android.widget.TextView;
 import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.listener.OnFragmentFinishedListener;
 import com.tt.sharedbaseclass.listener.OnFragmentInteractionListener;
+import com.tt.sharedbaseclass.listener.RenderFragmentBase;
+import com.tt.sharedbaseclass.service.RenderService;
 import com.tt.sharedutils.StringUtil;
 
 import static com.tt.sharedbaseclass.R.id.header_view_save_task;
@@ -25,7 +26,7 @@ import static com.tt.sharedbaseclass.R.id.header_view_save_task;
 /**
  * Created by zhengguo on 2016/5/17.
  */
-public abstract class FragmentBaseWithSharedHeaderView extends Fragment {
+public abstract class FragmentBaseWithSharedHeaderView extends Fragment implements RenderFragmentBase {
 
     protected OnFragmentInteractionListener mListener;
     protected OnFragmentFinishedListener mOnFragmentFinishedListener;
@@ -33,6 +34,7 @@ public abstract class FragmentBaseWithSharedHeaderView extends Fragment {
     protected ImageView mHeaderViewMainMenu, mHeaderViewLeftArrow, mHeaderViewVoiceInput, mHeaderViewAddNewTask, mHeaderViewSaveTask;
     protected TextView mHeaderViewTitle;
     protected SearchView mHeaderViewSearch;
+    protected RenderService mRenderService;
 
     public FragmentBaseWithSharedHeaderView() {
         // Required empty public constructor
@@ -56,6 +58,17 @@ public abstract class FragmentBaseWithSharedHeaderView extends Fragment {
         mHeaderViewSaveTask = (ImageView) view.findViewById(header_view_save_task);
     }
 
+    protected void initServices() {
+        mRenderService = new RenderService(getActivity());
+    }
+
+    protected void destroyServices() {
+        if (mRenderService != null) {
+            mRenderService.removeAllHandlers();
+            mRenderService.destoryService();
+        }
+    }
+
     protected AlertDialog.Builder getDefaultAlertDialogBuilder(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         SpannableString ssTitle = null;
@@ -70,11 +83,17 @@ public abstract class FragmentBaseWithSharedHeaderView extends Fragment {
         if (!StringUtil.isEmpty(message)) {
             ssMessage = new SpannableString(message);
             ssMessage.setSpan(new ForegroundColorSpan(getResources()
-                            .getColor(android.R.color.holo_green_dark)),
-                    0, message.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                .getColor(android.R.color.holo_green_dark)),
+              0, message.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             builder.setMessage(ssMessage);
         }
         return builder;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        fetchData();
     }
 
     @Override
@@ -107,8 +126,8 @@ public abstract class FragmentBaseWithSharedHeaderView extends Fragment {
             finish();
         } else {
             Log.e("Render", "Fragment does not implement on mOnFragmentFinishedListener" +
-                    " or navigate to fragment with function navigateToFragmentForResultCode(" +
-                    "Fragment context, int requestCode)");
+              " or navigate to fragment with function navigateToFragmentForResultCode(" +
+              "Fragment context, int requestCode)");
         }
     }
 
@@ -118,6 +137,12 @@ public abstract class FragmentBaseWithSharedHeaderView extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        destroyServices();
     }
 
 }

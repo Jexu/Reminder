@@ -15,7 +15,7 @@ import com.tt.sharedbaseclass.model.TaskBean;
  */
 public class RenderDbHelper extends SQLiteOpenHelper {
     public RenderDbHelper(Context context) {
-        super(context, "RenderDb", null, 3);
+        super(context, "RenderDb", null, 4);
     }
 
     @Override

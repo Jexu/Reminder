@@ -71,7 +71,8 @@ public class Constant {
         public static final int REQUEST_CODE_UPDATE_GROUP_NAME = 4;
         public static final int REQUEST_CODE_DELETE_TASK_BEAN = 5;
         public static final int REQUEST_CODE_DELETE_GROUP = 6;
-        public static final int REQUEST_CODE_GET_TASK_BEANS = 7;
+        public static final int REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED = 7;
+        public static final int REQUEST_CODE_GET_TASKS_BEANS_BY_GROUP_NAME = 9;
         public static final int REQUEST_CODE_GET_GROUPS = 8;
 
 
@@ -88,6 +89,9 @@ public class Constant {
     }
 
     public static class RenderDbHelper {
+
+        public static final String GROUP_NAME_FINISHED = "Finished";
+        public static final String GROUP_NAME_MY_TASK = "My Tasks";
 
         public static final String EXTRA_TABLE_TASKS_COLUM_TIMILLS = "colum_timills";
         public static String EXTRA_TABLE_TASKS_COLUM_ID = "_id";

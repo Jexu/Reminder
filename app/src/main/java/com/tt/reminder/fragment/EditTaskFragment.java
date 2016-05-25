@@ -262,6 +262,11 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
         }
     }
 
+    @Override
+    public void fetchData() {
+
+    }
+
     private static class AddNewGroupCallBack implements RenderCallback {
 
         @Override
