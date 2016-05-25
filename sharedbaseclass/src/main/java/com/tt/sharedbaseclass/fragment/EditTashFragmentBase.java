@@ -12,11 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-
 import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.model.TaskBean;
-import com.tt.sharedbaseclass.service.RenderService;
 import com.tt.sharedbaseclass.view.WheelView;
 
 import java.util.Arrays;
@@ -41,7 +39,6 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
     protected EDITED_VIEW mEditedView;
     protected EditText mEdtRepeatInterval;
     protected WheelView mRepeatUnitWheel;
-    protected RenderService mRenderService;
     protected String [] mRepeatUnits;
 
     protected enum EDITED_VIEW {
@@ -97,17 +94,6 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
         mTaskContent.addTextChangedListener(this);
         mAlarmDate.addTextChangedListener(this);
         mAlarmTime.addTextChangedListener(this);
-    }
-
-    protected void initServices() {
-        mRenderService = new RenderService(getActivity());
-    }
-
-    protected void destroyServices() {
-        if (mRenderService != null) {
-            mRenderService.removeAllHandlers();
-            mRenderService.destoryService();
-        }
     }
 
     protected View mRepeatIntervalDialogView;
@@ -231,9 +217,4 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        destroyServices();
-    }
 }

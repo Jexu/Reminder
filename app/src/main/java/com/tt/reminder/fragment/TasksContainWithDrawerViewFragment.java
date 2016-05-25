@@ -1,21 +1,30 @@
 package com.tt.reminder.fragment;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.tt.reminder.R;
 import com.tt.reminder.activity.MainActivity;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.FragmentBaseWithSharedHeaderView;
 import com.tt.sharedbaseclass.listener.OnFragmentFinishedListener;
+import com.tt.sharedbaseclass.model.RenderObjectBeans;
+import com.tt.sharedbaseclass.service.RenderCallback;
+import com.tt.sharedutils.AndroidUtil;
+import com.tt.sharedutils.DeviceUtil;
 
 public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHeaderView
         implements View.OnClickListener, DrawerLayout.DrawerListener,
@@ -24,10 +33,16 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
 
     private static TasksContainWithDrawerViewFragment mTasksContainWithDrawerViewFragment;
 
+    private static long INTERVAL_OF_DOUBLE_BACK_PRESSED_DOUBLE_CLICK = 500;
+    private long mFirstBackPressedTime = 0;
+
     private DrawerLayout mDrawerLayout;
     private LinearLayout mLeftDrawer;
     private boolean mIsLeftDrawerOpened = false;
     private ListView mListView;
+    private LruCache<String, RenderObjectBeans> mLruCache;
+    private GetTasksByGroupNameCallback mGetTasksByGroupNameCallback;
+    private GetGroupsCallback mGetGroupsCallback;
 
     public TasksContainWithDrawerViewFragment() {
         // Required empty public constructor
@@ -40,6 +55,11 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
         return mTasksContainWithDrawerViewFragment;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mLruCache = new LruCache<>((int)DeviceUtil.getMaxMemory()/8);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,6 +82,51 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
         mHeaderViewLeftArrow.setVisibility(View.GONE);
         mHeaderViewVoiceInput.setOnClickListener(this);
         mHeaderViewAddNewTask.setOnClickListener(this);
+        testListView();
+    }
+
+    @Override
+    public void initServices() {
+        super.initServices();
+        mGetTasksByGroupNameCallback = new GetTasksByGroupNameCallback();
+        mGetGroupsCallback = new GetGroupsCallback(this);
+        mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_TASKS_BY_GROUP_NAME.toString(),
+          mGetTasksByGroupNameCallback);
+        mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_GROUPS.toString(),
+          mGetGroupsCallback);
+    }
+
+    @Override
+    public void fetchData() {
+        Log.i("Render", "fetchData");
+        mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_TASKS_BY_GROUP_NAME.value(),
+          Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS,
+          null,
+          null,
+          null,
+          Constant.RenderServiceHelper.REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED);
+        mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_GROUPS.value(),
+          Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP,
+          null,
+          null,
+          null,
+          0);
+    }
+    
+    private void getTasksSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
+        // TODO: 5/25/16 update lrucache; update listview
+    }
+    
+    private void getGroupsSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
+        // TODO: 5/25/16 update lrucache; update groups view
+        mLruCache.put(Constant.BundelExtra.EXTRAL_GROUPS_BEANS, renderObjectBeans);
+    }
+
+    private void testListView() {
+        mListView.setDivider(null);
+        mListView.setDividerHeight(-1);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.shared_list_item_view,R.id.shared_list_item_task_group_name, new String[]{"Work", "Shop"});
+        mListView.setAdapter(adapter);
     }
 
     @Override
@@ -70,8 +135,14 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
     }
 
     @Override
-    public void onBackPressed() {
-
+    public boolean onBackPressed() {
+        if (mFirstBackPressedTime == 0
+                || System.currentTimeMillis() - mFirstBackPressedTime >= INTERVAL_OF_DOUBLE_BACK_PRESSED_DOUBLE_CLICK) {
+            mFirstBackPressedTime = System.currentTimeMillis();
+            Toast.makeText(getActivity(), R.string.toast_double_click_to_exit, Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -101,6 +172,9 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
         EditTaskFragment editTaskFragment = new EditTaskFragment();
         Bundle args = new Bundle();
         args.putInt(Constant.FragmentType.FRAGMENT_TYPE, fragmentType);
+        // TODO: 2016/5/25 have to check null, if null then get groups again
+        args.putSerializable(Constant.BundelExtra.EXTRAL_GROUPS_BEANS,
+                mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS));
         editTaskFragment.setArguments(args);
         MainActivity.navigateToForResultCode(editTaskFragment, getFragmentManager(), 1);
     }
@@ -151,9 +225,6 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
     @Override
     public void onStart() {
         super.onStart();
-        if (mListener != null) {
-            mListener.onFragmentSelected(this);
-        }
     }
 
     @Override
@@ -161,6 +232,47 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
         super.onDetach();
         if (mDrawerLayout != null) {
             mDrawerLayout.removeDrawerListener(this);
+        }
+    }
+
+    private static class GetTasksByGroupNameCallback implements RenderCallback {
+
+        @Override
+        public void onHandleSelectSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
+
+        }
+
+        @Override
+        public void onHandleUpdateSuccess(long row, int requestCode, int resultCode) {
+
+        }
+
+        @Override
+        public void onHandleFail(int requestCode, int resultCode) {
+
+        }
+    }
+
+    private static class GetGroupsCallback implements RenderCallback {
+        private TasksContainWithDrawerViewFragment mContext;
+        private GetGroupsCallback(TasksContainWithDrawerViewFragment context) {
+            mContext = context;
+        }
+
+        @Override
+        public void onHandleSelectSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
+            Log.i("Render", "get group successfully");
+            mContext.getGroupsSuccess(renderObjectBeans, requestCode, resultCode);
+        }
+
+        @Override
+        public void onHandleUpdateSuccess(long row, int requestCode, int resultCode) {
+
+        }
+
+        @Override
+        public void onHandleFail(int requestCode, int resultCode) {
+            Log.i("Render", "fail to get group");
         }
     }
 

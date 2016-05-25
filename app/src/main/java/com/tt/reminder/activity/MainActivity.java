@@ -5,21 +5,18 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
+
 import com.tt.reminder.R;
 import com.tt.reminder.fragment.TasksContainWithDrawerViewFragment;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.FragmentBaseWithSharedHeaderView;
-import com.tt.sharedbaseclass.listener.OnFragmentFinishedListener;
 import com.tt.sharedbaseclass.listener.OnFragmentInteractionListener;
+import com.tt.sharedbaseclass.fragment.RenderFragmentBase;
 
 public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
 
-    private static long INTERVAL_OF_DOUBLE_BACK_PRESSED_DOUBLE_CLICK = 500;
-    private long mFirstBackPressedTime = 0;
-
     private static TasksContainWithDrawerViewFragment mTasksContainWithDrawerViewFragment;
-    private FragmentBaseWithSharedHeaderView mSelectedFragment;
+    private RenderFragmentBase mSelectedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,20 +45,12 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 1) {
-            if (mSelectedFragment != null) {
-                mSelectedFragment.onBackPressed();
-            } else {
-                super.onBackPressed();
-            }
+        if (mSelectedFragment != null) {
+            mSelectedFragment.onBackPressed();
+            mSelectedFragment = null;
         } else {
-            if (mFirstBackPressedTime == 0
-              || System.currentTimeMillis() - mFirstBackPressedTime >= INTERVAL_OF_DOUBLE_BACK_PRESSED_DOUBLE_CLICK) {
-                mFirstBackPressedTime = System.currentTimeMillis();
-                Toast.makeText(this, R.string.toast_double_click_to_exit, Toast.LENGTH_SHORT).show();
-            } else {
-                finish();
-            }
+            if (!mTasksContainWithDrawerViewFragment.onBackPressed())
+            super.onBackPressed();
         }
     }
 
@@ -91,7 +80,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     }
 
     @Override
-    public void onFragmentSelected(FragmentBaseWithSharedHeaderView context) {
+    public void onFragmentSelected(RenderFragmentBase context) {
         mSelectedFragment = context;
     }
+
 }

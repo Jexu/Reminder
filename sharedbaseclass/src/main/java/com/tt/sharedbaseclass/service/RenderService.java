@@ -71,19 +71,29 @@ public class RenderService {
 
     private void getTasksByGroupName(int action, String groupName, int requestCode) {
         RenderCallback handler = mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
+        Cursor cursor;
         if (StringUtil.isEmpty(groupName)) {
-            if (handler != null) {
-                handler.onHandleFail(requestCode, Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_FAIL_ERROR);
+            if (requestCode == Constant.RenderServiceHelper.REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED) {
+                cursor = mDbReader.rawQuery("select * from "
+                  + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
+                  + " where " + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
+                  + " <> ? order by "
+                  + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS,
+                  new String[]{Constant.RenderDbHelper.GROUP_NAME_FINISHED});
             } else {
-                Log.e("Render", "this is no handler when get tasks by group name");
+                cursor = mDbReader.rawQuery("select * from "
+                  + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
+                  + " order by "
+                  + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS, null);
             }
+        } else {
+            cursor = mDbReader.rawQuery("select * from "
+              + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
+              + " where " + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
+              + " = ? order by "
+              + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS, new String[]{groupName});
         }
-        Cursor cursor = mDbReader.rawQuery("select * from "
-                + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
-                + " where " + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
-                + " = ? order by "
-                + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS, new String[]{groupName});
-        if (cursor.moveToFirst()) {
+        if (cursor != null && cursor.moveToFirst()) {
             List<TaskBean> renderObjectBeans = new RenderObjectBeans<TaskBean>();
             while (cursor.moveToNext()) {
                 TaskBean taskBean = new TaskBean();
@@ -108,7 +118,9 @@ public class RenderService {
                 handler.onHandleFail(requestCode, Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_FAIL_NO_TASKS);
             }
         }
-        cursor.close();
+        if (cursor != null) {
+            cursor.close();
+        }
     }
 
     private void getGroupsExceptFinished(int action, int requestCode) {
@@ -119,7 +131,7 @@ public class RenderService {
                 + Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP
                 + " where "
                 + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
-                + " <> ?", new String[R.string.remder_db_helper_group_finished]);
+                + " <> ?", new String[]{Constant.RenderDbHelper.GROUP_NAME_FINISHED});
         if (cursor.moveToFirst()) {
             List<String> renderObjectBeans  = new RenderObjectBeans<String>();
             while(cursor.moveToNext()) {
@@ -280,7 +292,8 @@ public class RenderService {
 
     private List cursorToRenderObjectBeans(Cursor cursor, int requestCode) {
         switch (requestCode) {
-            case Constant.RenderServiceHelper.REQUEST_CODE_GET_TASK_BEANS:
+            case Constant.RenderServiceHelper.REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED:
+            case Constant.RenderServiceHelper.REQUEST_CODE_GET_TASKS_BEANS_BY_GROUP_NAME:
                 List<TaskBean> renderObjectBeansTasks = null;
                 if (cursor.moveToFirst()) {
                     renderObjectBeansTasks = new RenderObjectBeans<TaskBean>();
@@ -312,7 +325,7 @@ public class RenderService {
                 switch (action) {
                     //get all tasks by group name
                     case 1:
-                        getTasksByGroupName(action,whereArgs[0],requestCode);
+                        getTasksByGroupName(action,whereArgs == null ? null : whereArgs[0],requestCode);
                         break;
                     //get groups except finished
                     case 2:

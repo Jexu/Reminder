@@ -22,6 +22,17 @@
     <dimen name="shared_divider_height_2dp">2dp</dimen>
     <dimen name="shared_divider_width_1000dp">1000dp</dimen>
     <dimen name="shared_divider_stroke_width_1dp">1dp</dimen>
+    <dimen name="shared_list_item_left_textview_margin_top">3dp</dimen>
+    <dimen name="shared_list_item_left_textview_margin_bottom">3dp</dimen>
+    <dimen name="shared_list_item_left_textview_margin_start">5dp</dimen>
+    <dimen name="shared_list_item_left_textview_textsize">12sp</dimen>
+
+    <dimen name="shared_list_item_right_textview_margin_top">2dp</dimen>
+    <dimen name="shared_list_item_right_textview_margin_bottom">2dp</dimen>
+    <dimen name="shared_list_item_right_textview_margin_start">10dp</dimen>
+    <dimen name="shared_list_item_right_margin_end">10dp</dimen>
+    <dimen name="shared_list_item_task_group_name_margin">10dp</dimen>
+    <dimen name="shared_list_item_task_group_name_textsize">25sp</dimen>
 
 
 </resources>
