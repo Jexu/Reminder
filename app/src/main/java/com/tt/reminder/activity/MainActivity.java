@@ -4,19 +4,20 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.preference.MultiSelectListPreference;
 import android.support.v7.app.AppCompatActivity;
 
 import com.tt.reminder.R;
 import com.tt.reminder.fragment.TasksContainWithDrawerViewFragment;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.FragmentBaseWithSharedHeaderView;
-import com.tt.sharedbaseclass.listener.OnFragmentInteractionListener;
+import com.tt.sharedbaseclass.listener.OnFragmentRegisterListener;
 import com.tt.sharedbaseclass.fragment.RenderFragmentBase;
 
-public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements OnFragmentRegisterListener {
 
     private static TasksContainWithDrawerViewFragment mTasksContainWithDrawerViewFragment;
-    private RenderFragmentBase mSelectedFragment;
+    private static RenderFragmentBase mSelectedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
         mTasksContainWithDrawerViewFragment = TasksContainWithDrawerViewFragment.newInstance();
         transaction.add(R.id.main_activity_frame_layout, mTasksContainWithDrawerViewFragment
-                , Constant.FRAGMENT_TYPE.TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT.toString());
+                , mTasksContainWithDrawerViewFragment.getFragmentTag());
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -46,41 +47,31 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     @Override
     public void onBackPressed() {
         if (mSelectedFragment != null) {
-            mSelectedFragment.onBackPressed();
-            mSelectedFragment = null;
-        } else {
-            if (!mTasksContainWithDrawerViewFragment.onBackPressed())
-            super.onBackPressed();
+            if (!mSelectedFragment.onBackPressed()) {
+                super.onBackPressed();
+            }
         }
     }
 
-    public static void navigateTo(android.app.Fragment fragment, android.app.FragmentManager fragmentManager) {
-        android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        //fragmentTransaction.setCustomAnimations(R.animator.fragment_slide_in_bottom,R.animator.fragment_slide_out_top);
-        Fragment f = fragmentManager.findFragmentByTag(Constant.FRAGMENT_TYPE.TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT.toString());
-        if (f != null && f.isAdded()) {
-            fragmentTransaction.hide(f);
-        }
-        fragmentTransaction.add(R.id.main_activity_frame_layout, fragment, fragment.getTag());
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+    public static void navigateTo(RenderFragmentBase fragment, android.app.FragmentManager fragmentManager) {
+        navigateToForResultCode(fragment, fragmentManager, Constant.BundelExtra.FINISH_REQUEST_CODE_DEFAULT);
     }
 
-    public static void navigateToForResultCode(android.app.Fragment fragment, android.app.FragmentManager fragmentManager, int requestCode) {
+    public static void navigateToForResultCode(RenderFragmentBase fragment, android.app.FragmentManager fragmentManager, int requestCode) {
         android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         //fragmentTransaction.setCustomAnimations(R.animator.fragment_slide_in_bottom,R.animator.fragment_slide_out_top);
-        Fragment f = fragmentManager.findFragmentByTag(Constant.FRAGMENT_TYPE.TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT.toString());
+        Fragment f = fragmentManager.findFragmentByTag(mSelectedFragment.getFragmentTag());
         if (f != null && f.isAdded()) {
             fragmentTransaction.hide(f);
         }
-        ((FragmentBaseWithSharedHeaderView)fragment).navigateToFragmentForResultCode(mTasksContainWithDrawerViewFragment, requestCode);
-        fragmentTransaction.add(R.id.main_activity_frame_layout, fragment, fragment.getTag());
+        fragment.navigateToFragmentForResultCode(mSelectedFragment, requestCode);
+        fragmentTransaction.add(R.id.main_activity_frame_layout, fragment, fragment.getFragmentTag());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
     @Override
-    public void onFragmentSelected(RenderFragmentBase context) {
+    public void onFragmentRegistered(RenderFragmentBase context) {
         mSelectedFragment = context;
     }
 

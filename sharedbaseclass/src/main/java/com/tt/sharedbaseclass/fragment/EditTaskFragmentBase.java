@@ -49,7 +49,7 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
     }
 
     public EditTaskFragmentBase() {
-
+        super();
     }
 
     @Override
@@ -207,8 +207,8 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
     @Override
     public void onStart() {
         super.onStart();
-        if (mListener != null) {
-            mListener.onFragmentSelected(this);
+        if (mFragmentRegister != null) {
+            mFragmentRegister.onFragmentRegistered(this);
         }
     }
 

@@ -37,6 +37,7 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
 
     public TasksContainWithDrawerViewFragment() {
         // Required empty public constructor
+        super();
     }
 
     public static TasksContainWithDrawerViewFragment newInstance() {
@@ -210,6 +211,7 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
 
     @Override
     public void onFinishedWithResult(int requestCode, int resultCode, Bundle bundle) {
+        super.onFinishedWithResult(requestCode, resultCode, bundle);
         Log.i("Render", "finishedWithRequestCode");
     }
 

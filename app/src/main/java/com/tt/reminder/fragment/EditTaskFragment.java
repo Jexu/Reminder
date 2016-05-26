@@ -36,6 +36,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
 
     public EditTaskFragment() {
         // Required empty public constructor
+        super();
     }
 
     public static EditTaskFragment newInstance() {
