@@ -6,14 +6,31 @@ package com.tt.sharedbaseclass.constant;
  */
 public class Constant {
     public enum FRAGMENT_TYPE {
-        TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT, EDIT_TASK_FRAGMENT, NEW_EDIT_TASK_FRAGMENT;
-    }
+        TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT(0), EDIT_TASK_FRAGMENT(1), NEW_EDIT_TASK_FRAGMENT(2);
 
-    public static class FragmentType {
-        public static String FRAGMENT_TYPE = "fragment_type";
-        public static int TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT = 0;
-        public static int EDIT_TASK_FRAGMENT = 1;
-        public static int NEW_EDIT_TASK_FRAGMENT = 2;
+        int value;
+        FRAGMENT_TYPE(int value) {
+            this.value = value;
+        }
+
+        public static FRAGMENT_TYPE valueOf(int value) {
+            FRAGMENT_TYPE result = TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT;
+            switch (value) {
+                case 0:
+                    result = TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT;
+                    break;
+                case 1:
+                    result = EDIT_TASK_FRAGMENT;
+                    break;
+                case 2:
+                    result = NEW_EDIT_TASK_FRAGMENT;
+                    break;
+            }
+            return result;
+        }
+        public int value() {
+            return this.value;
+        }
     }
 
     public static class RenderServiceHelper {
@@ -116,6 +133,7 @@ public class Constant {
     }
 
     public static class BundelExtra {
+        public static final String EXTRA_FRAGMENT_TYPE = "extra_fragment_type";
         public static final String EXTRA_TASK_BEAN = "extra_task_bean";
         public static final String EXTRAL_GROUPS_BEANS = "extra_groups_beans";
         public static final String EXTRA_RENDER_OBJECT_BEAN = "extra_object_bean";

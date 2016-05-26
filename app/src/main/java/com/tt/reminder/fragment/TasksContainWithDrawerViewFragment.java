@@ -144,7 +144,7 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
                 onMainMenuClick();
                 break;
             case R.id.header_view_add_new_task:
-                navigateToEditFragment(Constant.FragmentType.NEW_EDIT_TASK_FRAGMENT);
+                navigateToEditFragment(Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value());
                 break;
         }
     }
@@ -162,7 +162,7 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
     private void navigateToEditFragment(int fragmentType) {
         EditTaskFragment editTaskFragment = new EditTaskFragment();
         Bundle args = new Bundle();
-        args.putInt(Constant.FragmentType.FRAGMENT_TYPE, fragmentType);
+        args.putInt(Constant.BundelExtra.EXTRA_FRAGMENT_TYPE, fragmentType);
         // TODO: 2016/5/25 have to check null, if null then get groups again
         args.putSerializable(Constant.BundelExtra.EXTRAL_GROUPS_BEANS,
           mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS));
