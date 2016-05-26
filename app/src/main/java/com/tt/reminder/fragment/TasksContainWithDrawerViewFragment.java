@@ -1,6 +1,5 @@
 package com.tt.reminder.fragment;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,12 +9,7 @@ import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.Toast;
-
+import android.widget.*;
 import com.tt.reminder.R;
 import com.tt.reminder.activity.MainActivity;
 import com.tt.sharedbaseclass.constant.Constant;
@@ -23,7 +17,6 @@ import com.tt.sharedbaseclass.fragment.FragmentBaseWithSharedHeaderView;
 import com.tt.sharedbaseclass.listener.OnFragmentFinishedListener;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.service.RenderCallback;
-import com.tt.sharedutils.AndroidUtil;
 import com.tt.sharedutils.DeviceUtil;
 
 public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHeaderView
@@ -174,7 +167,7 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
         args.putInt(Constant.FragmentType.FRAGMENT_TYPE, fragmentType);
         // TODO: 2016/5/25 have to check null, if null then get groups again
         args.putSerializable(Constant.BundelExtra.EXTRAL_GROUPS_BEANS,
-                mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS));
+          mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS));
         editTaskFragment.setArguments(args);
         MainActivity.navigateToForResultCode(editTaskFragment, getFragmentManager(), 1);
     }

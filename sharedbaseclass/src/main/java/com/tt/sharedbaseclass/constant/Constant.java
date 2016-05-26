@@ -91,7 +91,7 @@ public class Constant {
     public static class RenderDbHelper {
 
         public static final String GROUP_NAME_FINISHED = "Finished";
-        public static final String GROUP_NAME_MY_TASK = "MyTasks";
+        public static final String GROUP_NAME_MY_TASK = "My Tasks";
 
         public static final String EXTRA_TABLE_TASKS_COLUM_TIMILLS = "colum_timills";
         public static String EXTRA_TABLE_TASKS_COLUM_ID = "_id";

@@ -7,8 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
-
-import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
@@ -93,7 +91,7 @@ public class RenderService {
               + " = ? order by "
               + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS, new String[]{groupName});
         }
-        if (cursor != null && cursor.moveToFirst()) {
+        if (cursor != null) {
             List<TaskBean> renderObjectBeans = new RenderObjectBeans<TaskBean>();
             while (cursor.moveToNext()) {
                 TaskBean taskBean = new TaskBean();
@@ -132,7 +130,7 @@ public class RenderService {
                 + " where "
                 + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
                 + " <> ?", new String[]{Constant.RenderDbHelper.GROUP_NAME_FINISHED});
-        if (cursor.moveToFirst()) {
+        if (cursor != null) {
             List<String> renderObjectBeans  = new RenderObjectBeans<String>();
             while(cursor.moveToNext()) {
                 renderObjectBeans.add(cursor.getString(cursor.getColumnIndex(
@@ -295,7 +293,7 @@ public class RenderService {
             case Constant.RenderServiceHelper.REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED:
             case Constant.RenderServiceHelper.REQUEST_CODE_GET_TASKS_BEANS_BY_GROUP_NAME:
                 List<TaskBean> renderObjectBeansTasks = null;
-                if (cursor.moveToFirst()) {
+                if (cursor != null) {
                     renderObjectBeansTasks = new RenderObjectBeans<TaskBean>();
                     while (cursor.moveToNext()) {
                         renderObjectBeansTasks.add(cursorRowToTaskBean(cursor));
@@ -305,7 +303,7 @@ public class RenderService {
                 break;
             case Constant.RenderServiceHelper.REQUEST_CODE_GET_GROUPS:
             default:
-                if (cursor.moveToFirst()) {
+                if (cursor != null) {
                     List<String> renderObjectBeansGroup  = new RenderObjectBeans<String>();
                     while(cursor.moveToNext()) {
                         renderObjectBeansGroup.add(cursor.getString(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP)));

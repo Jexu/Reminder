@@ -5,8 +5,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
-import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.model.TaskBean;
 
@@ -15,7 +13,7 @@ import com.tt.sharedbaseclass.model.TaskBean;
  */
 public class RenderDbHelper extends SQLiteOpenHelper {
     public RenderDbHelper(Context context) {
-        super(context, "RenderDb", null, 8);
+        super(context, "RenderDb", null, 10);
     }
 
     @Override
@@ -79,6 +77,7 @@ public class RenderDbHelper extends SQLiteOpenHelper {
         db.execSQL(createGroup.toString());
         ContentValues cvGroup = new ContentValues();
         cvGroup.put(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP, Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+        db.insertOrThrow(Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP, null, cvGroup);
         cvGroup.put(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP, Constant.RenderDbHelper.GROUP_NAME_FINISHED);
         db.insertOrThrow(Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP, null, cvGroup);
         Log.i("Render", "create group table successfully");
