@@ -6,14 +6,31 @@ package com.tt.sharedbaseclass.constant;
  */
 public class Constant {
     public enum FRAGMENT_TYPE {
-        TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT, EDIT_TASK_FRAGMENT, NEW_EDIT_TASK_FRAGMENT;
-    }
+        TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT(0), EDIT_TASK_FRAGMENT(1), NEW_EDIT_TASK_FRAGMENT(2);
 
-    public static class FragmentType {
-        public static String FRAGMENT_TYPE = "fragment_type";
-        public static int TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT = 0;
-        public static int EDIT_TASK_FRAGMENT = 1;
-        public static int NEW_EDIT_TASK_FRAGMENT = 2;
+        int value;
+        FRAGMENT_TYPE(int value) {
+            this.value = value;
+        }
+
+        public static FRAGMENT_TYPE valueOf(int value) {
+            FRAGMENT_TYPE result = TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT;
+            switch (value) {
+                case 0:
+                    result = TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT;
+                    break;
+                case 1:
+                    result = EDIT_TASK_FRAGMENT;
+                    break;
+                case 2:
+                    result = NEW_EDIT_TASK_FRAGMENT;
+                    break;
+            }
+            return result;
+        }
+        public int value() {
+            return this.value;
+        }
     }
 
     public static class RenderServiceHelper {
@@ -64,6 +81,11 @@ public class Constant {
             }
         }
 
+        public static final int HANDLER_MSG_WHAT_ON_SELECT_SUCCESS = 1;
+        public static final int HANDLER_MSG_WHAT_ON_UPDATE_SUCCESS = 2;
+        public static final int HANDLER_MSG_WHAT_ON_HANDLE_FAIL = 3;
+
+
         public static final int REQUEST_CODE_DEFAULT = 0;
         public static final int REQUEST_CODE_INSERT_TASK_BEAN = 1;
         public static final int REQUEST_CODE__INSERT_NEW_GROUP = 2;
@@ -91,7 +113,7 @@ public class Constant {
     public static class RenderDbHelper {
 
         public static final String GROUP_NAME_FINISHED = "Finished";
-        public static final String GROUP_NAME_MY_TASK = "MyTasks";
+        public static final String GROUP_NAME_MY_TASK = "My Tasks";
 
         public static final String EXTRA_TABLE_TASKS_COLUM_TIMILLS = "colum_timills";
         public static String EXTRA_TABLE_TASKS_COLUM_ID = "_id";
@@ -111,8 +133,14 @@ public class Constant {
     }
 
     public static class BundelExtra {
+        public static final String EXTRA_FRAGMENT_TYPE = "extra_fragment_type";
         public static final String EXTRA_TASK_BEAN = "extra_task_bean";
         public static final String EXTRAL_GROUPS_BEANS = "extra_groups_beans";
+        public static final String EXTRA_RENDER_OBJECT_BEAN = "extra_object_bean";
+        public static final String EXTRA_UPDATE_ROW = "extra_update_row";
+        public static final String EXTRA_REQUEST_CODE = "extra_request_code";
+        public static final String EXTRA_RESULT_CODE = "extra_result_code";
+
     }
 
     public enum WEEK {
@@ -239,6 +267,38 @@ public class Constant {
             }
             return result;
         }
+        public int value() {
+            return this.value;
+        }
+    }
+
+    public enum TASK_BEAN_STATUS {
+
+        TASK_CONTENT_NULL(0), DATE_NOT_SET(1), TIME_NOT_SET(2), AVAILABLE_SAVE(3);
+        private int value;
+        TASK_BEAN_STATUS(int value) {
+            this.value = value;
+        }
+
+        public static TASK_BEAN_STATUS valueOf(int value) {
+            TASK_BEAN_STATUS result = TASK_CONTENT_NULL;
+            switch (value) {
+                case 0:
+                    result = TASK_CONTENT_NULL;
+                    break;
+                case 1:
+                    result = DATE_NOT_SET;
+                    break;
+                case 2:
+                    result = TIME_NOT_SET;
+                    break;
+                case 3:
+                    result = AVAILABLE_SAVE;
+                    break;
+            }
+            return result;
+        }
+
         public int value() {
             return this.value;
         }

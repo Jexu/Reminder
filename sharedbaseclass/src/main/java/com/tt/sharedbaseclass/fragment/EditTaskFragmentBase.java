@@ -11,18 +11,20 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
-import com.tt.sharedbaseclass.model.TaskBean;
 import com.tt.sharedbaseclass.view.WheelView;
 
 import java.util.Arrays;
 
 /**
- * Created by Administrator on 2016/5/18.
+ * Created by zhengguo on 2016/5/18.
  */
-public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderView implements
+public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderView implements
          TextWatcher, Animator.AnimatorListener {
 
     protected EditText mTaskContent;
@@ -40,19 +42,24 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
     protected EditText mEdtRepeatInterval;
     protected WheelView mRepeatUnitWheel;
     protected String [] mRepeatUnits;
+    protected int mFragmentType;
 
     protected enum EDITED_VIEW {
         TASK_CONTENT, PICKED_DATE, PICKED_TIME, DEFAULT;
     }
 
-    public EditTashFragmentBase() {
+    public EditTaskFragmentBase() {
 
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null) {
+            mFragmentType = args.getInt(Constant.BundelExtra.EXTRA_FRAGMENT_TYPE);
+        }
         mEditedView = EDITED_VIEW.DEFAULT;
+        super.onCreate(savedInstanceState);
     }
 
     @Nullable
@@ -100,7 +107,7 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
     protected int mSelectedWheelItemIndex = 2;
     protected AlertDialog.Builder showSetRepeatIntervalDialog() {
         AlertDialog.Builder builder = getDefaultAlertDialogBuilder(
-                getResources().getString(R.string.set_repeat_interval_dialog_title_set_repeat), "");
+          getResources().getString(R.string.set_repeat_interval_dialog_title_set_repeat), "");
         mRepeatIntervalDialogView = getActivity().getLayoutInflater().inflate(R.layout.shared_wheel_view, null, false);
         mEdtRepeatInterval = (EditText) mRepeatIntervalDialogView.findViewById(R.id.edt_repeat_interval);
         mRepeatUnitWheel = (WheelView) mRepeatIntervalDialogView.findViewById(R.id.wheel_repeat_unit);
@@ -127,19 +134,7 @@ public abstract class EditTashFragmentBase extends FragmentBaseWithSharedHeaderV
                 }).show();
     }
 
-    protected void addNewGroup(EditText editText) {
-        if (!TextUtils.isEmpty(editText.getText().toString().trim())) {
-            TaskBean taskBean = new TaskBean();
-            taskBean.setGroup(editText.getText().toString());
-            mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.value(),
-                    Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP, null, taskBean, null,
-                    Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP);
-            // TODO: 2016/5/23 show loading view
-        } else {
-            Toast.makeText(getActivity(), R.string.edit_task_add_new_group_please_input_new_group_name,
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
+    protected abstract void addNewGroup(EditText editText);
 
     @Override
     public void onAnimationStart(Animator animation) {

@@ -1,6 +1,5 @@
 package com.tt.reminder.fragment;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,26 +9,18 @@ import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.Toast;
-
+import android.widget.*;
 import com.tt.reminder.R;
 import com.tt.reminder.activity.MainActivity;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.FragmentBaseWithSharedHeaderView;
-import com.tt.sharedbaseclass.listener.OnFragmentFinishedListener;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.service.RenderCallback;
-import com.tt.sharedutils.AndroidUtil;
 import com.tt.sharedutils.DeviceUtil;
 
 public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHeaderView
         implements View.OnClickListener, DrawerLayout.DrawerListener,
-        AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener,
-        OnFragmentFinishedListener{
+        AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private static TasksContainWithDrawerViewFragment mTasksContainWithDrawerViewFragment;
 
@@ -114,11 +105,11 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
     }
     
     private void getTasksSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
-        // TODO: 5/25/16 update lrucache; update listview
+        // TODO: 5/25/16 update lrucache; update listview; have to check size
     }
     
     private void getGroupsSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
-        // TODO: 5/25/16 update lrucache; update groups view
+        // TODO: 5/25/16 update lrucache; update groups view; have to check size
         mLruCache.put(Constant.BundelExtra.EXTRAL_GROUPS_BEANS, renderObjectBeans);
     }
 
@@ -153,7 +144,7 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
                 onMainMenuClick();
                 break;
             case R.id.header_view_add_new_task:
-                navigateToEditFragment(Constant.FragmentType.NEW_EDIT_TASK_FRAGMENT);
+                navigateToEditFragment(Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value());
                 break;
         }
     }
@@ -171,10 +162,10 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
     private void navigateToEditFragment(int fragmentType) {
         EditTaskFragment editTaskFragment = new EditTaskFragment();
         Bundle args = new Bundle();
-        args.putInt(Constant.FragmentType.FRAGMENT_TYPE, fragmentType);
+        args.putInt(Constant.BundelExtra.EXTRA_FRAGMENT_TYPE, fragmentType);
         // TODO: 2016/5/25 have to check null, if null then get groups again
         args.putSerializable(Constant.BundelExtra.EXTRAL_GROUPS_BEANS,
-                mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS));
+          mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS));
         editTaskFragment.setArguments(args);
         MainActivity.navigateToForResultCode(editTaskFragment, getFragmentManager(), 1);
     }
@@ -235,7 +226,7 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
         }
     }
 
-    private static class GetTasksByGroupNameCallback implements RenderCallback {
+    private static class GetTasksByGroupNameCallback extends RenderCallback {
 
         @Override
         public void onHandleSelectSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
@@ -253,7 +244,7 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
         }
     }
 
-    private static class GetGroupsCallback implements RenderCallback {
+    private static class GetGroupsCallback extends RenderCallback {
         private TasksContainWithDrawerViewFragment mContext;
         private GetGroupsCallback(TasksContainWithDrawerViewFragment context) {
             mContext = context;
