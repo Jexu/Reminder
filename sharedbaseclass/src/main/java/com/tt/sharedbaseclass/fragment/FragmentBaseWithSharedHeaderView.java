@@ -15,13 +15,11 @@ import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import com.tt.sharedbaseclass.R;
-import com.tt.sharedbaseclass.listener.OnFragmentFinishedListener;
 import com.tt.sharedbaseclass.listener.OnFragmentInteractionListener;
 import com.tt.sharedbaseclass.service.RenderService;
 import com.tt.sharedutils.StringUtil;
 
 import static com.tt.sharedbaseclass.R.id.header_view_save_task;
-import static com.tt.sharedbaseclass.R.id.submit_area;
 
 /**
  * Created by zhengguo on 2016/5/17.
@@ -29,7 +27,7 @@ import static com.tt.sharedbaseclass.R.id.submit_area;
 public abstract class FragmentBaseWithSharedHeaderView extends Fragment implements RenderFragmentBase {
 
     protected OnFragmentInteractionListener mListener;
-    protected OnFragmentFinishedListener mOnFragmentFinishedListener;
+    protected RenderFragmentBase mRenderFragment;
     private int mRequestCode;
     protected ImageView mHeaderViewMainMenu, mHeaderViewLeftArrow, mHeaderViewVoiceInput, mHeaderViewAddNewTask, mHeaderViewSaveTask;
     protected TextView mHeaderViewTitle;
@@ -138,30 +136,37 @@ public abstract class FragmentBaseWithSharedHeaderView extends Fragment implemen
 
     }
 
-    public void navigateToFragmentForResultCode(OnFragmentFinishedListener context, int requestCode) {
-        if (context instanceof OnFragmentFinishedListener) {
-            mOnFragmentFinishedListener = context;
+    @Override
+    public void navigateToFragmentForResultCode(RenderFragmentBase context, int requestCode) {
+        if (context instanceof RenderFragmentBase) {
+            mRenderFragment = context;
             mRequestCode = requestCode;
         }
     }
 
+    @Override
     public void finish() {
         if (getFragmentManager().getBackStackEntryCount() > 1) {
             getFragmentManager().popBackStack();
         }
     }
 
+    @Override
     public void finishWithResultCode(int resultCode, Bundle bundle) {
-        if (mOnFragmentFinishedListener != null) {
-            mOnFragmentFinishedListener.onFinishedWithResult(mRequestCode, resultCode, bundle);
+        if (mRenderFragment != null) {
+            mRenderFragment.onFinishedWithResult(mRequestCode, resultCode, bundle);
             finish();
         } else {
-            Log.e("Render", "Fragment does not implement on mOnFragmentFinishedListener" +
+            Log.e("Render", "Fragment does not implement on mRenderFragment" +
               " or navigate to fragment with function navigateToFragmentForResultCode(" +
               "Fragment context, int requestCode)");
         }
     }
 
+    @Override
+    public void onFinishedWithResult(int requestCode, int resultCode, Bundle bundle) {
+
+    }
 
     @Override
     public void onDetach() {
