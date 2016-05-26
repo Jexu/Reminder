@@ -6,6 +6,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
@@ -69,6 +71,9 @@ public class RenderService {
 
     private void getTasksByGroupName(int action, String groupName, int requestCode) {
         RenderCallback handler = mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
+        Message msg = new Message();
         Cursor cursor;
         if (StringUtil.isEmpty(groupName)) {
             if (requestCode == Constant.RenderServiceHelper.REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED) {
@@ -108,14 +113,18 @@ public class RenderService {
                 taskBean = null;
             }
             if (handler != null) {
-                handler.onHandleSelectSuccess((RenderObjectBeans) renderObjectBeans, requestCode
-                        , Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_SUCCESS);
+                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_SELECT_SUCCESS;
+                bundle.putSerializable(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN, (RenderObjectBeans) renderObjectBeans);
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_SUCCESS);
             }
         } else {
             if (handler != null) {
-                handler.onHandleFail(requestCode, Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_FAIL_NO_TASKS);
+                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_FAIL_NO_TASKS);
             }
         }
+        msg.obj = bundle;
+        handler.sendMessage(msg);
         if (cursor != null) {
             cursor.close();
         }
@@ -123,6 +132,9 @@ public class RenderService {
 
     private void getGroupsExceptFinished(int action, int requestCode) {
         RenderCallback handler = mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
+        Message msg = new Message();
         Cursor cursor = mDbReader.rawQuery("select "
                 + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
                 + " from "
@@ -137,24 +149,32 @@ public class RenderService {
                         Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP)));
             }
             if (handler != null) {
-                handler.onHandleSelectSuccess((RenderObjectBeans) renderObjectBeans, requestCode
-                        , Constant.RenderServiceHelper.RESULT_CODE_GET_GROUPS_SUCCESS);
+                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_SELECT_SUCCESS;
+                bundle.putSerializable(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN, (RenderObjectBeans) renderObjectBeans);
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_GET_GROUPS_SUCCESS);
             }
         } else {
             if (handler != null) {
-                handler.onHandleFail(requestCode
-                        , Constant.RenderServiceHelper.RESULT_CODE_GET_GROUPS_FAIL_NO_GROUPS);
+                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_GET_GROUPS_FAIL_NO_GROUPS);
             }
         }
-        cursor.close();
+        msg.obj = bundle;
+        handler.sendMessage(msg);
+        if (cursor != null) {
+            cursor.close();
+        }
     }
 
     private void addDataToTable(int action, String tableName,TaskBean taskBean, int requestCode) {
         RenderCallback handler = mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
+        Message msg = new Message();
         if (StringUtil.isEmpty(tableName) || taskBean == null) {
             if (handler != null) {
-                handler.onHandleFail(requestCode
-                        , Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL);
+                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL);
             } else {
                 Log.e("Render", "this is no handler when get tasks by group name");
             }
@@ -162,23 +182,29 @@ public class RenderService {
         long row = mDbWriter.insert(tableName, null, taskBeanToContentValues(taskBean, requestCode));
         if (row != -1) {
             if (handler != null) {
-                handler.onHandleUpdateSuccess(row, requestCode
-                        , Constant.RenderServiceHelper.RESULT_CODE_UPDATE_SUCCESS);
+                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_UPDATE_SUCCESS;
+                bundle.putLong(Constant.BundelExtra.EXTRA_UPDATE_ROW, row);
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_SUCCESS);
             }
         } else {
             if (handler != null) {
-                handler.onHandleFail(requestCode
-                        , Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL);
+                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL);
             }
         }
+        msg.obj = bundle;
+        handler.sendMessage(msg);
     }
 
     private void updateTable(int action, String tableName,TaskBean oldTaskBean, TaskBean newTaskBean, int requestCode) {
         RenderCallback handler = mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
+        Message msg = new Message();
         if (StringUtil.isEmpty(tableName) || oldTaskBean == null || newTaskBean == null) {
             if (handler != null) {
-                handler.onHandleFail(requestCode
-                        , Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL);
+                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL);
             } else {
                 Log.e("Render", "this is no handler when get tasks by group name");
             }
@@ -187,23 +213,29 @@ public class RenderService {
                 , Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_ID + " = ?", new String[]{oldTaskBean.getId() + ""});
         if (row != -1) {
             if (handler != null) {
-                handler.onHandleUpdateSuccess(row, requestCode
-                        , Constant.RenderServiceHelper.RESULT_CODE_UPDATE_SUCCESS);
+                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_UPDATE_SUCCESS;
+                bundle.putLong(Constant.BundelExtra.EXTRA_UPDATE_ROW, row);
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_SUCCESS);
             }
         } else {
             if (handler != null) {
-                handler.onHandleFail(requestCode
-                        , Constant.RenderServiceHelper.RESULT_CODE_UPDATE_SUCCESS);
+                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL);
             }
         }
+        msg.obj = bundle;
+        handler.sendMessage(msg);
     }
 
     private void deleteDateById(int action, String tableName,String id, int requestCode) {
         RenderCallback handler = mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
+        Message msg = new Message();
         if (StringUtil.isEmpty(tableName)) {
             if (handler != null) {
-                handler.onHandleFail(requestCode
-                        , Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL);
+                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL);
             } else {
                 Log.e("Render", "this is no handler when get tasks by group name");
             }
@@ -212,15 +244,18 @@ public class RenderService {
                 , new String[]{id + ""});
         if (row != -1) {
             if (handler != null) {
-                handler.onHandleUpdateSuccess(row, requestCode
-                        , Constant.RenderServiceHelper.RESULT_CODE_UPDATE_SUCCESS);
+                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_UPDATE_SUCCESS;
+                bundle.putLong(Constant.BundelExtra.EXTRA_UPDATE_ROW, row);
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_SUCCESS);
             }
         } else {
             if (handler != null) {
-                handler.onHandleFail(requestCode
-                        , Constant.RenderServiceHelper.RESULT_CODE_UPDATE_SUCCESS);
+                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL);
             }
         }
+        msg.obj = bundle;
+        handler.sendMessage(msg);
     }
 
     private ContentValues taskBeanToContentValues(TaskBean taskBean, int requestCode) {

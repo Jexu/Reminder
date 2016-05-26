@@ -30,6 +30,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
     private TaskBean mTaskBean;
     private TaskBean mTaskBeanFromParent;
     private RenderObjectBeans<String> mGroupsBean;
+    private ArrayAdapter<String> mGroupsAdapter;
     private AddNewGroupCallBack mAddNewGroupCallBack;
 
     public EditTaskFragment() {
@@ -53,6 +54,10 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
                 mTaskBeanFromParent = new TaskBean();
             }
             mGroupsBean = (RenderObjectBeans<String>) args.getSerializable(Constant.BundelExtra.EXTRAL_GROUPS_BEANS);
+            mGroupsAdapter = new ArrayAdapter<>(getActivity(),
+              R.layout.shared_spinner_simple_item,
+              R.id.spinner_simple_item_view,
+              mGroupsBean);
         } else {
             mTaskBeanFromParent = new TaskBean();
         }
@@ -81,18 +86,16 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
         mNewRepeatIntervalBtn.setOnClickListener(this);
         mTvRepeatInterval.setOnClickListener(this);
         mNewGroupBtn.setOnClickListener(this);
-        mGroupSpinner.setAdapter(new ArrayAdapter<>(getActivity(),
-          R.layout.shared_spinner_simple_item,
-          R.id.spinner_simple_item_view,
-          mGroupsBean));
+        mGroupSpinner.setOnItemSelectedListener(this);
+        mGroupSpinner.setAdapter(mGroupsAdapter);
     }
 
     @Override
     public void initServices() {
         super.initServices();
-        mAddNewGroupCallBack = new AddNewGroupCallBack();
+        mAddNewGroupCallBack = new AddNewGroupCallBack(this);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.toString(),
-                mAddNewGroupCallBack);
+          mAddNewGroupCallBack);
     }
 
     @Override
@@ -224,24 +227,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        int repeatInterval = 0;
-        switch (position) {
-            case 1:
-                repeatInterval = 1;
-                break;
-            case 2:
-                repeatInterval = 7;
-                break;
-            case 3:
-                repeatInterval = 30;
-                break;
-            case 4:
-                repeatInterval = 365;
-                break;
-            default:
-                repeatInterval = 0;
-        }
-        mTaskBean.setRepeatInterval(repeatInterval);
+        mTaskBean.setGroup((String) mGroupsBean.get(position));
     }
 
     @Override
@@ -273,8 +259,41 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
 
     }
 
-    private static class AddNewGroupCallBack implements RenderCallback {
+    @Override
+    protected void addNewGroup(EditText editText) {
+        if (!TextUtils.isEmpty(editText.getText().toString().trim())) {
+            TaskBean taskBean = new TaskBean();
+            taskBean.setGroup(editText.getText().toString());
+            mTaskBean.setGroup(editText.getText().toString());
+            mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.value(),
+              Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP, null, taskBean, null,
+              Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP);
+            // TODO: 2016/5/23 show loading view
+        } else {
+            Toast.makeText(getActivity(), com.tt.sharedbaseclass.R.string.edit_task_add_new_group_please_input_new_group_name,
+              Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    private void onAddNewGroupSuccess(long row, int requestCode, int resultCode) {
+        if (requestCode == Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP
+          && resultCode == Constant.RenderServiceHelper.RESULT_CODE_UPDATE_SUCCESS) {
+            // TODO: 2016/5/23  update group list
+            Log.i("Render", "add new group successfully");
+            mGroupsBean.add(mTaskBean.getGroup());
+            mGroupsAdapter.notifyDataSetChanged();
+            mGroupSpinner.setSelection(mGroupsBean.indexOf(mTaskBean.getGroup()));
+        } else {
+            Log.e("Render", "error request code or result code");
+        }
+    }
+
+    private static class AddNewGroupCallBack extends RenderCallback {
+
+        EditTaskFragment mContext;
+        private AddNewGroupCallBack(EditTaskFragment context) {
+            mContext = context;
+        }
         @Override
         public void onHandleSelectSuccess(RenderObjectBeans renderObjectBeans,
                                           int requestCode, int resultCode) {
@@ -283,13 +302,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
 
         @Override
         public void onHandleUpdateSuccess(long row, int requestCode, int resultCode) {
-            if (requestCode == Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP
-                    && resultCode == Constant.RenderServiceHelper.RESULT_CODE_UPDATE_SUCCESS) {
-                // TODO: 2016/5/23  update group list
-                Log.i("Render", "add new group successfully");
-            } else {
-                Log.e("Render", "error request code or result code");
-            }
+            mContext.onAddNewGroupSuccess(row, requestCode, resultCode);
         }
 
         @Override
@@ -304,7 +317,7 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
         }
     }
 
-    private static class SaveTaskBeanCallback implements RenderCallback {
+    private static class SaveTaskBeanCallback extends RenderCallback {
 
         @Override
         public void onHandleSelectSuccess(RenderObjectBeans renderObjectBeans,

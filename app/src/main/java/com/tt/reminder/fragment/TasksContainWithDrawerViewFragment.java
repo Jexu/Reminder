@@ -226,7 +226,7 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
         }
     }
 
-    private static class GetTasksByGroupNameCallback implements RenderCallback {
+    private static class GetTasksByGroupNameCallback extends RenderCallback {
 
         @Override
         public void onHandleSelectSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
@@ -244,7 +244,7 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
         }
     }
 
-    private static class GetGroupsCallback implements RenderCallback {
+    private static class GetGroupsCallback extends RenderCallback {
         private TasksContainWithDrawerViewFragment mContext;
         private GetGroupsCallback(TasksContainWithDrawerViewFragment context) {
             mContext = context;

@@ -64,6 +64,11 @@ public class Constant {
             }
         }
 
+        public static final int HANDLER_MSG_WHAT_ON_SELECT_SUCCESS = 1;
+        public static final int HANDLER_MSG_WHAT_ON_UPDATE_SUCCESS = 2;
+        public static final int HANDLER_MSG_WHAT_ON_HANDLE_FAIL = 3;
+
+
         public static final int REQUEST_CODE_DEFAULT = 0;
         public static final int REQUEST_CODE_INSERT_TASK_BEAN = 1;
         public static final int REQUEST_CODE__INSERT_NEW_GROUP = 2;
@@ -113,6 +118,11 @@ public class Constant {
     public static class BundelExtra {
         public static final String EXTRA_TASK_BEAN = "extra_task_bean";
         public static final String EXTRAL_GROUPS_BEANS = "extra_groups_beans";
+        public static final String EXTRA_RENDER_OBJECT_BEAN = "extra_object_bean";
+        public static final String EXTRA_UPDATE_ROW = "extra_update_row";
+        public static final String EXTRA_REQUEST_CODE = "extra_request_code";
+        public static final String EXTRA_RESULT_CODE = "extra_result_code";
+
     }
 
     public enum WEEK {
