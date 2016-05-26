@@ -105,11 +105,11 @@ public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHe
     }
     
     private void getTasksSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
-        // TODO: 5/25/16 update lrucache; update listview
+        // TODO: 5/25/16 update lrucache; update listview; have to check size
     }
     
     private void getGroupsSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
-        // TODO: 5/25/16 update lrucache; update groups view
+        // TODO: 5/25/16 update lrucache; update groups view; have to check size
         mLruCache.put(Constant.BundelExtra.EXTRAL_GROUPS_BEANS, renderObjectBeans);
     }
 

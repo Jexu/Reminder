@@ -243,4 +243,36 @@ public class Constant {
             return this.value;
         }
     }
+
+    public enum TASK_BEAN_STATUS {
+
+        TASK_CONTENT_NULL(0), DATE_NOT_SET(1), TIME_NOT_SET(2), AVAILABLE_SAVE(3);
+        private int value;
+        TASK_BEAN_STATUS(int value) {
+            this.value = value;
+        }
+
+        public static TASK_BEAN_STATUS valueOf(int value) {
+            TASK_BEAN_STATUS result = TASK_CONTENT_NULL;
+            switch (value) {
+                case 0:
+                    result = TASK_CONTENT_NULL;
+                    break;
+                case 1:
+                    result = DATE_NOT_SET;
+                    break;
+                case 2:
+                    result = TIME_NOT_SET;
+                    break;
+                case 3:
+                    result = AVAILABLE_SAVE;
+                    break;
+            }
+            return result;
+        }
+
+        public int value() {
+            return this.value;
+        }
+    }
 }

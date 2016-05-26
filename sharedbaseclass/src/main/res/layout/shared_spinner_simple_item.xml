@@ -4,10 +4,11 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/simple_list_item_view"
+        android:id="@+id/spinner_simple_item_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        style="@style/edit_view_style_in_layout_fragment_edit"
+        android:textSize="@dimen/subtitle_text_size_in_layout_fragment_edit"
+        android:layout_margin="@dimen/shared_spinner_simple_item_margin_2dp"
         />
 </LinearLayout>

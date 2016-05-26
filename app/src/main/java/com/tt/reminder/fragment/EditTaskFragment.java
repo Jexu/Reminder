@@ -81,7 +81,10 @@ public class EditTaskFragment extends EditTashFragmentBase implements View.OnCli
         mNewRepeatIntervalBtn.setOnClickListener(this);
         mTvRepeatInterval.setOnClickListener(this);
         mNewGroupBtn.setOnClickListener(this);
-        mGroupSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, mGroupsBean));
+        mGroupSpinner.setAdapter(new ArrayAdapter<>(getActivity(),
+          R.layout.shared_spinner_simple_item,
+          R.id.spinner_simple_item_view,
+          mGroupsBean));
     }
 
     @Override

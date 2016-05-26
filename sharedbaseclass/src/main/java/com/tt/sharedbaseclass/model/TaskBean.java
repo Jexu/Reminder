@@ -1,6 +1,7 @@
 package com.tt.sharedbaseclass.model;
 
 import com.tt.sharedbaseclass.constant.Constant;
+import com.tt.sharedutils.StringUtil;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -232,6 +233,17 @@ public class TaskBean implements Serializable {
   public boolean isClearedPickedTime() {
     return (mHour == DEFAULT_VALUE_OF_DATE_TIME
       || mMinute ==DEFAULT_VALUE_OF_DATE_TIME);
+  }
+
+  public Constant.TASK_BEAN_STATUS checkTaskStatus() {
+    if (StringUtil.isEmpty(mTaskContent)) {
+      return Constant.TASK_BEAN_STATUS.TASK_CONTENT_NULL;
+    } else if (!isClearedPickedTime() && isClearedPickedDate()) {
+      return Constant.TASK_BEAN_STATUS.DATE_NOT_SET;
+    } else if (isClearedPickedTime() && !isClearedPickedDate()){
+      return Constant.TASK_BEAN_STATUS.TIME_NOT_SET;
+    }
+    return Constant.TASK_BEAN_STATUS.AVAILABLE_SAVE;
   }
 
   @Override
