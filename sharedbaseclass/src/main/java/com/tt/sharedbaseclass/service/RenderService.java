@@ -34,7 +34,7 @@ public class RenderService {
         mDbWriter = mRenderDbHelper.getWritableDatabase();
     }
 
-    public void destoryService() {
+    public void destroyService() {
         if (mDbWriter != null) {
             mDbWriter.close();
             mDbWriter = null;

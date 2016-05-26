@@ -67,7 +67,7 @@ public abstract class FragmentBaseWithSharedHeaderView extends Fragment implemen
     public void destroyServices() {
         if (mRenderService != null) {
             mRenderService.removeAllHandlers();
-            mRenderService.destoryService();
+            mRenderService.destroyService();
         }
     }
 

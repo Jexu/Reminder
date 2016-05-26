@@ -40,7 +40,7 @@ public class TaskBean implements Serializable {
     this.mMinute = DEFAULT_VALUE_OF_DATE_TIME;
     mRepeatInterval = DEFAULT_VALUE_OF_INTERVAL;
     mRepeatUnit = Constant.REPEAT_UNIT.NO_REPEAT.value();
-    mGroup = "";
+    mGroup = Constant.RenderDbHelper.GROUP_NAME_MY_TASK;
     mCalendar = Calendar.getInstance(Locale.ENGLISH);
   }
 

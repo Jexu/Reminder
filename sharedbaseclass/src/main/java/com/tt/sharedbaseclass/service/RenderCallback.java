@@ -31,6 +31,8 @@ public abstract class RenderCallback extends Handler {
                 break;
             //on handle fail
             case 3:
+                onHandleFail(bundle.getInt(Constant.BundelExtra.EXTRA_REQUEST_CODE),
+                  bundle.getInt(Constant.BundelExtra.EXTRA_RESULT_CODE));
                 break;
         }
     }
