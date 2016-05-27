@@ -26,7 +26,7 @@ public abstract class RenderFragmentBase extends Fragment implements RenderBase 
     }
 
     @Override
-    public void navigateToFragmentForResultCode(RenderFragmentBase context, int requestCode) {
+    public void setContextAndReqCode(RenderFragmentBase context, int requestCode) {
         if (context instanceof RenderFragmentBase) {
             mRenderFragment = context;
             mRequestCode = requestCode;

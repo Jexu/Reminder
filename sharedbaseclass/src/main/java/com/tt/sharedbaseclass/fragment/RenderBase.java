@@ -9,7 +9,7 @@ public interface RenderBase {
     String getFragmentTag();
     void initServices();
     void fetchData();
-    void navigateToFragmentForResultCode(RenderFragmentBase context, int requestCode);
+    void setContextAndReqCode(RenderFragmentBase context, int requestCode);
     void finish();
     void finishWithResultCode(int resultCode, Bundle bundle);
     void onFinishedWithResult(int requestCode, int resultCode, Bundle bundle);

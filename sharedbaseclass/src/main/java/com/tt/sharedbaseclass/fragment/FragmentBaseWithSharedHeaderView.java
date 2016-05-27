@@ -1,9 +1,7 @@
 package com.tt.sharedbaseclass.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Spannable;
@@ -16,7 +14,6 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
-import com.tt.sharedbaseclass.listener.OnFragmentRegisterListener;
 import com.tt.sharedbaseclass.service.RenderService;
 import com.tt.sharedutils.StringUtil;
 
@@ -131,7 +128,7 @@ public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBas
             }
         } else {
             Log.e("Render", "Fragment does not implement on mRenderFragment" +
-                    " or navigate to fragment with function navigateToFragmentForResultCode(" +
+                    " or navigate to fragment with function setContextAndReqCode(" +
                     "Fragment context, int requestCode)");
         }
     }

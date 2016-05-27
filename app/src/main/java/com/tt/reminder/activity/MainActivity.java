@@ -4,13 +4,11 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.preference.MultiSelectListPreference;
 import android.support.v7.app.AppCompatActivity;
 
 import com.tt.reminder.R;
 import com.tt.reminder.fragment.TasksContainWithDrawerViewFragment;
 import com.tt.sharedbaseclass.constant.Constant;
-import com.tt.sharedbaseclass.fragment.FragmentBaseWithSharedHeaderView;
 import com.tt.sharedbaseclass.listener.OnFragmentRegisterListener;
 import com.tt.sharedbaseclass.fragment.RenderFragmentBase;
 
@@ -64,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentRegiste
         if (f != null && f.isAdded()) {
             fragmentTransaction.hide(f);
         }
-        fragment.navigateToFragmentForResultCode(mSelectedFragment, requestCode);
+        fragment.setContextAndReqCode(mSelectedFragment, requestCode);
         fragmentTransaction.add(R.id.main_activity_frame_layout, fragment, fragment.getFragmentTag());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
