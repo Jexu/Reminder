@@ -178,19 +178,22 @@ public class TaskBean implements Serializable {
     return mIsFinished;
   }
 
-  public String getPickedDate() {
+  public String getPickedDate(boolean isInEditFragment) {
     if (isClearedPickedDate()) {
       return null;
     }
     mCalendar.set(this.mYear, this.mMonth, this.mDayOfMonth);
     StringBuffer sb = new StringBuffer();
-    sb.append(Constant.WEEK.valueOf(mCalendar.get(Calendar.DAY_OF_WEEK) - 1))
-            .append(", ")
-            .append(Constant.MONTH.valueOf(mCalendar.get(Calendar.MONTH) + 1))
-            .append(" ")
-            .append(this.mDayOfMonth)
-            .append(", ")
-            .append(this.mYear);
+    if (isInEditFragment) {
+      sb.append(Constant.WEEK.valueOf(mCalendar.get(Calendar.DAY_OF_WEEK) - 1))
+              .append(", ");
+    }
+
+      sb.append(Constant.MONTH.valueOf(mCalendar.get(Calendar.MONTH) + 1))
+      .append(" ")
+      .append(this.mDayOfMonth)
+      .append(",")
+      .append(this.mYear);
     return sb.toString();
   }
 
@@ -206,11 +209,16 @@ public class TaskBean implements Serializable {
       || mDayOfMonth == DEFAULT_VALUE_OF_DATE_TIME);
   }
 
-  public String getPickedTime() {
+  public String getPickedTime(boolean isInEditFragment) {
     if (isClearedPickedTime()) {
       return null;
     }
     StringBuffer sb = new StringBuffer();
+    if (!isInEditFragment) {
+      mCalendar.set(this.mYear, this.mMonth, this.mDayOfMonth);
+      sb.append(Constant.WEEK.valueOf(mCalendar.get(Calendar.DAY_OF_WEEK) - 1))
+              .append(", ");
+    }
     if (mHour < 10) {
       sb.append("0").append(mHour);
     } else {

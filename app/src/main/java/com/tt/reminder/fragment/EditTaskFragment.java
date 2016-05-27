@@ -196,14 +196,14 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
         mTaskBean.setYear(year);
         mTaskBean.setMonth(monthOfYear);
         mTaskBean.setDayOfMonth(dayOfMonth);
-        updateEditedViewStatue(EDITED_VIEW.PICKED_DATE, mAlarmDate, mTaskBean.getPickedDate());
+        updateEditedViewStatue(EDITED_VIEW.PICKED_DATE, mAlarmDate, mTaskBean.getPickedDate(true));
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         mTaskBean.setHour(hourOfDay);
         mTaskBean.setMinuse(minute);
-        updateEditedViewStatue(EDITED_VIEW.PICKED_TIME, mAlarmTime, mTaskBean.getPickedTime());
+        updateEditedViewStatue(EDITED_VIEW.PICKED_TIME, mAlarmTime, mTaskBean.getPickedTime(true));
     }
 
     private void clearPickedDate() {

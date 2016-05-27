@@ -285,12 +285,12 @@ public class RenderService {
             cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_CONTENT, newTaskBean.getTaskContent());
         }
         if (oldTaskBean.getTimeInMillis() != newTaskBean.getTimeInMillis()) {
-            if (!oldTaskBean.getPickedDate().equals(newTaskBean.getPickedDate())) {
+            if (!oldTaskBean.getPickedDate(true).equals(newTaskBean.getPickedDate(true))) {
                 cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_YEAR, newTaskBean.getYear());
                 cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_MONTH, newTaskBean.getMonth());
                 cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_DAY_OF_MONTH, newTaskBean.getDayOfMonth());
             }
-            if (!oldTaskBean.getPickedTime().equals(newTaskBean.getPickedTime())) {
+            if (!oldTaskBean.getPickedTime(true).equals(newTaskBean.getPickedTime(true))) {
                 cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_HOUR, newTaskBean.getHour());
                 cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_MINUTE, newTaskBean.getMinute());
             }

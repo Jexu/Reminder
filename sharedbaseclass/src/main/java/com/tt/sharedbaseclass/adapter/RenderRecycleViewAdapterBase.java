@@ -12,7 +12,6 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
 
   protected RenderObjectBeans mRenderObjectBeans;
   protected OnItemClickListener mOnItemClickListener;
-  protected View mItemRootView;
   protected Context mContext;
 
   public interface OnItemClickListener {
@@ -22,6 +21,7 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
 
   public RenderRecycleViewAdapterBase() {
     super();
+    this.mRenderObjectBeans = new RenderObjectBeans();
   }
 
   public RenderRecycleViewAdapterBase(Context context) {
@@ -36,10 +36,21 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
     this.mRenderObjectBeans = renderObjectBeans;
   }
 
+  public void setContext(Context context) {
+    mContext = context;
+  }
+
   public void addBean(Object bean) {
     if (mRenderObjectBeans != null) {
       mRenderObjectBeans.add(bean);
+      notifyDataSetChanged();
     }
+  }
+
+  public void addAllBeans(RenderObjectBeans renderObjectBeans) {
+    mRenderObjectBeans.clear();
+    mRenderObjectBeans = renderObjectBeans;
+    notifyDataSetChanged();
   }
 
   public void removeBean(int position) {
@@ -52,6 +63,12 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
     if (mRenderObjectBeans != null) {
       int position = mRenderObjectBeans.indexOf(bean);
       mRenderObjectBeans.remove(bean);
+    }
+  }
+
+  public void clearAll() {
+    if (mRenderObjectBeans != null) {
+      mRenderObjectBeans.clear();
     }
   }
 
