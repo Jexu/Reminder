@@ -1,4 +1,4 @@
-package com.tt.sharedbaseclass.service;
+package com.tt.sharedbaseclass.model;
 
 
 import android.content.ContentValues;
@@ -10,8 +10,6 @@ import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 import com.tt.sharedbaseclass.constant.Constant;
-import com.tt.sharedbaseclass.model.RenderObjectBeans;
-import com.tt.sharedbaseclass.model.TaskBean;
 import com.tt.sharedutils.StringUtil;
 
 import java.util.HashMap;

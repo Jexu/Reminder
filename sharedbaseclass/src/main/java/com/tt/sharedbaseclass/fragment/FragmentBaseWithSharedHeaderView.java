@@ -14,7 +14,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
-import com.tt.sharedbaseclass.service.RenderService;
+import com.tt.sharedbaseclass.model.RenderService;
 import com.tt.sharedutils.StringUtil;
 
 import static com.tt.sharedbaseclass.R.id.header_view_save_task;

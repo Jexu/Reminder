@@ -15,7 +15,7 @@ import com.tt.reminder.activity.MainActivity;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.FragmentBaseWithSharedHeaderView;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
-import com.tt.sharedbaseclass.service.RenderCallback;
+import com.tt.sharedbaseclass.model.RenderCallback;
 import com.tt.sharedutils.DeviceUtil;
 
 public class TasksContainWithDrawerViewFragment extends FragmentBaseWithSharedHeaderView

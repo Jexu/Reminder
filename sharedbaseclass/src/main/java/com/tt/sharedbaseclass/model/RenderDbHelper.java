@@ -1,4 +1,4 @@
-package com.tt.sharedbaseclass.service;
+package com.tt.sharedbaseclass.model;
 
 import android.content.ContentValues;
 import android.content.Context;

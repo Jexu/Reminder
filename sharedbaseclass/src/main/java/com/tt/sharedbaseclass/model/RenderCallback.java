@@ -1,10 +1,9 @@
-package com.tt.sharedbaseclass.service;
+package com.tt.sharedbaseclass.model;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import com.tt.sharedbaseclass.constant.Constant;
-import com.tt.sharedbaseclass.model.RenderObjectBeans;
 
 
 /**
