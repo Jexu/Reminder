@@ -49,7 +49,7 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
     }
 
     public EditTaskFragmentBase() {
-
+        super();
     }
 
     @Override
@@ -157,6 +157,7 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
                 mClearTimeBtn.setVisibility(View.GONE);
             }
         }
+        mEditedView = EDITED_VIEW.TASK_CONTENT;
     }
 
     @Override
@@ -194,8 +195,6 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
             } else if (!TextUtils.isEmpty(mAlarmTime.getText().toString()) && mClearTimeBtn.getVisibility() == View.GONE) {
                 mClearTimeBtn.animate().alpha(1).translationX(mAlarmTime.getX()).setDuration(100).setListener(this).start();
             }
-        } else {
-            mEditedView = EDITED_VIEW.TASK_CONTENT;
         }
     }
 
@@ -207,8 +206,8 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
     @Override
     public void onStart() {
         super.onStart();
-        if (mListener != null) {
-            mListener.onFragmentSelected(this);
+        if (mFragmentRegister != null) {
+            mFragmentRegister.onFragmentRegistered(this);
         }
     }
 

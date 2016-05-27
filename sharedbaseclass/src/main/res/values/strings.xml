@@ -19,6 +19,9 @@
     <string name="fragment_edit_tasi_no_repeat">No Repeat</string>
     <string name="set_repeat_interval_dialog_title_set_repeat">Set Repeat</string>
 
+    <string name="toast_double_click_to_exit">double click to exit</string>
+
+
     <string-array name="repeat_interval_units">
         <item>No repeat</item>
         <item>Year(s)</item>

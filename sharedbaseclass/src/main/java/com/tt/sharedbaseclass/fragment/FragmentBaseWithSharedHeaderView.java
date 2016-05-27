@@ -1,9 +1,7 @@
 package com.tt.sharedbaseclass.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Spannable;
@@ -15,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import com.tt.sharedbaseclass.R;
-import com.tt.sharedbaseclass.listener.OnFragmentInteractionListener;
-import com.tt.sharedbaseclass.service.RenderService;
+import com.tt.sharedbaseclass.constant.Constant;
+import com.tt.sharedbaseclass.model.RenderService;
 import com.tt.sharedutils.StringUtil;
 
 import static com.tt.sharedbaseclass.R.id.header_view_save_task;
@@ -24,17 +22,15 @@ import static com.tt.sharedbaseclass.R.id.header_view_save_task;
 /**
  * Created by zhengguo on 2016/5/17.
  */
-public abstract class FragmentBaseWithSharedHeaderView extends Fragment implements RenderFragmentBase {
+public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBase {
 
-    protected OnFragmentInteractionListener mListener;
-    protected RenderFragmentBase mRenderFragment;
-    private int mRequestCode;
     protected ImageView mHeaderViewMainMenu, mHeaderViewLeftArrow, mHeaderViewVoiceInput, mHeaderViewAddNewTask, mHeaderViewSaveTask;
     protected TextView mHeaderViewTitle;
     protected SearchView mHeaderViewSearch;
     protected RenderService mRenderService;
 
     public FragmentBaseWithSharedHeaderView() {
+        super();
         // Required empty public constructor
     }
 
@@ -85,22 +81,14 @@ public abstract class FragmentBaseWithSharedHeaderView extends Fragment implemen
         if (!StringUtil.isEmpty(message)) {
             ssMessage = new SpannableString(message);
             ssMessage.setSpan(new ForegroundColorSpan(getResources()
-                .getColor(android.R.color.holo_green_dark)),
-              0, message.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            .getColor(android.R.color.holo_green_dark)),
+                    0, message.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             builder.setMessage(ssMessage);
         }
         return builder;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        fetchData();
-        Log.e("Render", "onStart");
-        if (mListener != null) {
-            mListener.onFragmentSelected(this);
-        }
-    }
+
 
     @Override
     public void onResume() {
@@ -124,55 +112,32 @@ public abstract class FragmentBaseWithSharedHeaderView extends Fragment implemen
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) activity;
-        } else {
-            throw new RuntimeException(activity.toString()
-              + " must implement OnFragmentInteractionListener");
-        }
-        Log.e("Render", "onAttach");
-
-    }
-
-    @Override
-    public void navigateToFragmentForResultCode(RenderFragmentBase context, int requestCode) {
-        if (context instanceof RenderFragmentBase) {
-            mRenderFragment = context;
-            mRequestCode = requestCode;
-        }
-    }
-
-    @Override
     public void finish() {
-        if (getFragmentManager().getBackStackEntryCount() > 1) {
-            getFragmentManager().popBackStack();
-        }
+        finishWithResultCode(Constant.BundelExtra.FINISH_RESULT_CODE_DEFAULT, null);
     }
 
     @Override
     public void finishWithResultCode(int resultCode, Bundle bundle) {
         if (mRenderFragment != null) {
             mRenderFragment.onFinishedWithResult(mRequestCode, resultCode, bundle);
-            finish();
+            if (mFragmentRegister != null) {
+                mRenderFragment.getmFragmentRegister().onFragmentRegistered(mRenderFragment);
+            }
+            if (getFragmentManager().getBackStackEntryCount() > 1) {
+                getFragmentManager().popBackStack();
+            }
         } else {
             Log.e("Render", "Fragment does not implement on mRenderFragment" +
-              " or navigate to fragment with function navigateToFragmentForResultCode(" +
-              "Fragment context, int requestCode)");
+                    " or navigate to fragment with function setContextAndReqCode(" +
+                    "Fragment context, int requestCode)");
         }
     }
 
     @Override
     public void onFinishedWithResult(int requestCode, int resultCode, Bundle bundle) {
-
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+
 
     @Override
     public void onDestroy() {

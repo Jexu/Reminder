@@ -13,16 +13,21 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/shared_list_item_left_date_from"
             style="@style/shared_list_item_left_textview_style"
+            android:visibility="gone"
             />
 
         <TextView
-          style="@style/shared_list_item_left_textview_style"
+            android:id="@+id/shared_list_item_left_date_symbol"
+            style="@style/shared_list_item_left_textview_style"
           android:layout_gravity="center_horizontal"
           android:text="~" />
 
         <TextView
-          style="@style/shared_list_item_left_textview_style"
+            android:id="@+id/shared_list_item_left_date_to"
+            style="@style/shared_list_item_left_textview_style"
+            android:visibility="gone"
           />
 
     </LinearLayout>
@@ -43,7 +48,7 @@
         >
 
         <TextView
-            android:id="@+id/shared_list_item_task_group_name"
+            android:id="@+id/shared_list_item_right_task_group_name"
             style="@style/shared_list_item_right_textview_style"
             android:textColor="@android:color/black"
             android:layout_margin="@dimen/shared_list_item_task_group_name_margin"
@@ -51,21 +56,24 @@
             android:textSize="@dimen/shared_list_item_task_group_name_textsize" />
 
         <CheckBox
+            android:id="@+id/shared_list_item_right_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:layout_alignBaseline="@+id/shared_list_item_task_group_name"
+            android:layout_alignBaseline="@+id/shared_list_item_right_task_group_name"
             android:layout_alignParentEnd="true" />
 
         <TextView
-            android:id="@+id/shared_list_item_task_content"
+            android:id="@+id/shared_list_item_right_task_content"
             style="@style/shared_list_item_right_textview_style"
-            android:layout_below="@+id/shared_list_item_task_group_name"
-            android:textSize="16sp"/>
+            android:layout_below="@+id/shared_list_item_right_task_group_name"
+            android:textSize="17sp"/>
 
         <TextView
-          style="@style/shared_list_item_right_textview_style"
-          android:layout_below="@+id/shared_list_item_task_content"/>
+            android:id="@+id/shared_list_item_right_task_time"
+            style="@style/shared_list_item_right_textview_style"
+            android:layout_marginTop="@dimen/shared_list_item_right_textview_margin_top"
+            android:textSize="@dimen/shared_list_item_left_textview_textsize"
+          android:layout_below="@+id/shared_list_item_right_task_content"/>
 
     </RelativeLayout>
 

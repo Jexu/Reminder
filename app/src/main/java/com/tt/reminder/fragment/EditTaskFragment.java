@@ -17,7 +17,7 @@ import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.EditTaskFragmentBase;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
-import com.tt.sharedbaseclass.service.RenderCallback;
+import com.tt.sharedbaseclass.model.RenderCallback;
 import com.tt.sharedbaseclass.view.WheelView;
 
 import java.util.Calendar;
@@ -36,6 +36,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
 
     public EditTaskFragment() {
         // Required empty public constructor
+        super();
     }
 
     public static EditTaskFragment newInstance() {
@@ -195,14 +196,14 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
         mTaskBean.setYear(year);
         mTaskBean.setMonth(monthOfYear);
         mTaskBean.setDayOfMonth(dayOfMonth);
-        updateEditedViewStatue(EDITED_VIEW.PICKED_DATE, mAlarmDate, mTaskBean.getPickedDate());
+        updateEditedViewStatue(EDITED_VIEW.PICKED_DATE, mAlarmDate, mTaskBean.getPickedDate(true));
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         mTaskBean.setHour(hourOfDay);
         mTaskBean.setMinuse(minute);
-        updateEditedViewStatue(EDITED_VIEW.PICKED_TIME, mAlarmTime, mTaskBean.getPickedTime());
+        updateEditedViewStatue(EDITED_VIEW.PICKED_TIME, mAlarmTime, mTaskBean.getPickedTime(true));
     }
 
     private void clearPickedDate() {
