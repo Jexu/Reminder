@@ -17,6 +17,10 @@ public class GroupBean extends RenderBeanBase {
         mGroup = Constant.RenderDbHelper.GROUP_NAME_MY_TASK;
     }
 
+    public GroupBean(String group) {
+        mGroup = group;
+    }
+
     public int getId() {
         return mId;
     }

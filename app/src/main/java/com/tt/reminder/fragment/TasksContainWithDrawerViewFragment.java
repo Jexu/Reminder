@@ -1,5 +1,6 @@
 package com.tt.reminder.fragment;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -170,7 +171,8 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
 
     @Override
     public void onItemClickListener(View view, int position) {
-
+        TaskBean taskBean = (TaskBean) mRenderRecycleViewAdapter.getBean(position);
+        navigateToEditFragment(Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value(), taskBean);
     }
 
     @Override
@@ -179,17 +181,24 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     }
 
     @Override
-    protected void navigateToEditFragment(int fragmentType) {
+    protected void navigateToEditFragment(int fragmentType, TaskBean taskBean) {
         EditTaskFragment editTaskFragment = new EditTaskFragment();
         Bundle args = new Bundle();
+        int requestCode = Constant.BundelExtra.FINISH_REQUEST_CODE_DEFAULT;
+        if (fragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()) {
+            args.putSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN, taskBean);
+            requestCode = Constant.BundelExtra.FINISH_REQUEST_CODE_EDIT_TASK;
+        } else if (fragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()){
+            requestCode = Constant.BundelExtra.FINISH_REQUEST_CODE_NEW_TASK;
+        }
         args.putInt(Constant.BundelExtra.EXTRA_FRAGMENT_TYPE, fragmentType);
         // TODO: 2016/5/25 have to check null, if null then get groups again
         args.putSerializable(Constant.BundelExtra.EXTRAL_GROUPS_BEANS,
-          mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS));
+          mRenderObjectBeansGroups);
         editTaskFragment.setArguments(args);
         MainActivity.navigateToForResultCode(editTaskFragment
                 , getFragmentManager()
-                , Constant.BundelExtra.FINISH_REQUEST_CODE_NEW_TASK);
+                , requestCode);
     }
 
     @Override

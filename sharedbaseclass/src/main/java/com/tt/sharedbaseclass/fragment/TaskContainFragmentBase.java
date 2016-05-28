@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
+import com.tt.sharedbaseclass.model.TaskBean;
 import com.tt.sharedutils.DeviceUtil;
 
 /**
@@ -78,13 +79,13 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
         if (i == R.id.header_view_main_menu) {
             onMainMenuClick();
         } else if (i == R.id.header_view_add_new_task) {
-            navigateToEditFragment(Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value());
+            navigateToEditFragment(Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value(), null);
         }
     }
 
     protected abstract void onMainMenuClick();
 
-    protected abstract void navigateToEditFragment(int fragmentType);
+    protected abstract void navigateToEditFragment(int fragmentType, TaskBean taskBean);
 
     protected void onMainMenuAnimation(View mainMenu, float drawerViewSlideOffset) {
         mainMenu.setRotation(drawerViewSlideOffset * 90);

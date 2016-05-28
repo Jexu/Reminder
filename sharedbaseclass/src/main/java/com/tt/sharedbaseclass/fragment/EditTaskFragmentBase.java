@@ -19,6 +19,7 @@ import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.view.WheelView;
 
+import java.lang.ref.SoftReference;
 import java.util.Arrays;
 
 /**
@@ -59,6 +60,7 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
             mFragmentType = args.getInt(Constant.BundelExtra.EXTRA_FRAGMENT_TYPE);
         }
         mEditedView = EDITED_VIEW.TASK_CONTENT;
+        mRepeatUnits = getResources().getStringArray(R.array.repeat_interval_units);
         super.onCreate(savedInstanceState);
     }
 
@@ -111,9 +113,6 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
         mRepeatIntervalDialogView = getActivity().getLayoutInflater().inflate(R.layout.shared_wheel_view, null, false);
         mEdtRepeatInterval = (EditText) mRepeatIntervalDialogView.findViewById(R.id.edt_repeat_interval);
         mRepeatUnitWheel = (WheelView) mRepeatIntervalDialogView.findViewById(R.id.wheel_repeat_unit);
-        if (mRepeatUnits == null) {
-            mRepeatUnits = getResources().getStringArray(R.array.repeat_interval_units);
-        }
         mRepeatUnitWheel.setItems(Arrays.asList(mRepeatUnits));
         return  builder;
     }

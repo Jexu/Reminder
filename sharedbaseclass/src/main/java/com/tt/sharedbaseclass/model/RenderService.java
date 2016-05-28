@@ -22,25 +22,13 @@ import java.util.Map;
 public class RenderService {
     private Map<String, RenderCallback> mHandlers;
     private RenderDbHelper mRenderDbHelper;
-    private SQLiteDatabase mDbReader;
-    private SQLiteDatabase mDbWriter;
 
     public RenderService(Context context) {
         mHandlers = new HashMap<>();
         mRenderDbHelper = new RenderDbHelper(context);
-        mDbReader = mRenderDbHelper.getReadableDatabase();
-        mDbWriter = mRenderDbHelper.getWritableDatabase();
     }
 
     public void destroyService() {
-        if (mDbWriter != null) {
-            mDbWriter.close();
-            mDbWriter = null;
-        }
-        if (mDbReader != null) {
-            mDbReader.close();
-            mDbReader = null;
-        }
         if (mRenderDbHelper != null) {
             mRenderDbHelper.close();
             mRenderDbHelper = null;
@@ -85,8 +73,9 @@ public class RenderService {
         }
         Cursor cursorHasDate;
         Cursor cursorNoDate;
+        SQLiteDatabase dbReader = mRenderDbHelper.getReadableDatabase();
         if (requestCode == Constant.RenderServiceHelper.REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED) {
-            cursorHasDate = mDbReader.rawQuery("select * from "
+            cursorHasDate = dbReader.rawQuery("select * from "
                   + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
                   + " where " + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
                   + " <> ? and "
@@ -96,7 +85,7 @@ public class RenderService {
                   + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS,
                   new String[]{Constant.RenderDbHelper.GROUP_NAME_FINISHED
                     , TaskBean.DEFAULT_VALUE_OF_DATE_TIME+""});
-            cursorNoDate = mDbReader.rawQuery("select * from "
+            cursorNoDate = dbReader.rawQuery("select * from "
                   + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
                   + " where " + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
                   + " <> ? and "
@@ -104,7 +93,7 @@ public class RenderService {
                   +" = ?",new String[]{Constant.RenderDbHelper.GROUP_NAME_FINISHED
                     ,TaskBean.DEFAULT_VALUE_OF_DATE_TIME+""});
         } else {
-            cursorHasDate = mDbReader.rawQuery("select * from "
+            cursorHasDate = dbReader.rawQuery("select * from "
               + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
               + " where " + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
               + " = ? and "
@@ -113,7 +102,7 @@ public class RenderService {
               +" order by "
               + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS, new String[]{groupName
                     , TaskBean.DEFAULT_VALUE_OF_DATE_TIME+""});
-            cursorNoDate = mDbReader.rawQuery("select * from "
+            cursorNoDate = dbReader.rawQuery("select * from "
               + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
               + " where " + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
               + " = ? and "
@@ -168,6 +157,10 @@ public class RenderService {
         if (cursorHasDate != null) {
             cursorHasDate.close();
         }
+        if (cursorNoDate != null) {
+            cursorNoDate.close();
+        }
+        dbReader.close();
     }
 
     private void getGroupsExceptFinished(int action, int requestCode) {
@@ -175,7 +168,8 @@ public class RenderService {
         Bundle bundle = new Bundle();
         bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
         Message msg = new Message();
-        Cursor cursor = mDbReader.rawQuery("select * "
+        SQLiteDatabase dbReader = mRenderDbHelper.getReadableDatabase();
+        Cursor cursor = dbReader.rawQuery("select * "
                 + " from "
                 + Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP
                 + " where "
@@ -205,6 +199,7 @@ public class RenderService {
         if (cursor != null) {
             cursor.close();
         }
+        dbReader.close();
     }
 
     private void addDataToTable(int action, String tableName,TaskBean taskBean, int requestCode) {
@@ -223,7 +218,8 @@ public class RenderService {
             handler.sendMessage(msg);
             return;
         }
-        long row = mDbWriter.insert(tableName, null, taskBeanToContentValues(taskBean, requestCode));
+        SQLiteDatabase dbWrite = mRenderDbHelper.getWritableDatabase();
+        long row = dbWrite.insert(tableName, null, taskBeanToContentValues(taskBean, requestCode));
         if (row != -1) {
             if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_UPDATE_SUCCESS;
@@ -238,6 +234,7 @@ public class RenderService {
         }
         msg.obj = bundle;
         handler.sendMessage(msg);
+        dbWrite.close();
     }
 
     private void updateTable(int action, String tableName,TaskBean oldTaskBean, TaskBean newTaskBean, int requestCode) {
@@ -256,7 +253,8 @@ public class RenderService {
             handler.sendMessage(msg);
             return;
         }
-        long row = mDbWriter.update(tableName, taskBeanToContentValues(oldTaskBean, newTaskBean, requestCode)
+        SQLiteDatabase dbWrite = mRenderDbHelper.getWritableDatabase();
+        long row = dbWrite.update(tableName, taskBeanToContentValues(oldTaskBean, newTaskBean, requestCode)
                 , Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_ID + " = ?", new String[]{oldTaskBean.getId() + ""});
         if (row != -1) {
             if (handler != null) {
@@ -272,6 +270,7 @@ public class RenderService {
         }
         msg.obj = bundle;
         handler.sendMessage(msg);
+        dbWrite.close();
     }
 
     private void deleteDateById(int action, String tableName,String id, int requestCode) {
@@ -290,7 +289,8 @@ public class RenderService {
             handler.sendMessage(msg);
             return;
         }
-        long row = mDbWriter.delete(tableName, Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_ID + "=?"
+        SQLiteDatabase dbWrite = mRenderDbHelper.getWritableDatabase();
+        long row = dbWrite.delete(tableName, Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_ID + "=?"
                 , new String[]{id + ""});
         if (row != -1) {
             if (handler != null) {
@@ -306,6 +306,7 @@ public class RenderService {
         }
         msg.obj = bundle;
         handler.sendMessage(msg);
+        dbWrite.close();
     }
 
     private ContentValues taskBeanToContentValues(TaskBean taskBean, int requestCode) {

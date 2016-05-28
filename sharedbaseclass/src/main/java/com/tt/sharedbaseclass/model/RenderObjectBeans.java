@@ -60,6 +60,7 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
             TaskBean tb = (TaskBean)bean;
             if (tb.isClearedPickedDate() && tb.isClearedPickedTime()) {
                 add(tb);
+                mCountTaskNoDate++;
                 return;
             } else {
                 int index = 0;
@@ -96,6 +97,7 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
                     index = mid;
                 }
                 add(index, tb);
+                mCountTaskHasDate++;
             }
         }
     }
