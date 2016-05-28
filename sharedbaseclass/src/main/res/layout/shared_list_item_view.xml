@@ -21,8 +21,10 @@
         <TextView
             android:id="@+id/shared_list_item_left_date_symbol"
             style="@style/shared_list_item_left_textview_style"
-          android:layout_gravity="center_horizontal"
-          android:text="~" />
+            android:layout_gravity="center_horizontal"
+            android:text="@string/shared_list_item_view_date_placeholder"
+            android:visibility="invisible"
+            />
 
         <TextView
             android:id="@+id/shared_list_item_left_date_to"

@@ -167,14 +167,19 @@ public class TaskBean extends GroupBean {
     StringBuffer sb = new StringBuffer();
     if (isInEditFragment) {
       sb.append(Constant.WEEK.valueOf(mCalendar.get(Calendar.DAY_OF_WEEK) - 1))
-              .append(", ");
+              .append(", ")
+              .append(Constant.MONTH.valueOf(mCalendar.get(Calendar.MONTH) + 1))
+              .append(" ")
+              .append(this.mDayOfMonth)
+              .append(",")
+              .append(this.mYear);
+    } else {
+      sb.append(mDayOfMonth<10?"0"+mDayOfMonth:mDayOfMonth)
+              .append("/")
+              .append(mMonth<10?"0"+mMonth:mMonth)
+              .append("/")
+              .append(mYear);
     }
-
-      sb.append(Constant.MONTH.valueOf(mCalendar.get(Calendar.MONTH) + 1))
-      .append(" ")
-      .append(this.mDayOfMonth)
-      .append(",")
-      .append(this.mYear);
     return sb.toString();
   }
 

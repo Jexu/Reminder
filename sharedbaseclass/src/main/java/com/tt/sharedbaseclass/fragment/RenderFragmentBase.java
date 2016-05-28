@@ -3,7 +3,9 @@ package com.tt.sharedbaseclass.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.tt.sharedbaseclass.listener.OnFragmentRegisterListener;
 
@@ -39,9 +41,14 @@ public abstract class RenderFragmentBase extends Fragment implements RenderBase 
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        fetchData();
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
-        fetchData();
         Log.e("Render", "onStart");
         if (mFragmentRegister != null) {
             mFragmentRegister.onFragmentRegistered(this);

@@ -20,6 +20,7 @@
     <string name="set_repeat_interval_dialog_title_set_repeat">Set Repeat</string>
 
     <string name="toast_double_click_to_exit">double click to exit</string>
+    <string name="shared_list_item_view_date_placeholder">00/00/0000</string>
 
 
     <string-array name="repeat_interval_units">

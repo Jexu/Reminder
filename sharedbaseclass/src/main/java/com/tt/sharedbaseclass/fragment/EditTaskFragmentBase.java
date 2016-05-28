@@ -58,7 +58,7 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
         if (args != null) {
             mFragmentType = args.getInt(Constant.BundelExtra.EXTRA_FRAGMENT_TYPE);
         }
-        mEditedView = EDITED_VIEW.DEFAULT;
+        mEditedView = EDITED_VIEW.TASK_CONTENT;
         super.onCreate(savedInstanceState);
     }
 

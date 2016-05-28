@@ -86,20 +86,22 @@ public class Constant {
         public static final int HANDLER_MSG_WHAT_ON_HANDLE_FAIL = 3;
 
 
-        public static final int REQUEST_CODE_DEFAULT = 0;
+        public static final int REQUEST_CODE_DEFAULT = -1;
         public static final int REQUEST_CODE_INSERT_TASK_BEAN = 1;
         public static final int REQUEST_CODE__INSERT_NEW_GROUP = 2;
         public static final int REQUEST_CODE_UPDATE_TASK_BEAN = 3;
         public static final int REQUEST_CODE_UPDATE_GROUP_NAME = 4;
         public static final int REQUEST_CODE_DELETE_TASK_BEAN = 5;
         public static final int REQUEST_CODE_DELETE_GROUP = 6;
-        public static final int REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED = 7;
+        public static final int REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED = 0;
         public static final int REQUEST_CODE_GET_TASKS_BEANS_BY_GROUP_NAME = 9;
         public static final int REQUEST_CODE_GET_GROUPS = 8;
 
 
 
-        public static final int RESULT_CODE_GET_TASKS_SUCCESS = 0;
+        public static final int RESULT_CODE_GET_TASKS_SUCCESS_HAS_DATE_ONLY = 0;
+        public static final int RESULT_CODE_GET_TASKS_SUCCESS_NO_DATE_ONLY = 8;
+        public static final int RESULT_CODE_GET_TASKS_SUCCESS_HAS_DATE_AND_NO_DATE = 9;
         public static final int RESULT_CODE_GET_TASKS_FAIL_NO_TASKS = 1;
         public static final int RESULT_CODE_GET_TASKS_FAIL_ERROR = 2;
         public static final int RESULT_CODE_GET_GROUPS_SUCCESS = 3;

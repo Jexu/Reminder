@@ -12,7 +12,7 @@ import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedutils.DeviceUtil;
 
 /**
- * Created by Administrator on 2016/5/27.
+ * Created by zhengguo on 2016/5/27.
  */
 public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHeaderView
         implements View.OnClickListener {
@@ -32,18 +32,28 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
     @Override
     public void fetchData() {
         Log.i("Render", "fetchData");
+        getGroupsExceptFinished(Constant.RenderServiceHelper.REQUEST_CODE_DEFAULT);
+    }
+
+    protected void getTasksByGroupName(String GroupName, int requestCode) {
         mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_TASKS_BY_GROUP_NAME.value(),
                 Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS,
                 null,
                 null,
-                null,
-                Constant.RenderServiceHelper.REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED);
+                new String[]{GroupName},
+                requestCode);
+    }
+
+    protected void getGroupsExceptFinished(int requestCode) {
         mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_GROUPS.value(),
                 Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP,
                 null,
                 null,
                 null,
-                0);
+                requestCode);
+        //must getGroups firstly here, then get tasks
+        getTasksByGroupName(Constant.RenderDbHelper.GROUP_NAME_MY_TASK
+                , Constant.RenderServiceHelper.REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED);
     }
 
     protected abstract void getTasksSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode);

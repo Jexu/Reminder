@@ -72,39 +72,92 @@ public class RenderService {
         Bundle bundle = new Bundle();
         bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
         Message msg = new Message();
-        Cursor cursor;
         if (StringUtil.isEmpty(groupName)) {
-            if (requestCode == Constant.RenderServiceHelper.REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED) {
-                cursor = mDbReader.rawQuery("select * from "
+            if (handler != null) {
+                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_FAIL_ERROR);
+            } else {
+                Log.e("Render", "this is no handler when get tasks by group name");
+            }
+            msg.obj = bundle;
+            handler.sendMessage(msg);
+            return;
+        }
+        Cursor cursorHasDate;
+        Cursor cursorNoDate;
+        if (requestCode == Constant.RenderServiceHelper.REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED) {
+            cursorHasDate = mDbReader.rawQuery("select * from "
                   + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
                   + " where " + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
-                  + " <> ? order by "
-                  + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS,
-                  new String[]{Constant.RenderDbHelper.GROUP_NAME_FINISHED});
-            } else {
-                cursor = mDbReader.rawQuery("select * from "
-                  + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
+                  + " <> ? and "
+                  + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS
+                  +" <> ?"
                   + " order by "
-                  + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS, null);
-            }
+                  + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS,
+                  new String[]{Constant.RenderDbHelper.GROUP_NAME_FINISHED
+                    , TaskBean.DEFAULT_VALUE_OF_DATE_TIME+""});
+            cursorNoDate = mDbReader.rawQuery("select * from "
+                  + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
+                  + " where " + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
+                  + " <> ? and "
+                  + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS
+                  +" = ?",new String[]{Constant.RenderDbHelper.GROUP_NAME_FINISHED
+                    ,TaskBean.DEFAULT_VALUE_OF_DATE_TIME+""});
         } else {
-            cursor = mDbReader.rawQuery("select * from "
+            cursorHasDate = mDbReader.rawQuery("select * from "
               + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
               + " where " + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
-              + " = ? order by "
-              + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS, new String[]{groupName});
+              + " = ? and "
+              + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS
+              +" <> ?"
+              +" order by "
+              + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS, new String[]{groupName
+                    , TaskBean.DEFAULT_VALUE_OF_DATE_TIME+""});
+            cursorNoDate = mDbReader.rawQuery("select * from "
+              + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
+              + " where " + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
+              + " = ? and "
+              + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS
+              +" = ?", new String[]{groupName
+              , TaskBean.DEFAULT_VALUE_OF_DATE_TIME+""});
         }
-        if (cursor != null) {
-            List<TaskBean> renderObjectBeans = new RenderObjectBeans<TaskBean>();
-            while (cursor.moveToNext()) {
-                renderObjectBeans.add(cursorRowToTaskBean(cursor));
+
+        RenderObjectBeans<TaskBean> renderObjectBeans = new RenderObjectBeans<TaskBean>();
+        boolean isCursorHasDate = false;
+        if (cursorHasDate != null) {
+            renderObjectBeans.setCountTaskHasDate(cursorHasDate.getCount());
+            while (cursorHasDate.moveToNext()) {
+                renderObjectBeans.add(cursorRowToTaskBean(cursorHasDate));
             }
-            if (handler != null) {
-                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_SELECT_SUCCESS;
-                bundle.putSerializable(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN, (RenderObjectBeans) renderObjectBeans);
-                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_SUCCESS);
+            isCursorHasDate = true;
+        }
+        boolean isCursorNoDate = false;
+        if (cursorNoDate != null) {
+            renderObjectBeans.setCountTaskHasDate(cursorNoDate.getCount());
+            while (cursorNoDate.moveToNext()) {
+                renderObjectBeans.add(cursorRowToTaskBean(cursorNoDate));
             }
-        } else {
+            isCursorNoDate = true;
+        }
+
+        if (isCursorHasDate || isCursorNoDate) {
+            msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_SELECT_SUCCESS;
+            bundle.putSerializable(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN
+                    , (RenderObjectBeans) renderObjectBeans);
+            if (isCursorHasDate && !isCursorNoDate) {
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE
+                        , Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_SUCCESS_HAS_DATE_ONLY);
+                renderObjectBeans.setType(RenderObjectBeans.TYPE_TASK_BEANS_HAS_DATE_ONLY);
+            } else if (isCursorHasDate && isCursorNoDate) {
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE
+                        , Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_SUCCESS_HAS_DATE_AND_NO_DATE);
+                renderObjectBeans.setType(RenderObjectBeans.TYPE_TASK_BEANS_NO_DATE_ONLY);
+            } else if (!isCursorHasDate && isCursorNoDate) {
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE
+                        , Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_SUCCESS_NO_DATE_ONLY);
+                renderObjectBeans.setType(RenderObjectBeans.TYPE_TASK_BEANS_HAS_DATE_AND_NO_DATE);
+            }
+        }else {
             if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
                 bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_FAIL_NO_TASKS);
@@ -112,8 +165,8 @@ public class RenderService {
         }
         msg.obj = bundle;
         handler.sendMessage(msg);
-        if (cursor != null) {
-            cursor.close();
+        if (cursorHasDate != null) {
+            cursorHasDate.close();
         }
     }
 
@@ -166,6 +219,9 @@ public class RenderService {
             } else {
                 Log.e("Render", "this is no handler when get tasks by group name");
             }
+            msg.obj = bundle;
+            handler.sendMessage(msg);
+            return;
         }
         long row = mDbWriter.insert(tableName, null, taskBeanToContentValues(taskBean, requestCode));
         if (row != -1) {
@@ -196,6 +252,9 @@ public class RenderService {
             } else {
                 Log.e("Render", "this is no handler when get tasks by group name");
             }
+            msg.obj = bundle;
+            handler.sendMessage(msg);
+            return;
         }
         long row = mDbWriter.update(tableName, taskBeanToContentValues(oldTaskBean, newTaskBean, requestCode)
                 , Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_ID + " = ?", new String[]{oldTaskBean.getId() + ""});
@@ -227,6 +286,9 @@ public class RenderService {
             } else {
                 Log.e("Render", "this is no handler when get tasks by group name");
             }
+            msg.obj = bundle;
+            handler.sendMessage(msg);
+            return;
         }
         long row = mDbWriter.delete(tableName, Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_ID + "=?"
                 , new String[]{id + ""});
