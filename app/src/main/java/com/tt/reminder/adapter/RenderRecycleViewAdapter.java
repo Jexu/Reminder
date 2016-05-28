@@ -64,8 +64,13 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase imple
       h.mLeftSymbol.setVisibility(View.VISIBLE);
       h.mRightTime.setVisibility(View.VISIBLE);
     } else {
-      h.mLeftSymbol.setVisibility(View.GONE);
-      h.mRightTime.setVisibility(View.GONE);
+      if (mRenderObjectBeans.getCountTaskHasDate() > 0) {
+        h.mLeftSymbol.setVisibility(View.INVISIBLE);
+        h.mRightTime.setVisibility(View.INVISIBLE);
+      } else {
+        h.mLeftSymbol.setVisibility(View.GONE);
+        h.mRightTime.setVisibility(View.GONE);
+      }
     }
   }
 

@@ -1,5 +1,6 @@
 package com.tt.reminder.fragment;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import com.tt.reminder.adapter.RenderRecycleViewAdapter;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.FragmentBaseWithSharedHeaderView;
 import com.tt.sharedbaseclass.fragment.TaskContainFragmentBase;
+import com.tt.sharedbaseclass.model.GroupBean;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.RenderCallback;
 import com.tt.sharedbaseclass.model.TaskBean;
@@ -37,6 +39,7 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     private RenderRecycleViewAdapter mRenderRecycleViewAdapter;
     private GetTasksByGroupNameCallback mGetTasksByGroupNameCallback;
     private GetGroupsCallback mGetGroupsCallback;
+    private RenderObjectBeans mRenderObjectBeansGroups;
 
     public TasksContainWithDrawerViewFragment() {
         // Required empty public constructor
@@ -86,7 +89,7 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     @Override
     public void initServices() {
         super.initServices();
-        mGetTasksByGroupNameCallback = new GetTasksByGroupNameCallback();
+        mGetTasksByGroupNameCallback = new GetTasksByGroupNameCallback(this);
         mGetGroupsCallback = new GetGroupsCallback(this);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_TASKS_BY_GROUP_NAME.toString(),
                 mGetTasksByGroupNameCallback);
@@ -97,37 +100,62 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     @Override
     protected void getTasksSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
         // TODO: 5/25/16 update lrucache; update listview; have to check size
+        //key = extra_render_object_bean+group_name
+        if (mRenderObjectBeansGroups == null) {
+            getGroupsExceptFinished(Constant.RenderServiceHelper.REQUEST_CODE_DEFAULT);
+        }
+        mLruCache.put(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN
+                + mRenderObjectBeansGroups.get(requestCode).toString()
+                , renderObjectBeans);
+        updateRecycleView((GroupBean) mRenderObjectBeansGroups.get(requestCode));
+    }
+
+    private void updateRecycleView(GroupBean groupBean) {
+        RenderObjectBeans renderObjectBeans
+                = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN
+                    + groupBean.toString());
+        if (renderObjectBeans != null) {
+            if (renderObjectBeans.isEmpty()) {
+
+            } else {
+                mRenderRecycleViewAdapter.addAllBeans(renderObjectBeans);
+            }
+        } else {
+            getTasksByGroupName(groupBean.toString()
+                    , mRenderObjectBeansGroups.indexOf(groupBean));
+        }
     }
 
     @Override
     protected void getGroupsSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
         // TODO: 5/25/16 update lrucache; update groups view; have to check size
         mLruCache.put(Constant.BundelExtra.EXTRAL_GROUPS_BEANS, renderObjectBeans);
+        mRenderObjectBeansGroups = renderObjectBeans;
     }
 
     private void testListView() {
-        TaskBean taskBean = new TaskBean();
-        taskBean.setTaskContent("Task");
-        taskBean.setGroup("My Tasks");
-        taskBean.setYear(2015);
-        taskBean.setMonth(12);
-        taskBean.setDayOfMonth(24);
-        taskBean.setHour(23);
-        taskBean.setMinuse(5);
-        RenderObjectBeans renderObjectBeans = new RenderObjectBeans();
-
-        TaskBean taskBean2 = new TaskBean();
-        taskBean2.setTaskContent("Task22222222222222222222222222222222222222222");
-        taskBean2.setGroup("My Tasks2");
-        taskBean2.setYear(2017);
-        taskBean2.setMonth(12);
-        taskBean2.setDayOfMonth(24);
-        taskBean2.setHour(23);
-        taskBean2.setMinuse(5);
-
-        renderObjectBeans.add(taskBean);
-        renderObjectBeans.add(taskBean2);
-        mRenderRecycleViewAdapter.addAllBeans(renderObjectBeans);
+//        TaskBean taskBean = new TaskBean();
+//        taskBean.setTaskContent("Task");
+//        taskBean.setGroup("My Tasks");
+//        taskBean.setYear(2015);
+//        taskBean.setMonth(12);
+//        taskBean.setDayOfMonth(24);
+//        taskBean.setHour(23);
+//        taskBean.setMinuse(5);
+//        RenderObjectBeans renderObjectBeans = new RenderObjectBeans();
+//
+//        TaskBean taskBean2 = new TaskBean();
+//        taskBean2.setTaskContent("Task22222222222222222222222222222222222222222");
+//        taskBean2.setGroup("My Tasks2");
+//        taskBean2.setYear(2017);
+//        taskBean2.setMonth(12);
+//        taskBean2.setDayOfMonth(24);
+//        taskBean2.setHour(23);
+//        taskBean2.setMinuse(5);
+//
+//        renderObjectBeans.add(taskBean);
+//        renderObjectBeans.add(taskBean2);
+//        mRenderRecycleViewAdapter.addAllBeans(renderObjectBeans);
     }
 
     @Override
@@ -143,7 +171,8 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
 
     @Override
     public void onItemClickListener(View view, int position) {
-
+        TaskBean taskBean = (TaskBean) mRenderRecycleViewAdapter.getBean(position);
+        navigateToEditFragment(Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value(), taskBean);
     }
 
     @Override
@@ -152,15 +181,24 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     }
 
     @Override
-    protected void navigateToEditFragment(int fragmentType) {
+    protected void navigateToEditFragment(int fragmentType, TaskBean taskBean) {
         EditTaskFragment editTaskFragment = new EditTaskFragment();
         Bundle args = new Bundle();
+        int requestCode = Constant.BundelExtra.FINISH_REQUEST_CODE_DEFAULT;
+        if (fragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()) {
+            args.putSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN, taskBean);
+            requestCode = Constant.BundelExtra.FINISH_REQUEST_CODE_EDIT_TASK;
+        } else if (fragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()){
+            requestCode = Constant.BundelExtra.FINISH_REQUEST_CODE_NEW_TASK;
+        }
         args.putInt(Constant.BundelExtra.EXTRA_FRAGMENT_TYPE, fragmentType);
         // TODO: 2016/5/25 have to check null, if null then get groups again
         args.putSerializable(Constant.BundelExtra.EXTRAL_GROUPS_BEANS,
-          mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS));
+          mRenderObjectBeansGroups);
         editTaskFragment.setArguments(args);
-        MainActivity.navigateToForResultCode(editTaskFragment, getFragmentManager(), 1);
+        MainActivity.navigateToForResultCode(editTaskFragment
+                , getFragmentManager()
+                , requestCode);
     }
 
     @Override
@@ -188,6 +226,17 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     }
 
     @Override
+    public void onFinishedWithResult(int requestCode, int resultCode, Bundle bundle) {
+        super.onFinishedWithResult(requestCode, resultCode, bundle);
+        Log.i("Render", "onFinishedWithResult");
+        if (resultCode != Constant.BundelExtra.FINISH_RESULT_CODE_DEFAULT
+            && requestCode == Constant.BundelExtra.FINISH_REQUEST_CODE_NEW_TASK) {
+            TaskBean newTaskBean = (TaskBean) bundle.get(Constant.BundelExtra.EXTRA_TASK_BEAN);
+            mRenderRecycleViewAdapter.addBean(newTaskBean);
+        }
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         if (mDrawerLayout != null) {
@@ -197,9 +246,14 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
 
     private static class GetTasksByGroupNameCallback extends RenderCallback {
 
+        private TasksContainWithDrawerViewFragment mContext;
+        private GetTasksByGroupNameCallback(TasksContainWithDrawerViewFragment context) {
+            mContext = context;
+        }
         @Override
         public void onHandleSelectSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
-
+            Log.i("Render", "get tasks successfully");
+            mContext.getTasksSuccess(renderObjectBeans, requestCode, resultCode);
         }
 
         @Override
@@ -209,7 +263,7 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
 
         @Override
         public void onHandleFail(int requestCode, int resultCode) {
-
+            Log.e("Render", "fail to get tasks");
         }
     }
 
@@ -232,7 +286,7 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
 
         @Override
         public void onHandleFail(int requestCode, int resultCode) {
-            Log.i("Render", "fail to get group");
+            Log.e("Render", "fail to get group");
         }
     }
 

@@ -42,7 +42,7 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
 
   public void addBean(Object bean) {
     if (mRenderObjectBeans != null) {
-      mRenderObjectBeans.add(bean);
+      mRenderObjectBeans.addBeanInOrder(bean);
       notifyDataSetChanged();
     }
   }

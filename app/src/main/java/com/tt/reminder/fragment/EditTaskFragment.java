@@ -15,11 +15,14 @@ import android.widget.*;
 import com.tt.reminder.R;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.EditTaskFragmentBase;
+import com.tt.sharedbaseclass.model.GroupBean;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 import com.tt.sharedbaseclass.model.RenderCallback;
 import com.tt.sharedbaseclass.view.WheelView;
 
+import java.lang.ref.SoftReference;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class EditTaskFragment extends EditTaskFragmentBase implements View.OnClickListener,
@@ -29,7 +32,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
     private static EditTaskFragment mEditTaskFragment;
     private TaskBean mTaskBean;
     private TaskBean mTaskBeanFromParent;
-    private RenderObjectBeans<String> mGroupsBean;
+    private RenderObjectBeans<GroupBean> mGroupsBean;
     private ArrayAdapter<String> mGroupsAdapter;
     private SaveTaskBeanCallback mSaveTaskBeanCallback;
     private AddNewGroupCallBack mAddNewGroupCallBack;
@@ -49,21 +52,24 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTaskBean = new TaskBean();
         Bundle args = getArguments();
-        if (args != null) {
+        if (mFragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()) {
             mTaskBeanFromParent = (TaskBean) args.getSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN);
             if (mTaskBeanFromParent == null) {
                 mTaskBeanFromParent = new TaskBean();
             }
-            mGroupsBean = (RenderObjectBeans<String>) args.getSerializable(Constant.BundelExtra.EXTRAL_GROUPS_BEANS);
+            mTaskBean.copy(mTaskBeanFromParent);
+        } else if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()){
+            mTaskBeanFromParent = new TaskBean();
+        }
+        if (args != null) {
+            mGroupsBean = (RenderObjectBeans<GroupBean>) args.getSerializable(Constant.BundelExtra.EXTRAL_GROUPS_BEANS);
             mGroupsAdapter = new ArrayAdapter<>(getActivity(),
               R.layout.shared_spinner_simple_item,
               R.id.spinner_simple_item_view,
               mGroupsBean);
-        } else {
-            mTaskBeanFromParent = new TaskBean();
         }
-        mTaskBean = new TaskBean();
     }
 
     @Override
@@ -90,6 +96,25 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
         mNewGroupBtn.setOnClickListener(this);
         mGroupSpinner.setOnItemSelectedListener(this);
         mGroupSpinner.setAdapter(mGroupsAdapter);
+        initViewContent();
+    }
+
+    private void initViewContent() {
+        if (mFragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()) {
+            mTaskContent.setText(mTaskBeanFromParent.getTaskContent());
+            if (!mTaskBeanFromParent.isClearedPickedDate() && !mTaskBeanFromParent.isClearedPickedTime()) {
+                updateEditedViewStatue(EDITED_VIEW.PICKED_DATE, mAlarmDate, mTaskBeanFromParent.getPickedDate(true));
+                updateEditedViewStatue(EDITED_VIEW.PICKED_TIME, mAlarmTime, mTaskBeanFromParent.getPickedTime(true));
+            }
+            if (mTaskBeanFromParent.getRepeatInterval() == TaskBean.DEFAULT_VALUE_OF_INTERVAL) {
+                mTvRepeatInterval.setText(mRepeatUnits[0]);
+            } else {
+                mTvRepeatInterval.setText(getResources().getString(R.string.repeat_every_interval_unit
+                        , mTaskBeanFromParent.getRepeatInterval()
+                        , mRepeatUnits[mTaskBeanFromParent.getRepeatUnit()]));
+            }
+            mGroupSpinner.setSelection(Arrays.binarySearch(mGroupsBean.toArray(), new GroupBean(mTaskBeanFromParent.getGroup())));
+        }
     }
 
     @Override
@@ -98,7 +123,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
         mAddNewGroupCallBack = new AddNewGroupCallBack(this);
         mSaveTaskBeanCallback = new SaveTaskBeanCallback(this);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.toString(),
-          mAddNewGroupCallBack);
+                mAddNewGroupCallBack);
         if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
             mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.toString(),
               mSaveTaskBeanCallback);
@@ -237,7 +262,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mTaskBean.setGroup((String) mGroupsBean.get(position));
+        mTaskBean.setGroup(mGroupsBean.get(position).toString());
     }
 
     @Override
@@ -253,12 +278,12 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
             String title = getResources().getString(R.string.edit_task_fragment_alert_dialog_title);
             String message = getResources().getString(R.string.edit_task_fragment_alert_dialog_message);
             AlertDialog.Builder builder = getDefaultAlertDialogBuilder(title, message);
-            builder.setNegativeButton(R.string.edit_task_fragment_alert_dialog_calcel,
+            builder.setNegativeButton(R.string.edit_task_fragment_alert_dialog_discard,
               new DialogInterface.OnClickListener() {
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    finishWithResultCode(1, null);
+                    finishWithResultCode(Constant.BundelExtra.FINISH_RESULT_CODE_DEFAULT, null);
                 }
             })
               .setPositiveButton(R.string.edit_task_fragment_alert_dialog_save,
@@ -302,15 +327,14 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
 
     private void onSaveTaskSuccess(long row, int requestCode, int resultCode) {
         Bundle bundle = new Bundle();
-        int finishedResult = -1;
         // TODO: 5/26/16 update bundle and finishedCode
         if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
             Log.i("Render", "add new task successfully");
-
+            bundle.putSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN, mTaskBean);
         } else if (mFragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()) {
             Log.i("Render", "update task successfully");
         }
-        finishWithResultCode(finishedResult, bundle);
+        finishWithResultCode(Constant.BundelExtra.FINISH_RESULT_CODE_SUCCESS, bundle);
     }
 
     @Override
@@ -334,9 +358,9 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
           && resultCode == Constant.RenderServiceHelper.RESULT_CODE_UPDATE_SUCCESS) {
             // TODO: 2016/5/23  update group list
             Log.i("Render", "add new group successfully");
-            mGroupsBean.add(mTaskBean.getGroup());
+            mGroupsBean.add(new GroupBean(mTaskBean.getGroup()));
             mGroupsAdapter.notifyDataSetChanged();
-            mGroupSpinner.setSelection(mGroupsBean.indexOf(mTaskBean.getGroup()));
+            mGroupSpinner.setSelection(mGroupsBean.indexOf(new GroupBean(mTaskBean.getGroup())));
         } else {
             Log.e("Render", "error request code or result code");
         }

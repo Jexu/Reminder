@@ -19,6 +19,7 @@ import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.view.WheelView;
 
+import java.lang.ref.SoftReference;
 import java.util.Arrays;
 
 /**
@@ -58,7 +59,8 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
         if (args != null) {
             mFragmentType = args.getInt(Constant.BundelExtra.EXTRA_FRAGMENT_TYPE);
         }
-        mEditedView = EDITED_VIEW.DEFAULT;
+        mEditedView = EDITED_VIEW.TASK_CONTENT;
+        mRepeatUnits = getResources().getStringArray(R.array.repeat_interval_units);
         super.onCreate(savedInstanceState);
     }
 
@@ -111,9 +113,6 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
         mRepeatIntervalDialogView = getActivity().getLayoutInflater().inflate(R.layout.shared_wheel_view, null, false);
         mEdtRepeatInterval = (EditText) mRepeatIntervalDialogView.findViewById(R.id.edt_repeat_interval);
         mRepeatUnitWheel = (WheelView) mRepeatIntervalDialogView.findViewById(R.id.wheel_repeat_unit);
-        if (mRepeatUnits == null) {
-            mRepeatUnits = getResources().getStringArray(R.array.repeat_interval_units);
-        }
         mRepeatUnitWheel.setItems(Arrays.asList(mRepeatUnits));
         return  builder;
     }
@@ -125,7 +124,7 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
         final EditText editText = new EditText(getActivity());
         editText.setSingleLine(true);
         builder.setView(editText)
-                .setNegativeButton(R.string.edit_task_fragment_alert_dialog_calcel, null)
+                .setNegativeButton(R.string.edit_task_fragment_alert_dialog_discard, null)
                 .setPositiveButton(R.string.edit_task_fragment_alert_dialog_save, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

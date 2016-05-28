@@ -11,7 +11,7 @@
     <string name="hint_alarm_time_not_set">Time not set</string>
     <string name="render_db_helper_group_my_task">My Tasks</string>
     <string name="remder_db_helper_group_finished">Finished</string>
-    <string name="edit_task_fragment_alert_dialog_calcel">Cancel</string>
+    <string name="edit_task_fragment_alert_dialog_discard">Discard</string>
     <string name="edit_task_fragment_alert_dialog_save">Save</string>
     <string name="alert_dialog_title_new_group">New Group</string>
     <string name="alert_dialog_message_add_new_group">Add a New Group</string>
@@ -20,6 +20,7 @@
     <string name="set_repeat_interval_dialog_title_set_repeat">Set Repeat</string>
 
     <string name="toast_double_click_to_exit">double click to exit</string>
+    <string name="shared_list_item_view_date_placeholder">00/00/0000</string>
 
 
     <string-array name="repeat_interval_units">
