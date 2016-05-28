@@ -1,7 +1,6 @@
 package com.tt.sharedbaseclass.model;
 
-import android.app.Activity;
-import android.content.ComponentName;
+
 
 import com.tt.sharedbaseclass.constant.Constant;
 
@@ -52,7 +51,53 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
         return mCountTaskNoDate;
     }
 
-    public void setmCountTaskNoDate(int countTaskNoDate) {
+    public void setCountTaskNoDate(int countTaskNoDate) {
         this.mCountTaskNoDate = countTaskNoDate;
     }
+
+    public void addBeanInOrder(Object bean) {
+        if (bean instanceof TaskBean) {
+            TaskBean tb = (TaskBean)bean;
+            if (tb.isClearedPickedDate() && tb.isClearedPickedTime()) {
+                add(tb);
+                return;
+            } else {
+                int index = 0;
+
+                int low = 0;
+                int high = getCountTaskHasDate() - 1;
+                int mid;
+                while (low <= high) {
+                    mid = (low + high)/2;
+                    if (tb.compareTo(get(mid)) < 0) {
+                        if (mid-1 >= 0 && tb.compareTo(get(mid - 1)) >= 0) {
+                            index = mid;
+                            break;
+                        } else if (mid - 1 < 0) {
+                            index = 0;
+                            break;
+                        }else {
+                            high = mid - 1;
+                        }
+                    } else if (tb.compareTo(get(mid)) > 0) {
+                        if (mid+1 <= getCountTaskHasDate()-1 && tb.compareTo(get(mid + 1)) <= 0) {
+                            index = mid + 1;
+                            break;
+                        } else if (mid + 1 > getCountTaskHasDate() - 1) {
+                            index = mid + 1;
+                            break;
+                        } else {
+                            low = mid + 1;
+                        }
+                    } else {
+                        index = mid;
+                        break;
+                    }
+                    index = mid;
+                }
+                add(index, tb);
+            }
+        }
+    }
+
 }

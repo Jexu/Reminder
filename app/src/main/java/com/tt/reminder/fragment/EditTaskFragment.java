@@ -307,7 +307,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
         // TODO: 5/26/16 update bundle and finishedCode
         if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
             Log.i("Render", "add new task successfully");
-
+            bundle.putSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN, mTaskBean);
         } else if (mFragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()) {
             Log.i("Render", "update task successfully");
         }

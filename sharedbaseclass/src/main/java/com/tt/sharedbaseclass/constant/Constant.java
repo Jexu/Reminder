@@ -138,6 +138,8 @@ public class Constant {
 
         public static final int FINISH_REQUEST_CODE_DEFAULT = -1;
         public static final int FINISH_RESULT_CODE_DEFAULT = -2;
+        public static final int FINISH_REQUEST_CODE_NEW_TASK = -3;
+
 
 
         public static final String EXTRA_FRAGMENT_TYPE = "extra_fragment_type";

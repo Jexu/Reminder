@@ -187,7 +187,9 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
         args.putSerializable(Constant.BundelExtra.EXTRAL_GROUPS_BEANS,
           mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS));
         editTaskFragment.setArguments(args);
-        MainActivity.navigateToForResultCode(editTaskFragment, getFragmentManager(), 1);
+        MainActivity.navigateToForResultCode(editTaskFragment
+                , getFragmentManager()
+                , Constant.BundelExtra.FINISH_REQUEST_CODE_NEW_TASK);
     }
 
     @Override
@@ -212,6 +214,17 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     @Override
     public void onDrawerStateChanged(int newState) {
 
+    }
+
+    @Override
+    public void onFinishedWithResult(int requestCode, int resultCode, Bundle bundle) {
+        super.onFinishedWithResult(requestCode, resultCode, bundle);
+        Log.i("Render", "onFinishedWithResult");
+        if (resultCode != Constant.BundelExtra.FINISH_RESULT_CODE_DEFAULT
+            && requestCode == Constant.BundelExtra.FINISH_REQUEST_CODE_NEW_TASK) {
+            TaskBean newTaskBean = (TaskBean) bundle.get(Constant.BundelExtra.EXTRA_TASK_BEAN);
+            mRenderRecycleViewAdapter.addBean(newTaskBean);
+        }
     }
 
     @Override

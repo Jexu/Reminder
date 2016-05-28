@@ -133,7 +133,7 @@ public class RenderService {
         }
         boolean isCursorNoDate = false;
         if (cursorNoDate != null) {
-            renderObjectBeans.setCountTaskHasDate(cursorNoDate.getCount());
+            renderObjectBeans.setCountTaskNoDate(cursorNoDate.getCount());
             while (cursorNoDate.moveToNext()) {
                 renderObjectBeans.add(cursorRowToTaskBean(cursorNoDate));
             }

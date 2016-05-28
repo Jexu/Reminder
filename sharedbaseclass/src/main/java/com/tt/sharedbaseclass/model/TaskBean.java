@@ -176,7 +176,7 @@ public class TaskBean extends GroupBean {
     } else {
       sb.append(mDayOfMonth<10?"0"+mDayOfMonth:mDayOfMonth)
               .append("/")
-              .append(mMonth<10?"0"+mMonth:mMonth)
+              .append(mMonth<9?"0"+(mMonth+1):(mMonth+1))
               .append("/")
               .append(mYear);
     }
