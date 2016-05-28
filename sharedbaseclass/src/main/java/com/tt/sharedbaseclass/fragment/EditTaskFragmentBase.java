@@ -125,7 +125,7 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
         final EditText editText = new EditText(getActivity());
         editText.setSingleLine(true);
         builder.setView(editText)
-                .setNegativeButton(R.string.edit_task_fragment_alert_dialog_calcel, null)
+                .setNegativeButton(R.string.edit_task_fragment_alert_dialog_discard, null)
                 .setPositiveButton(R.string.edit_task_fragment_alert_dialog_save, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

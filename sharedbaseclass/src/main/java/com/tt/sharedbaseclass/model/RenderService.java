@@ -97,18 +97,7 @@ public class RenderService {
         if (cursor != null) {
             List<TaskBean> renderObjectBeans = new RenderObjectBeans<TaskBean>();
             while (cursor.moveToNext()) {
-                TaskBean taskBean = new TaskBean();
-                taskBean.setTaskContent(cursor.getString(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_CONTENT)));
-                taskBean.setYear(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_YEAR)));
-                taskBean.setMonth(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_MONTH)));
-                taskBean.setDayOfMonth(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_DAY_OF_MONTH)));
-                taskBean.setHour(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_HOUR)));
-                taskBean.setMinuse(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_MINUTE)));
-                taskBean.setRepeatInterval(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_REPEAT_INTERVAL)));
-                taskBean.setRepeatUnit(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_REPEAT_UNIT)));
-                taskBean.setGroup(cursor.getString(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP)));
-                renderObjectBeans.add(taskBean);
-                taskBean = null;
+                renderObjectBeans.add(cursorRowToTaskBean(cursor));
             }
             if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_SELECT_SUCCESS;
@@ -133,22 +122,23 @@ public class RenderService {
         Bundle bundle = new Bundle();
         bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
         Message msg = new Message();
-        Cursor cursor = mDbReader.rawQuery("select "
-                + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
+        Cursor cursor = mDbReader.rawQuery("select * "
                 + " from "
                 + Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP
                 + " where "
                 + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
                 + " <> ?", new String[]{Constant.RenderDbHelper.GROUP_NAME_FINISHED});
         if (cursor != null) {
-            List<String> renderObjectBeans  = new RenderObjectBeans<String>();
+            List<GroupBean> renderObjectBeansGroup  = new RenderObjectBeans<GroupBean>();
             while(cursor.moveToNext()) {
-                renderObjectBeans.add(cursor.getString(cursor.getColumnIndex(
-                        Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP)));
+                GroupBean groupBean = new GroupBean();
+                groupBean.setId(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_ID)));
+                groupBean.setGroup(cursor.getString(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP)));
+                renderObjectBeansGroup.add(groupBean);
             }
             if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_SELECT_SUCCESS;
-                bundle.putSerializable(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN, (RenderObjectBeans) renderObjectBeans);
+                bundle.putSerializable(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN, (RenderObjectBeans) renderObjectBeansGroup);
                 bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_GET_GROUPS_SUCCESS);
             }
         } else {
@@ -309,6 +299,7 @@ public class RenderService {
 
     private TaskBean cursorRowToTaskBean(Cursor cursor) {
         TaskBean taskBean = new TaskBean();
+        taskBean.setId(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_ID)));
         taskBean.setTaskContent(cursor.getString(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_CONTENT)));
         taskBean.setYear(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_YEAR)));
         taskBean.setMonth(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_MONTH)));
@@ -337,9 +328,12 @@ public class RenderService {
             case Constant.RenderServiceHelper.REQUEST_CODE_GET_GROUPS:
             default:
                 if (cursor != null) {
-                    List<String> renderObjectBeansGroup  = new RenderObjectBeans<String>();
+                    List<GroupBean> renderObjectBeansGroup  = new RenderObjectBeans<GroupBean>();
                     while(cursor.moveToNext()) {
-                        renderObjectBeansGroup.add(cursor.getString(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP)));
+                        GroupBean groupBean = new GroupBean();
+                        groupBean.setId(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_ID)));
+                        groupBean.setGroup(cursor.getString(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP)));
+                        renderObjectBeansGroup.add(groupBean);
                     }
                     return renderObjectBeansGroup;
                 }

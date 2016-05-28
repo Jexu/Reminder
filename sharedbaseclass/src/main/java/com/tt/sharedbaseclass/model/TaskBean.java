@@ -10,8 +10,7 @@ import java.util.Locale;
 /**
  * Created by zhengguo on 5/19/16.
  */
-public class TaskBean implements Serializable {
-  private int mId;
+public class TaskBean extends GroupBean {
   private String mTaskContent;
   private int mYear;
   private int mMonth;
@@ -21,7 +20,6 @@ public class TaskBean implements Serializable {
   private long mTimeInMillis;
   private int mRepeatInterval;
   private int mRepeatUnit;
-  private String mGroup;
   private boolean mIsFinished;
   private Calendar mCalendar;
 
@@ -31,25 +29,16 @@ public class TaskBean implements Serializable {
 
 
   public TaskBean() {
-
+    super();
     mTaskContent = "";
-    this.mYear = DEFAULT_VALUE_OF_DATE_TIME;
-    this.mMonth = DEFAULT_VALUE_OF_DATE_TIME;
-    this.mDayOfMonth = DEFAULT_VALUE_OF_DATE_TIME;
-    this.mHour = DEFAULT_VALUE_OF_DATE_TIME;
-    this.mMinute = DEFAULT_VALUE_OF_DATE_TIME;
+    mYear = DEFAULT_VALUE_OF_DATE_TIME;
+    mMonth = DEFAULT_VALUE_OF_DATE_TIME;
+    mDayOfMonth = DEFAULT_VALUE_OF_DATE_TIME;
+    mHour = DEFAULT_VALUE_OF_DATE_TIME;
+    mMinute = DEFAULT_VALUE_OF_DATE_TIME;
     mRepeatInterval = DEFAULT_VALUE_OF_INTERVAL;
     mRepeatUnit = Constant.REPEAT_UNIT.NO_REPEAT.value();
-    mGroup = Constant.RenderDbHelper.GROUP_NAME_MY_TASK;
     mCalendar = Calendar.getInstance(Locale.ENGLISH);
-  }
-
-  public int getId() {
-    return mId;
-  }
-
-  public void setId(int id) {
-    this.mId = id;
   }
 
   public String getTaskContent() {
@@ -142,14 +131,6 @@ public class TaskBean implements Serializable {
 
   public void setRepeatUnit(int repeatUnit) {
     this.mRepeatUnit = repeatUnit;
-  }
-
-  public String getGroup() {
-    return mGroup;
-  }
-
-  public void setGroup(String group) {
-    this.mGroup = group;
   }
 
   public boolean isDeadline() {
@@ -255,6 +236,36 @@ public class TaskBean implements Serializable {
   }
 
   @Override
+  public void copy(RenderBeanBase taskBean) {
+    super.copy(taskBean);
+    TaskBean tb = (TaskBean)taskBean;
+    mTaskContent = tb.mTaskContent;
+    mYear = tb.mYear;
+    mMonth = tb.mMonth;
+    mDayOfMonth = tb.mDayOfMonth;
+    mHour = tb.mHour;
+    mMinute = tb.mMinute;
+    mRepeatInterval = tb.mRepeatInterval;
+    mRepeatUnit = tb.mRepeatUnit;
+  }
+
+  @Override
+  public String toString() {
+    return mTaskContent;
+  }
+
+  @Override
+  public int compareTo(Object another) {
+    if (getTimeInMillis() > ((TaskBean) another).getTimeInMillis()) {
+      return 1;
+    } else if (getTimeInMillis() < ((TaskBean) another).getTimeInMillis()) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
+
+  @Override
   public boolean equals(Object o) {
     TaskBean taskBean = (TaskBean)o;
     return (taskBean.mTaskContent.equals(mTaskContent)
@@ -265,6 +276,6 @@ public class TaskBean implements Serializable {
       && taskBean.mMinute == mMinute
       && taskBean.mRepeatInterval == mRepeatInterval
       && taskBean.mRepeatUnit == mRepeatUnit
-      && taskBean.mGroup.equals(mGroup));
+      && super.equals(o));
   }
 }

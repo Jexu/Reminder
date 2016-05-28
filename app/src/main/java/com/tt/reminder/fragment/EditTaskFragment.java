@@ -15,6 +15,7 @@ import android.widget.*;
 import com.tt.reminder.R;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.EditTaskFragmentBase;
+import com.tt.sharedbaseclass.model.GroupBean;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 import com.tt.sharedbaseclass.model.RenderCallback;
@@ -29,7 +30,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
     private static EditTaskFragment mEditTaskFragment;
     private TaskBean mTaskBean;
     private TaskBean mTaskBeanFromParent;
-    private RenderObjectBeans<String> mGroupsBean;
+    private RenderObjectBeans<GroupBean> mGroupsBean;
     private ArrayAdapter<String> mGroupsAdapter;
     private SaveTaskBeanCallback mSaveTaskBeanCallback;
     private AddNewGroupCallBack mAddNewGroupCallBack;
@@ -55,7 +56,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
             if (mTaskBeanFromParent == null) {
                 mTaskBeanFromParent = new TaskBean();
             }
-            mGroupsBean = (RenderObjectBeans<String>) args.getSerializable(Constant.BundelExtra.EXTRAL_GROUPS_BEANS);
+            mGroupsBean = (RenderObjectBeans<GroupBean>) args.getSerializable(Constant.BundelExtra.EXTRAL_GROUPS_BEANS);
             mGroupsAdapter = new ArrayAdapter<>(getActivity(),
               R.layout.shared_spinner_simple_item,
               R.id.spinner_simple_item_view,
@@ -237,7 +238,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mTaskBean.setGroup((String) mGroupsBean.get(position));
+        mTaskBean.setGroup(mGroupsBean.get(position).toString());
     }
 
     @Override
@@ -253,7 +254,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
             String title = getResources().getString(R.string.edit_task_fragment_alert_dialog_title);
             String message = getResources().getString(R.string.edit_task_fragment_alert_dialog_message);
             AlertDialog.Builder builder = getDefaultAlertDialogBuilder(title, message);
-            builder.setNegativeButton(R.string.edit_task_fragment_alert_dialog_calcel,
+            builder.setNegativeButton(R.string.edit_task_fragment_alert_dialog_discard,
               new DialogInterface.OnClickListener() {
 
                 @Override
