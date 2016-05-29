@@ -87,18 +87,21 @@ public class Constant {
 
 
         public static final int REQUEST_CODE_DEFAULT = -1;
-        public static final int REQUEST_CODE_INSERT_TASK_BEAN = 1;
-        public static final int REQUEST_CODE__INSERT_NEW_GROUP = 2;
-        public static final int REQUEST_CODE_UPDATE_TASK_BEAN = 3;
-        public static final int REQUEST_CODE_UPDATE_GROUP_NAME = 4;
-        public static final int REQUEST_CODE_DELETE_TASK_BEAN = 5;
-        public static final int REQUEST_CODE_DELETE_GROUP = 6;
+        public static final int REQUEST_CODE_INSERT_TASK_BEAN = -2;
+        public static final int REQUEST_CODE__INSERT_NEW_GROUP = -3;
+        public static final int REQUEST_CODE_UPDATE_TASK_BEAN = -4;
+        public static final int REQUEST_CODE_UPDATE_GROUP_NAME = -5;
+        public static final int REQUEST_CODE_DELETE_TASK_BEAN = -6;
+        public static final int REQUEST_CODE_DELETE_GROUP = -7;
+
+        //this value must equal to zero
         public static final int REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED = 0;
-        public static final int REQUEST_CODE_GET_TASKS_BEANS_BY_GROUP_NAME = 9;
-        public static final int REQUEST_CODE_GET_GROUPS = 8;
+        public static final int REQUEST_CODE_GET_TASKS_BEANS_BY_GROUP_NAME = -9;
+        public static final int REQUEST_CODE_GET_GROUPS = -10;
 
 
 
+        public static final int RESULT_CODE_FAIL = -1;
         public static final int RESULT_CODE_GET_TASKS_SUCCESS_HAS_DATE_ONLY = 0;
         public static final int RESULT_CODE_GET_TASKS_SUCCESS_NO_DATE_ONLY = 8;
         public static final int RESULT_CODE_GET_TASKS_SUCCESS_HAS_DATE_AND_NO_DATE = 9;
@@ -107,8 +110,13 @@ public class Constant {
         public static final int RESULT_CODE_GET_GROUPS_SUCCESS = 3;
         public static final int RESULT_CODE_GET_GROUPS_FAIL_NO_GROUPS = 4;
         public static final int RESULT_CODE_GET_GROUPS_FAIL_ERROR = 5;
-        public static final int RESULT_CODE_UPDATE_SUCCESS = 6;
-        public static final int RESULT_CODE_UPDATE_FAIL = 7;
+        public static final int RESULT_CODE_INSERT_TASK_SUCCESS = 6;
+        public static final int RESULT_CODE_INSERT_GROUP_SUCCESS = 7;
+        public static final int RESULT_CODE_DELETE_TASK_SUCCESS = 8;
+        public static final int RESULT_CODE_DELETE_GROUP_SUCCESS = 9;
+        public static final int RESULT_CODE_UPDATE_TASK_SUCCESS = 10;
+        public static final int RESULT_CODE_UPDATE_GROUP_SUCCESS = 11;
+
 
     }
 

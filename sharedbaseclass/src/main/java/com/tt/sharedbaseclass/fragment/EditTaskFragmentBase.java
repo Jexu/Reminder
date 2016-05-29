@@ -26,7 +26,7 @@ import java.util.Arrays;
  * Created by zhengguo on 2016/5/18.
  */
 public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderView implements
-         TextWatcher, Animator.AnimatorListener {
+         TextWatcher {
 
     protected EditText mTaskContent;
     protected TextView mAlarmDate;
@@ -135,40 +135,6 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
 
     protected abstract void addNewGroup(EditText editText);
 
-    @Override
-    public void onAnimationStart(Animator animation) {
-        if (!TextUtils.isEmpty(mAlarmDate.getText().toString()) && mClearDateBtn.getVisibility() == View.GONE) {
-            mClearDateBtn.setVisibility(View.VISIBLE);
-        }
-        if (!TextUtils.isEmpty(mAlarmTime.getText().toString()) && mClearTimeBtn.getVisibility() == View.GONE) {
-            mClearTimeBtn.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    public void onAnimationEnd(Animator animation) {
-        if (mEditedView == EDITED_VIEW.PICKED_DATE) {
-            if (TextUtils.isEmpty(mAlarmDate.getText().toString()) && mClearDateBtn.getVisibility() == View.VISIBLE) {
-                mClearDateBtn.setVisibility(View.GONE);
-            }
-        } else if(mEditedView == EDITED_VIEW.PICKED_TIME) {
-            if (TextUtils.isEmpty(mAlarmTime.getText().toString()) && mClearTimeBtn.getVisibility() == View.VISIBLE) {
-                mClearTimeBtn.setVisibility(View.GONE);
-            }
-        }
-        mEditedView = EDITED_VIEW.TASK_CONTENT;
-    }
-
-    @Override
-    public void onAnimationCancel(Animator animation) {
-
-    }
-
-    @Override
-    public void onAnimationRepeat(Animator animation) {
-
-    }
-
     protected void updateEditedViewStatue(EDITED_VIEW edited_view, TextView editView,
                                         String editViewStr) {
         mEditedView = edited_view;
@@ -184,17 +150,18 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (mEditedView == EDITED_VIEW.PICKED_DATE) {
             if (TextUtils.isEmpty(mAlarmDate.getText().toString()) && mClearDateBtn.getVisibility() == View.VISIBLE) {
-                mClearDateBtn.animate().alpha(0).translationX(mAlarmDate.getX() + mClearDateBtn.getWidth()).setDuration(100).setListener(this).start();
+                mClearDateBtn.setVisibility(View.GONE);
             } else if (!TextUtils.isEmpty(mAlarmDate.getText().toString()) && mClearDateBtn.getVisibility() == View.GONE) {
-                mClearDateBtn.animate().alpha(1).translationX(mAlarmDate.getX()).setDuration(100).setListener(this).start();
+                mClearDateBtn.setVisibility(View.VISIBLE);
             }
         } else if (mEditedView == EDITED_VIEW.PICKED_TIME) {
             if (TextUtils.isEmpty(mAlarmTime.getText().toString()) && mClearTimeBtn.getVisibility() == View.VISIBLE) {
-                mClearTimeBtn.animate().alpha(0).translationX(mAlarmTime.getX() + mClearTimeBtn.getWidth()).setDuration(100).setListener(this).start();
+                mClearTimeBtn.setVisibility(View.GONE);
             } else if (!TextUtils.isEmpty(mAlarmTime.getText().toString()) && mClearTimeBtn.getVisibility() == View.GONE) {
-                mClearTimeBtn.animate().alpha(1).translationX(mAlarmTime.getX()).setDuration(100).setListener(this).start();
+                mClearTimeBtn.setVisibility(View.VISIBLE);
             }
         }
+        mEditedView = EDITED_VIEW.TASK_CONTENT;
     }
 
     @Override

@@ -9,6 +9,10 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:textSize="@dimen/subtitle_text_size_in_layout_fragment_edit"
-        android:layout_margin="@dimen/shared_spinner_simple_item_margin_2dp"
+        android:layout_marginTop="@dimen/shared_spinner_simple_item_margin_2dp"
+        android:layout_marginRight="@dimen/shared_spinner_simple_item_margin_2dp"
+        android:layout_marginBottom="@dimen/shared_spinner_simple_item_margin_2dp"
+        android:layout_marginLeft="@dimen/shared_spinner_simple_item_margin_left_4dp"
+        android:textColor="@android:color/black"
         />
 </LinearLayout>

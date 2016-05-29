@@ -21,7 +21,6 @@ import com.tt.sharedbaseclass.model.TaskBean;
 import com.tt.sharedbaseclass.model.RenderCallback;
 import com.tt.sharedbaseclass.view.WheelView;
 
-import java.lang.ref.SoftReference;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -248,8 +247,8 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
             mAlarmDate.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
             mAlarmTime.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
         } else {
-            mAlarmDate.setTextColor(getResources().getColor(android.R.color.tertiary_text_dark));
-            mAlarmTime.setTextColor(getResources().getColor(android.R.color.tertiary_text_dark));
+            mAlarmDate.setTextColor(getResources().getColor(android.R.color.black));
+            mAlarmTime.setTextColor(getResources().getColor(android.R.color.black));
         }
         if (mEditedView == EDITED_VIEW.TASK_CONTENT) {
             if (TextUtils.isEmpty(mTaskContent.getText())) {
@@ -275,7 +274,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
         if (mTaskBean.equals(mTaskBeanFromParent)) {
             finish();
         } else {
-            String title = getResources().getString(R.string.edit_task_fragment_alert_dialog_title);
+            String title = getResources().getString(R.string.alert_dialog_title_are_you_sure);
             String message = getResources().getString(R.string.edit_task_fragment_alert_dialog_message);
             AlertDialog.Builder builder = getDefaultAlertDialogBuilder(title, message);
             builder.setNegativeButton(R.string.edit_task_fragment_alert_dialog_discard,
@@ -322,17 +321,32 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
               ,Constant.RenderServiceHelper.REQUEST_CODE_INSERT_TASK_BEAN);
         } else if (mFragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()) {
             // TODO: 5/26/16 update origin task
+            if (mTaskBean.equals(mTaskBeanFromParent)) {
+                finish();
+            } else {
+                mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.value()
+                , Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
+                , mTaskBeanFromParent
+                , mTaskBean
+                , null
+                , Constant.RenderServiceHelper.REQUEST_CODE_UPDATE_TASK_BEAN);
+            }
         }
     }
 
     private void onSaveTaskSuccess(long row, int requestCode, int resultCode) {
         Bundle bundle = new Bundle();
         // TODO: 5/26/16 update bundle and finishedCode
-        if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
+        if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()
+                && requestCode == Constant.RenderServiceHelper.REQUEST_CODE_INSERT_TASK_BEAN
+                && resultCode == Constant.RenderServiceHelper.RESULT_CODE_INSERT_TASK_SUCCESS) {
             Log.i("Render", "add new task successfully");
             bundle.putSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN, mTaskBean);
-        } else if (mFragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()) {
+        } else if (mFragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()
+                && requestCode == Constant.RenderServiceHelper.REQUEST_CODE_UPDATE_TASK_BEAN
+                && resultCode == Constant.RenderServiceHelper.RESULT_CODE_UPDATE_TASK_SUCCESS) {
             Log.i("Render", "update task successfully");
+            bundle.putSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN, mTaskBean);
         }
         finishWithResultCode(Constant.BundelExtra.FINISH_RESULT_CODE_SUCCESS, bundle);
     }
@@ -355,7 +369,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
 
     private void onAddNewGroupSuccess(long row, int requestCode, int resultCode) {
         if (requestCode == Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP
-          && resultCode == Constant.RenderServiceHelper.RESULT_CODE_UPDATE_SUCCESS) {
+          && resultCode == Constant.RenderServiceHelper.RESULT_CODE_INSERT_GROUP_SUCCESS) {
             // TODO: 2016/5/23  update group list
             Log.i("Render", "add new group successfully");
             mGroupsBean.add(new GroupBean(mTaskBean.getGroup()));
@@ -386,7 +400,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
         @Override
         public void onHandleFail(int requestCode, int resultCode) {
             if (requestCode == Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP
-                    && resultCode == Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL) {
+                    && resultCode == Constant.RenderServiceHelper.RESULT_CODE_FAIL) {
                 // TODO: 2016/5/23 dismiss loading view
                 Log.i("Render", "fail to add new group");
             } else {
@@ -418,4 +432,5 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
 
         }
     }
+
 }

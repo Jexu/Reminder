@@ -79,16 +79,26 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
         if (i == R.id.header_view_main_menu) {
             onMainMenuClick();
         } else if (i == R.id.header_view_add_new_task) {
-            navigateToEditFragment(Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value(), null);
+            navigateToEditFragment(Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()
+                    , null
+                    , Constant.BundelExtra.FINISH_REQUEST_CODE_NEW_TASK);
         }
     }
 
     protected abstract void onMainMenuClick();
 
-    protected abstract void navigateToEditFragment(int fragmentType, TaskBean taskBean);
+    protected abstract void navigateToEditFragment(int fragmentType, TaskBean taskBean, int requestCode);
 
     protected void onMainMenuAnimation(View mainMenu, float drawerViewSlideOffset) {
         mainMenu.setRotation(drawerViewSlideOffset * 90);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mLruCache != null) {
+            mLruCache.evictAll();
+            mLruCache = null;
+        }
+    }
 }
