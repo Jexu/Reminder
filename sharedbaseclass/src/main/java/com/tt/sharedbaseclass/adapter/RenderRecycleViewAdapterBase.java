@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
+import com.tt.sharedbaseclass.model.TaskBean;
 
 /**
  * Created by zhengguo on 5/27/16.
@@ -55,7 +56,13 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
 
   public void removeBean(int position) {
     if (mRenderObjectBeans != null) {
+       if (((TaskBean)mRenderObjectBeans.get(position)).isClearedPickedDate()) {
+         mRenderObjectBeans.setCountTaskNoDate(mRenderObjectBeans.getCountTaskNoDate() - 1);
+       } else {
+         mRenderObjectBeans.setCountTaskHasDate(mRenderObjectBeans.getCountTaskHasDate() - 1);
+       }
       mRenderObjectBeans.remove(position);
+      notifyDataSetChanged();
     }
   }
 

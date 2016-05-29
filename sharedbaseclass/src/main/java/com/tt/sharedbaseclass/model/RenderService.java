@@ -111,7 +111,7 @@ public class RenderService {
               , TaskBean.DEFAULT_VALUE_OF_DATE_TIME+""});
         }
 
-        RenderObjectBeans<TaskBean> renderObjectBeans = new RenderObjectBeans<TaskBean>();
+        RenderObjectBeans<TaskBean> renderObjectBeans = new RenderObjectBeans<>();
         boolean isCursorHasDate = false;
         if (cursorHasDate != null) {
             renderObjectBeans.setCountTaskHasDate(cursorHasDate.getCount());
@@ -202,15 +202,15 @@ public class RenderService {
         dbReader.close();
     }
 
-    private void addDataToTable(int action, String tableName,TaskBean taskBean, int requestCode) {
+    private void addDataToTable(int action, String tableName,RenderBeanBase bean, int requestCode) {
         RenderCallback handler = mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
         Bundle bundle = new Bundle();
         bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
         Message msg = new Message();
-        if (StringUtil.isEmpty(tableName) || taskBean == null) {
+        if (StringUtil.isEmpty(tableName) || bean == null) {
             if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
-                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL);
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_FAIL);
             } else {
                 Log.e("Render", "this is no handler when get tasks by group name");
             }
@@ -219,17 +219,21 @@ public class RenderService {
             return;
         }
         SQLiteDatabase dbWrite = mRenderDbHelper.getWritableDatabase();
-        long row = dbWrite.insert(tableName, null, taskBeanToContentValues(taskBean, requestCode));
+        long row = dbWrite.insert(tableName, null, taskBeanToContentValues(bean, requestCode));
         if (row != -1) {
             if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_UPDATE_SUCCESS;
                 bundle.putLong(Constant.BundelExtra.EXTRA_UPDATE_ROW, row);
-                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_SUCCESS);
+                if (action == Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.value()) {
+                    bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_INSERT_TASK_SUCCESS);
+                } else if (action == Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.value()) {
+                    bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_INSERT_GROUP_SUCCESS);
+                }
             }
         } else {
             if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
-                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL);
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_FAIL);
             }
         }
         msg.obj = bundle;
@@ -237,15 +241,15 @@ public class RenderService {
         dbWrite.close();
     }
 
-    private void updateTable(int action, String tableName,TaskBean oldTaskBean, TaskBean newTaskBean, int requestCode) {
+    private void updateTable(int action, String tableName,RenderBeanBase oldBean, RenderBeanBase newBean, int requestCode) {
         RenderCallback handler = mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
         Bundle bundle = new Bundle();
         bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
         Message msg = new Message();
-        if (StringUtil.isEmpty(tableName) || oldTaskBean == null || newTaskBean == null) {
+        if (StringUtil.isEmpty(tableName) || oldBean == null || newBean == null) {
             if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
-                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL);
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_FAIL);
             } else {
                 Log.e("Render", "this is no handler when get tasks by group name");
             }
@@ -254,18 +258,22 @@ public class RenderService {
             return;
         }
         SQLiteDatabase dbWrite = mRenderDbHelper.getWritableDatabase();
-        long row = dbWrite.update(tableName, taskBeanToContentValues(oldTaskBean, newTaskBean, requestCode)
-                , Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_ID + " = ?", new String[]{oldTaskBean.getId() + ""});
+        long row = dbWrite.update(tableName, taskBeanToContentValues(oldBean, newBean, requestCode)
+                , Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_ID + " = ?", new String[]{((GroupBean) oldBean).getId() + ""});
         if (row != -1) {
             if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_UPDATE_SUCCESS;
                 bundle.putLong(Constant.BundelExtra.EXTRA_UPDATE_ROW, row);
-                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_SUCCESS);
+                if (action == Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.value()) {
+                    bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_TASK_SUCCESS);
+                } else if (action == Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_GROUP_NAME.value()) {
+                    bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_GROUP_SUCCESS);
+                }
             }
         } else {
             if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
-                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL);
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_FAIL);
             }
         }
         msg.obj = bundle;
@@ -281,7 +289,7 @@ public class RenderService {
         if (StringUtil.isEmpty(tableName)) {
             if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
-                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL);
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_FAIL);
             } else {
                 Log.e("Render", "this is no handler when get tasks by group name");
             }
@@ -296,12 +304,16 @@ public class RenderService {
             if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_UPDATE_SUCCESS;
                 bundle.putLong(Constant.BundelExtra.EXTRA_UPDATE_ROW, row);
-                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_SUCCESS);
+                if (action == Constant.RenderServiceHelper.ACTION.ACTION_DELETE_TASK.value()) {
+                    bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_DELETE_TASK_SUCCESS);
+                } else if (action == Constant.RenderServiceHelper.ACTION.ACTION_DELETE_GROUP.value()) {
+                    bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_DELETE_GROUP_SUCCESS);
+                }
             }
         } else {
             if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
-                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_UPDATE_FAIL);
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_FAIL);
             }
         }
         msg.obj = bundle;
@@ -309,10 +321,11 @@ public class RenderService {
         dbWrite.close();
     }
 
-    private ContentValues taskBeanToContentValues(TaskBean taskBean, int requestCode) {
+    private ContentValues taskBeanToContentValues(RenderBeanBase bean, int requestCode) {
         ContentValues cv = new ContentValues();
         switch (requestCode) {
             case Constant.RenderServiceHelper.REQUEST_CODE_INSERT_TASK_BEAN:
+                TaskBean taskBean = (TaskBean)bean;
                 cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_CONTENT, taskBean.getTaskContent());
                 cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_YEAR, taskBean.getYear());
                 cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_MONTH, taskBean.getMonth());
@@ -326,37 +339,54 @@ public class RenderService {
                 break;
             case Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP:
             default:
-                cv.put(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP, taskBean.getGroup());
+                GroupBean groupBean = (GroupBean)bean;
+                cv.put(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP, groupBean.getGroup());
                 break;
         }
         return cv;
     }
 
-    private ContentValues taskBeanToContentValues(TaskBean oldTaskBean, TaskBean newTaskBean, int requestCode) {
+    private ContentValues taskBeanToContentValues(RenderBeanBase oldBean, RenderBeanBase newBean, int requestCode) {
         ContentValues cv = new ContentValues();
-        if (!oldTaskBean.getTaskContent().equals(newTaskBean.getTaskContent())) {
-            cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_CONTENT, newTaskBean.getTaskContent());
-        }
-        if (oldTaskBean.getTimeInMillis() != newTaskBean.getTimeInMillis()) {
-            if (!oldTaskBean.getPickedDate(true).equals(newTaskBean.getPickedDate(true))) {
-                cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_YEAR, newTaskBean.getYear());
-                cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_MONTH, newTaskBean.getMonth());
-                cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_DAY_OF_MONTH, newTaskBean.getDayOfMonth());
+        if (requestCode == Constant.RenderServiceHelper.REQUEST_CODE_UPDATE_TASK_BEAN) {
+            TaskBean oldTaskBean = (TaskBean)oldBean;
+            TaskBean newTaskBean = (TaskBean)newBean;
+            if (!oldTaskBean.getTaskContent().equals(newTaskBean.getTaskContent())) {
+                cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_CONTENT, newTaskBean.getTaskContent());
             }
-            if (!oldTaskBean.getPickedTime(true).equals(newTaskBean.getPickedTime(true))) {
-                cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_HOUR, newTaskBean.getHour());
-                cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_MINUTE, newTaskBean.getMinute());
+            if (oldTaskBean.getTimeInMillis() != newTaskBean.getTimeInMillis()) {
+                cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS, newTaskBean.getTimeInMillis());
+                if ((oldTaskBean.isClearedPickedDate() && !newTaskBean.isClearedPickedDate())
+                        || (!oldTaskBean.isClearedPickedDate() && newTaskBean.isClearedPickedDate())
+                        || !oldTaskBean.getPickedDate(true).equals(newTaskBean.getPickedDate(true))) {
+                    cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_YEAR, newTaskBean.getYear());
+                    cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_MONTH, newTaskBean.getMonth());
+                    cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_DAY_OF_MONTH, newTaskBean.getDayOfMonth());
+                }
+                if ((oldTaskBean.isClearedPickedTime() && !newTaskBean.isClearedPickedTime())
+                        || (!oldTaskBean.isClearedPickedTime() && newTaskBean.isClearedPickedTime())
+                        || !oldTaskBean.getPickedTime(true).equals(newTaskBean.getPickedTime(true))) {
+                    cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_HOUR, newTaskBean.getHour());
+                    cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_MINUTE, newTaskBean.getMinute());
+                }
+            }
+            if (oldTaskBean.getRepeatInterval() != newTaskBean.getRepeatInterval()) {
+                cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_REPEAT_INTERVAL, newTaskBean.getRepeatInterval());
+            }
+            if (oldTaskBean.getRepeatUnit() != newTaskBean.getRepeatUnit()) {
+                cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_REPEAT_UNIT, newTaskBean.getRepeatUnit());
+            }
+            if (!oldTaskBean.getGroup().equals(newTaskBean.getGroup())) {
+                cv.put(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP, newTaskBean.getGroup());
+            }
+        } else if (requestCode == Constant.RenderServiceHelper.REQUEST_CODE_UPDATE_GROUP_NAME) {
+            GroupBean oldGroupBean = (GroupBean)oldBean;
+            GroupBean newGroupBean = (GroupBean)newBean;
+            if (!oldGroupBean.getGroup().equals(newGroupBean.getGroup())) {
+                cv.put(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP, newGroupBean.getGroup());
             }
         }
-        if (oldTaskBean.getRepeatInterval() != newTaskBean.getRepeatInterval()) {
-            cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_REPEAT_INTERVAL, newTaskBean.getRepeatInterval());
-        }
-        if (oldTaskBean.getRepeatUnit() != newTaskBean.getRepeatUnit()) {
-            cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_REPEAT_UNIT, newTaskBean.getRepeatUnit());
-        }
-        if (!oldTaskBean.getGroup().equals(newTaskBean.getGroup())) {
-            cv.put(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP, newTaskBean.getGroup());
-        }
+
         return cv;
     }
 
@@ -406,7 +436,7 @@ public class RenderService {
     }
 
 
-    public void getOrUpdate(final int action, final String tableName, final TaskBean oldTaskBean, final TaskBean newTaskBean, final String[] whereArgs, final int requestCode) {
+    public void getOrUpdate(final int action, final String tableName, final RenderBeanBase oldBean, final RenderBeanBase newBean, final String[] whereArgs, final int requestCode) {
         new AsyncTask<Void, Void , Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -423,13 +453,13 @@ public class RenderService {
                     //add new task
                     case 3:
                     case 4:
-                        addDataToTable(action, tableName, newTaskBean, requestCode);
+                        addDataToTable(action, tableName, newBean, requestCode);
                         break;
                     //update task
                     //update group name
                     case 5:
                     case 6:
-                        updateTable(action, tableName, oldTaskBean, newTaskBean, requestCode);
+                        updateTable(action, tableName, oldBean, newBean, requestCode);
                         break;
                     //delete task
                     //delete group
