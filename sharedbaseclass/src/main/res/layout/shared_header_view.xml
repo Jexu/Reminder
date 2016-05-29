@@ -14,7 +14,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/header_view_main_menu_margin_left"
         android:layout_marginRight="@dimen/header_view_margin_right_and_left_between_view"
-        android:background="@drawable/shared_header_view_main_menu"
+        android:background="@drawable/main_menu_24dp"
         android:scaleType="fitCenter" />
 
     <ImageView
@@ -25,7 +25,7 @@
         android:layout_marginLeft="@dimen/header_view_margin_right_and_left_between_view"
         android:layout_marginRight="@dimen/header_view_margin_right_and_left_between_view"
         android:layout_toRightOf="@+id/header_view_main_menu"
-        android:src="@drawable/shared_header_view_left_arrow"
+        android:src="@drawable/left_arrow_24dp"
         android:scaleType="fitCenter"
         android:visibility="gone" />
 
@@ -38,7 +38,7 @@
         android:layout_marginLeft="@dimen/header_view_margin_right_and_left_between_view"
         android:layout_marginRight="@dimen/header_view_margin_right_and_left_between_view"
         android:layout_toLeftOf="@+id/header_view_search"
-        android:src="@drawable/save" />
+        android:src="@drawable/voice_search__24dp" />
 
     <TextView
         android:id="@+id/header_view_title"
@@ -54,13 +54,14 @@
         android:layout_toLeftOf="@id/header_view_voice_input"
         android:layout_toRightOf="@+id/header_view_left_arrow" />
 
-    <SearchView
+    <ImageView
         android:id="@+id/header_view_search"
         android:layout_width="@dimen/image_button_size"
         android:layout_height="@dimen/image_button_size"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/header_view_margin_right_and_left_between_view"
         android:layout_marginRight="@dimen/header_view_margin_right_and_left_between_view"
+        android:background="@drawable/search_24dp"
         android:layout_toLeftOf="@+id/header_view_add_new_task" />
 
     <ImageView
@@ -71,7 +72,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="@dimen/header_view_save_task_margin_right"
         android:scaleType="fitCenter"
-        android:src="@drawable/shared_header_view_add" />
+        android:src="@drawable/add_24dp" />
 
     <ImageView
         android:id="@+id/header_view_save_task"
@@ -81,7 +82,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="@dimen/header_view_save_task_margin_right"
         android:scaleType="fitCenter"
-        android:src="@drawable/save"
+        android:src="@drawable/save_24dp"
         android:visibility="gone"
       />
 

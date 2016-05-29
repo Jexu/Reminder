@@ -26,7 +26,7 @@ public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBas
 
     protected ImageView mHeaderViewMainMenu, mHeaderViewLeftArrow, mHeaderViewVoiceInput, mHeaderViewAddNewTask, mHeaderViewSaveTask;
     protected TextView mHeaderViewTitle;
-    protected SearchView mHeaderViewSearch;
+    protected ImageView mHeaderViewSearch;
     protected RenderService mRenderService;
 
     public FragmentBaseWithSharedHeaderView() {
@@ -49,7 +49,7 @@ public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBas
         mHeaderViewLeftArrow = (ImageView) view.findViewById(R.id.header_view_left_arrow);
         mHeaderViewTitle = (TextView) view.findViewById(R.id.header_view_title);
         mHeaderViewVoiceInput = (ImageView) view.findViewById(R.id.header_view_voice_input);
-        mHeaderViewSearch = (SearchView) view.findViewById(R.id.header_view_search);
+        mHeaderViewSearch = (ImageView) view.findViewById(R.id.header_view_search);
         mHeaderViewAddNewTask = (ImageView) view.findViewById(R.id.header_view_add_new_task);
         mHeaderViewSaveTask = (ImageView) view.findViewById(header_view_save_task);
         Log.e("Render", "onViewCreated");
