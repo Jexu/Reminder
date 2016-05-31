@@ -153,8 +153,6 @@ public class Constant {
         public static final int FINISH_REQUEST_CODE_EDIT_TASK = -4;
 
 
-
-
         public static final String EXTRA_FRAGMENT_TYPE = "extra_fragment_type";
         public static final String EXTRA_TASK_BEAN = "extra_task_bean";
         public static final String EXTRAL_GROUPS_BEANS = "extra_groups_beans";

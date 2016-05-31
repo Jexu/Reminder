@@ -285,8 +285,18 @@ public class RenderService {
             handler.sendMessage(msg);
             return;
         }
+
+        int tempRequestCode;
+        if (action == Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.value()) {
+            tempRequestCode = Constant.RenderServiceHelper.REQUEST_CODE_UPDATE_TASK_BEAN;
+        } else if (action == Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_GROUP_NAME.value()) {
+            tempRequestCode = Constant.RenderServiceHelper.REQUEST_CODE_UPDATE_GROUP_NAME;
+        } else {
+            tempRequestCode = requestCode;
+        }
+
         SQLiteDatabase dbWrite = mRenderDbHelper.getWritableDatabase();
-        long row = dbWrite.update(tableName, taskBeanToContentValues(oldBean, newBean, requestCode)
+        long row = dbWrite.update(tableName, taskBeanToContentValues(oldBean, newBean, tempRequestCode)
           , Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_ID + " = ?", new String[]{((GroupBean) oldBean).getId() + ""});
         if (row != -1) {
             if (handler != null) {
