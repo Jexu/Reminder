@@ -136,6 +136,8 @@ public class Constant {
         public static String EXTRA_TABLE_TASKS_COLUM_MINUTE = "colum_minute";
         public static String EXTRA_TABLE_TASKS_COLUM_REPEAT_INTERVAL = "colum_repeat_interval";
         public static String EXTRA_TABLE_TASKS_COLUM_REPEAT_UNIT = "colum_repeat_unit";
+        public static String EXTRA_TABLE_TASKS_COLUM_IS_FINISHED = "colum_is_finished";
+
 
         public static String EXTRA_TABLE_GROUP_COLUM_ID = "_id";
         public static String EXTRA_TABLE_NAME_GROUP = "table_group";

@@ -3,7 +3,6 @@ package com.tt.sharedbaseclass.model;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedutils.StringUtil;
 
-import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -20,9 +19,11 @@ public class TaskBean extends GroupBean {
   private long mTimeInMillis;
   private int mRepeatInterval;
   private int mRepeatUnit;
-  private boolean mIsFinished;
+  private int mIsFinished;
   private Calendar mCalendar;
 
+  public static int VALUE_FINISHED = 0;
+  public static int VALUE_NOT_FINISHED = 1;
   public static int DEFAULT_VALUE_OF_DATE_TIME = -1;
   public static int DEFAULT_VALUE_OF_INTERVAL = 0;
   public static long TIMILLS_ONE_HOUR = 60*60*1000;
@@ -38,6 +39,7 @@ public class TaskBean extends GroupBean {
     mMinute = DEFAULT_VALUE_OF_DATE_TIME;
     mRepeatInterval = DEFAULT_VALUE_OF_INTERVAL;
     mRepeatUnit = Constant.REPEAT_UNIT.NO_REPEAT.value();
+    mIsFinished = VALUE_NOT_FINISHED;
     mCalendar = Calendar.getInstance(Locale.ENGLISH);
   }
 
@@ -155,8 +157,12 @@ public class TaskBean extends GroupBean {
     return isDeadLine;
   }
 
-  public boolean isFinished() {
+  public int isFinished() {
     return mIsFinished;
+  }
+
+  public void setIsFinished(int isFinished) {
+    mIsFinished = isFinished;
   }
 
   public String getPickedDate(boolean isInEditFragment) {
@@ -252,6 +258,7 @@ public class TaskBean extends GroupBean {
     mMinute = tb.mMinute;
     mRepeatInterval = tb.mRepeatInterval;
     mRepeatUnit = tb.mRepeatUnit;
+    mIsFinished = tb.mIsFinished;
   }
 
   @Override
@@ -281,6 +288,7 @@ public class TaskBean extends GroupBean {
       && taskBean.mMinute == mMinute
       && taskBean.mRepeatInterval == mRepeatInterval
       && taskBean.mRepeatUnit == mRepeatUnit
+      && taskBean.mIsFinished == mIsFinished
       && super.equals(o));
   }
 }

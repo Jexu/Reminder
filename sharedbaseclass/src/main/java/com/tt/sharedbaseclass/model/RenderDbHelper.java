@@ -6,14 +6,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import com.tt.sharedbaseclass.constant.Constant;
-import com.tt.sharedbaseclass.model.TaskBean;
 
 /**
  * Created by zhengguo on 2016/5/21.
  */
 public class RenderDbHelper extends SQLiteOpenHelper {
     public RenderDbHelper(Context context) {
-        super(context, "RenderDb", null, 10);
+        super(context, "RenderDb", null, 11);
     }
 
     @Override
@@ -54,6 +53,9 @@ public class RenderDbHelper extends SQLiteOpenHelper {
                 .append(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_REPEAT_UNIT)
                 .append(" integer default ")
                 .append(TaskBean.DEFAULT_VALUE_OF_DATE_TIME).append(", ")
+                .append(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_IS_FINISHED)
+                .append(" integer default ")
+                .append(TaskBean.VALUE_NOT_FINISHED).append(", ")
                 .append(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP)
                 .append(" text not null, foreign key (")
                 .append(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP)
