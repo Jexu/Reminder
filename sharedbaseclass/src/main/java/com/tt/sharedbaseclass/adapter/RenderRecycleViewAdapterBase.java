@@ -3,6 +3,7 @@ package com.tt.sharedbaseclass.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.CompoundButton;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 
@@ -18,6 +19,7 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
   public interface OnItemClickListener {
     void onItemClickListener(View view, int position);
     void onItemLongClickListener(View view, int position);
+    void onCheckedChanged(CompoundButton buttonView, boolean isChecked);
   }
 
   public RenderRecycleViewAdapterBase() {
