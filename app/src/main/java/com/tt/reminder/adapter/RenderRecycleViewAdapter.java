@@ -79,11 +79,17 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase imple
       h.mRightCheckBox.setChecked(false);
     }
     h.mRightCheckBox.setOnCheckedChangeListener(this);
-    h.mRightCheckBox.setTag(R.id.shared_list_item_right_checkbox,position);
+    h.mRightCheckBox.setTag(R.id.shared_list_item_right_checkbox, position);
   }
 
   @Override
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    TaskBean taskBean = (TaskBean) getBean(
+            Integer.parseInt(buttonView.getTag(R.id.shared_list_item_right_checkbox).toString()));
+    if ((taskBean.isFinished() == TaskBean.VALUE_FINISHED && isChecked)
+            || (taskBean.isFinished() == TaskBean.VALUE_NOT_FINISHED && !isChecked)) {
+      return;
+    }
     mOnItemClickListener.onCheckedChanged(buttonView, isChecked);
   }
 
