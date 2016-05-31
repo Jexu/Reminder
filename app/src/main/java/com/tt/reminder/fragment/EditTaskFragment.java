@@ -100,6 +100,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
 
     private void initViewContent() {
         if (mFragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()) {
+            mHeaderViewTitle.setText(R.string.header_view_title_edit_task);
             mTaskContent.setText(mTaskBeanFromParent.getTaskContent());
             if (!mTaskBeanFromParent.isClearedPickedDate() && !mTaskBeanFromParent.isClearedPickedTime()) {
                 updateEditedViewStatue(EDITED_VIEW.PICKED_DATE, mAlarmDate, mTaskBeanFromParent.getPickedDate(true));
@@ -113,6 +114,8 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
                         , mRepeatUnits[mTaskBeanFromParent.getRepeatUnit()]));
             }
             mGroupSpinner.setSelection(Arrays.binarySearch(mGroupsBean.toArray(), new GroupBean(mTaskBeanFromParent.getGroup())));
+        } else if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
+            mHeaderViewTitle.setText(R.string.header_view_title_new_task);
         }
     }
 
@@ -122,7 +125,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
         mAddNewGroupCallBack = new AddNewGroupCallBack(this);
         mSaveTaskBeanCallback = new SaveTaskBeanCallback(this);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.toString(),
-                mAddNewGroupCallBack);
+          mAddNewGroupCallBack);
         if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
             mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.toString(),
               mSaveTaskBeanCallback);

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SharedBaseClass</string>
     <string name="header_view_title_new_task">New Task</string>
+    <string name="header_view_title_edit_task">Edit Task</string>
     <string name="header_view_title_my_tasks">My Tasks</string>
     <string name="subtitle_what_to_do">WHAT IS TO BE DONE</string>
     <string name="hint_subtitle_what_to_do">Enter Task Here</string>

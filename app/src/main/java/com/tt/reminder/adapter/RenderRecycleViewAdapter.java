@@ -8,10 +8,8 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-
 import com.tt.reminder.R;
 import com.tt.sharedbaseclass.adapter.RenderRecycleViewAdapterBase;
-import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 
@@ -47,7 +45,7 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase imple
     h.mRightGroupName.setText(taskBean.getGroup());
     h.mRightTaskContent.setText(taskBean.getTaskContent());
     setDateTime(h, taskBean);
-    setCheckBox(h, taskBean);
+    setCheckBox(h, taskBean, position);
   }
 
   private void setDateTime(RenderViewHolder h, TaskBean taskBean) {
@@ -74,18 +72,25 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase imple
     }
   }
 
-  private void setCheckBox(RenderViewHolder h, TaskBean taskBean) {
-    if (taskBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_FINISHED)) {
+  private void setCheckBox(RenderViewHolder h, TaskBean taskBean, int position) {
+    if (taskBean.isFinished() == TaskBean.VALUE_FINISHED) {
       h.mRightCheckBox.setChecked(true);
     } else {
       h.mRightCheckBox.setChecked(false);
     }
     h.mRightCheckBox.setOnCheckedChangeListener(this);
+    h.mRightCheckBox.setTag(R.id.shared_list_item_right_checkbox, position);
   }
 
   @Override
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+    TaskBean taskBean = (TaskBean) getBean(
+            Integer.parseInt(buttonView.getTag(R.id.shared_list_item_right_checkbox).toString()));
+    if ((taskBean.isFinished() == TaskBean.VALUE_FINISHED && isChecked)
+            || (taskBean.isFinished() == TaskBean.VALUE_NOT_FINISHED && !isChecked)) {
+      return;
+    }
+    mOnItemClickListener.onCheckedChanged(buttonView, isChecked);
   }
 
   class RenderViewHolder extends RenderViewHolderBase {

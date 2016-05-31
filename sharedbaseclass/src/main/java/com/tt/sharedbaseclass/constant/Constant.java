@@ -136,6 +136,8 @@ public class Constant {
         public static String EXTRA_TABLE_TASKS_COLUM_MINUTE = "colum_minute";
         public static String EXTRA_TABLE_TASKS_COLUM_REPEAT_INTERVAL = "colum_repeat_interval";
         public static String EXTRA_TABLE_TASKS_COLUM_REPEAT_UNIT = "colum_repeat_unit";
+        public static String EXTRA_TABLE_TASKS_COLUM_IS_FINISHED = "colum_is_finished";
+
 
         public static String EXTRA_TABLE_GROUP_COLUM_ID = "_id";
         public static String EXTRA_TABLE_NAME_GROUP = "table_group";
@@ -149,8 +151,6 @@ public class Constant {
         public static final int FINISH_RESULT_CODE_SUCCESS = -5;
         public static final int FINISH_REQUEST_CODE_NEW_TASK = -3;
         public static final int FINISH_REQUEST_CODE_EDIT_TASK = -4;
-
-
 
 
         public static final String EXTRA_FRAGMENT_TYPE = "extra_fragment_type";

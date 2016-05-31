@@ -77,38 +77,66 @@ public class RenderService {
         if (requestCode == Constant.RenderServiceHelper.REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED) {
             cursorHasDate = dbReader.rawQuery("select * from "
                   + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
-                  + " where " + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
-                  + " <> ? and "
+                  + " where " + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_IS_FINISHED
+                  + " = ? and "
                   + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS
                   +" <> ?"
-                  + " order by "
-                  + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS,
-                  new String[]{Constant.RenderDbHelper.GROUP_NAME_FINISHED
-                    , TaskBean.DEFAULT_VALUE_OF_DATE_TIME+""});
+                  + " order by ? "
+                  , new String[]{TaskBean.VALUE_NOT_FINISHED+""
+                    , TaskBean.DEFAULT_VALUE_OF_DATE_TIME+""
+                    , Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS});
             cursorNoDate = dbReader.rawQuery("select * from "
                   + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
-                  + " where " + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
-                  + " <> ? and "
+                  + " where " + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_IS_FINISHED
+                  + " = ? and "
                   + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS
-                  +" = ?",new String[]{Constant.RenderDbHelper.GROUP_NAME_FINISHED
+                  +" = ?",new String[]{TaskBean.VALUE_NOT_FINISHED+""
                     ,TaskBean.DEFAULT_VALUE_OF_DATE_TIME+""});
         } else {
-            cursorHasDate = dbReader.rawQuery("select * from "
-              + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
-              + " where " + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
-              + " = ? and "
-              + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS
-              +" <> ?"
-              +" order by "
-              + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS, new String[]{groupName
-                    , TaskBean.DEFAULT_VALUE_OF_DATE_TIME+""});
-            cursorNoDate = dbReader.rawQuery("select * from "
-              + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
-              + " where " + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
-              + " = ? and "
-              + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS
-              +" = ?", new String[]{groupName
-              , TaskBean.DEFAULT_VALUE_OF_DATE_TIME+""});
+            if (!groupName.equals(Constant.RenderDbHelper.GROUP_NAME_FINISHED)) {
+                cursorHasDate = dbReader.rawQuery("select * from "
+                  + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
+                  + " where " + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
+                  + " = ? and "
+                  + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS
+                  +" <> ? and "
+                  + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_IS_FINISHED
+                  +" = ?"
+                  +" order by ? "
+                  , new String[]{groupName
+                  , TaskBean.DEFAULT_VALUE_OF_DATE_TIME+""
+                  , TaskBean.VALUE_NOT_FINISHED+""
+                  , Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS});
+                cursorNoDate = dbReader.rawQuery("select * from "
+                  + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
+                  + " where " + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
+                  + " = ? and "
+                  + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_IS_FINISHED
+                  + " = ? and "
+                  + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS
+                  +" = ?", new String[]{groupName
+                  , TaskBean.VALUE_NOT_FINISHED+""
+                  , TaskBean.DEFAULT_VALUE_OF_DATE_TIME+""});
+            } else {
+                cursorHasDate = dbReader.rawQuery("select * from "
+                  + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
+                  + " where " + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_IS_FINISHED
+                  + " = ? and "
+                  + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS
+                  +" <> ?"
+                  +" order by ? "
+                  , new String[]{TaskBean.VALUE_FINISHED+""
+                  , TaskBean.DEFAULT_VALUE_OF_DATE_TIME+""
+                  , Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS});
+                cursorNoDate = dbReader.rawQuery("select * from "
+                  + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
+                  + " where " + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_IS_FINISHED
+                  + " = ? and "
+                  + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS
+                  +" = ?", new String[]{TaskBean.VALUE_FINISHED+""
+                  , TaskBean.DEFAULT_VALUE_OF_DATE_TIME+""});
+            }
+
         }
 
         RenderObjectBeans<TaskBean> renderObjectBeans = new RenderObjectBeans<>();
@@ -170,11 +198,11 @@ public class RenderService {
         Message msg = new Message();
         SQLiteDatabase dbReader = mRenderDbHelper.getReadableDatabase();
         Cursor cursor = dbReader.rawQuery("select * "
-                + " from "
-                + Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP
-                + " where "
-                + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
-                + " <> ?", new String[]{Constant.RenderDbHelper.GROUP_NAME_FINISHED});
+          + " from "
+          + Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP
+          + " where "
+          + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
+          + " <> ?", new String[]{Constant.RenderDbHelper.GROUP_NAME_FINISHED});
         if (cursor != null) {
             List<GroupBean> renderObjectBeansGroup  = new RenderObjectBeans<GroupBean>();
             while(cursor.moveToNext()) {
@@ -257,9 +285,19 @@ public class RenderService {
             handler.sendMessage(msg);
             return;
         }
+
+        int tempRequestCode;
+        if (action == Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.value()) {
+            tempRequestCode = Constant.RenderServiceHelper.REQUEST_CODE_UPDATE_TASK_BEAN;
+        } else if (action == Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_GROUP_NAME.value()) {
+            tempRequestCode = Constant.RenderServiceHelper.REQUEST_CODE_UPDATE_GROUP_NAME;
+        } else {
+            tempRequestCode = requestCode;
+        }
+
         SQLiteDatabase dbWrite = mRenderDbHelper.getWritableDatabase();
-        long row = dbWrite.update(tableName, taskBeanToContentValues(oldBean, newBean, requestCode)
-                , Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_ID + " = ?", new String[]{((GroupBean) oldBean).getId() + ""});
+        long row = dbWrite.update(tableName, taskBeanToContentValues(oldBean, newBean, tempRequestCode)
+          , Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_ID + " = ?", new String[]{((GroupBean) oldBean).getId() + ""});
         if (row != -1) {
             if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_UPDATE_SUCCESS;
@@ -335,6 +373,7 @@ public class RenderService {
                 cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_REPEAT_INTERVAL, taskBean.getRepeatInterval());
                 cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_REPEAT_UNIT, taskBean.getRepeatUnit());
                 cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS, taskBean.getTimeInMillis());
+                cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_IS_FINISHED, taskBean.isFinished());
                 cv.put(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP, taskBean.getGroup());
                 break;
             case Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP:
@@ -376,6 +415,9 @@ public class RenderService {
             if (oldTaskBean.getRepeatUnit() != newTaskBean.getRepeatUnit()) {
                 cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_REPEAT_UNIT, newTaskBean.getRepeatUnit());
             }
+            if (oldTaskBean.isFinished() != newTaskBean.isFinished()) {
+                cv.put(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_IS_FINISHED, newTaskBean.isFinished());
+            }
             if (!oldTaskBean.getGroup().equals(newTaskBean.getGroup())) {
                 cv.put(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP, newTaskBean.getGroup());
             }
@@ -401,6 +443,7 @@ public class RenderService {
         taskBean.setMinuse(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_MINUTE)));
         taskBean.setRepeatInterval(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_REPEAT_INTERVAL)));
         taskBean.setRepeatUnit(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_REPEAT_UNIT)));
+        taskBean.setIsFinished(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_IS_FINISHED)));
         taskBean.setGroup(cursor.getString(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP)));
         return taskBean;
     }
