@@ -71,8 +71,15 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
   public void removeBean(Object bean) {
     if (mRenderObjectBeans != null) {
       int position = mRenderObjectBeans.indexOf(bean);
-      mRenderObjectBeans.remove(bean);
+      mRenderObjectBeans.remove(position);
     }
+  }
+
+  public int findBeanPosition(Object bean) {
+    if (mRenderObjectBeans != null) {
+      return mRenderObjectBeans.indexOf(bean);
+    }
+    return -1;
   }
 
   public void clearAll() {
@@ -99,13 +106,15 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
     ((RenderViewHolderBase)holder).mItemRootView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        mOnItemClickListener.onItemClickListener(v, holder.getLayoutPosition());
+        mOnItemClickListener.onItemClickListener(v,
+          holder.getLayoutPosition() == getItemCount()? holder.getLayoutPosition() - 1: holder.getLayoutPosition());
       }
     });
     ((RenderViewHolderBase)holder).mItemRootView.setOnLongClickListener(new View.OnLongClickListener() {
       @Override
       public boolean onLongClick(View v) {
-        mOnItemClickListener.onItemLongClickListener(v, holder.getLayoutPosition());
+        mOnItemClickListener.onItemLongClickListener(v,
+          holder.getLayoutPosition() == getItemCount()? holder.getLayoutPosition() - 1: holder.getLayoutPosition());
         return true;
       }
     });

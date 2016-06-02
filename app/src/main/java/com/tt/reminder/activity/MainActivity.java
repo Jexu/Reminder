@@ -5,16 +5,15 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
 import com.tt.reminder.R;
 import com.tt.reminder.fragment.TasksContainWithDrawerViewFragment;
 import com.tt.sharedbaseclass.constant.Constant;
-import com.tt.sharedbaseclass.listener.OnFragmentRegisterListener;
 import com.tt.sharedbaseclass.fragment.RenderFragmentBase;
+import com.tt.sharedbaseclass.listener.OnFragmentRegisterListener;
 
 public class MainActivity extends AppCompatActivity implements OnFragmentRegisterListener {
 
-    private static TasksContainWithDrawerViewFragment mTasksContainWithDrawerViewFragment;
+    private TasksContainWithDrawerViewFragment mTasksContainWithDrawerViewFragment;
     private static RenderFragmentBase mSelectedFragment;
 
     @Override
@@ -33,20 +32,39 @@ public class MainActivity extends AppCompatActivity implements OnFragmentRegiste
 
     private void initMainActivityFragment() {
 
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null
+          && bundle.getInt(Constant.BundelExtra.EXTRA_START_FROM) == Constant.BundelExtra.START_FROM_NOTIFICATION
+          && bundle.getSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN)!= null) {
+
+            Bundle args = mTasksContainWithDrawerViewFragment.getArguments();
+            args.putInt(Constant.BundelExtra.EXTRA_START_FROM, Constant.BundelExtra.START_FROM_NOTIFICATION);
+            args.putSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN, bundle.getSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN));
+            mTasksContainWithDrawerViewFragment.setArguments(args);
+        }
+
         FragmentManager mFragmentManager = getFragmentManager();
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        mTasksContainWithDrawerViewFragment = TasksContainWithDrawerViewFragment.newInstance();
+        //mTasksContainWithDrawerViewFragment = TasksContainWithDrawerViewFragment.newInstance();
+        mTasksContainWithDrawerViewFragment = new TasksContainWithDrawerViewFragment();
         transaction.add(R.id.main_activity_frame_layout, mTasksContainWithDrawerViewFragment
-                , mTasksContainWithDrawerViewFragment.getFragmentTag());
+          , mTasksContainWithDrawerViewFragment.getFragmentTag());
         transaction.addToBackStack(null);
         transaction.commit();
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
     public void onBackPressed() {
         if (mSelectedFragment != null) {
             if (!mSelectedFragment.onBackPressed()) {
-                super.onBackPressed();
+                finish();
             }
         }
     }
