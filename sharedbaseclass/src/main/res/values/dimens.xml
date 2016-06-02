@@ -37,7 +37,7 @@
     <dimen name="shared_list_item_task_group_name_textsize">25sp</dimen>
     <dimen name="shared_spinner_simple_item_margin_2dp">2dp</dimen>
     <dimen name="shared_spinner_simple_item_margin_left_4dp">2dp</dimen>
-
+    <dimen name="shared_list_item_in_drawer_margin_start_20dp">20dp</dimen>
 
 
 </resources>

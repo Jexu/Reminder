@@ -2,6 +2,8 @@ package com.tt.reminder.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +21,7 @@ import com.tt.reminder.adapter.RenderRecycleViewAdapter;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.TaskContainFragmentBase;
 import com.tt.sharedbaseclass.model.GroupBean;
+import com.tt.sharedbaseclass.model.RenderDbHelper;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.RenderCallback;
 import com.tt.sharedbaseclass.model.TaskBean;
@@ -30,7 +33,7 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     private static TasksContainWithDrawerViewFragment mTasksContainWithDrawerViewFragment;
 
     private DrawerLayout mDrawerLayout;
-    private LinearLayout mLeftDrawer;
+    private ScrollView mLeftDrawer;
     private boolean mIsLeftDrawerOpened = false;
     private RecyclerView mRenderRecycleView;
     private RenderRecycleViewAdapter mRenderRecycleViewAdapter;
@@ -54,7 +57,14 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRenderRecycleViewAdapter = new RenderRecycleViewAdapter(getActivity());
+        mRenderRecycleViewAdapter = new RenderRecycleViewAdapter(getActivity(), Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER);
+        test();
+    }
+
+    private void test() {
+        RenderDbHelper renderDbHelper = new RenderDbHelper(getActivity());
+        SQLiteDatabase reader = renderDbHelper.getReadableDatabase();
+        Cursor cursor = reader.query(Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS, new String[]{ Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP},null,null, Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP,null, null);
     }
 
     @Override
@@ -63,7 +73,7 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
         super.onCreateView(inflater, container, savedInstanceState);
         View contentView = inflater.inflate(R.layout.fragment_tasks_containt_with_drawer_view, container, false);
         mDrawerLayout = (DrawerLayout) contentView.findViewById(R.id.drawer_layout);
-        mLeftDrawer = (LinearLayout) contentView.findViewById(R.id.left_drawer);
+        mLeftDrawer = (ScrollView) contentView.findViewById(R.id.left_drawer);
         mRenderRecycleView = (RecyclerView) contentView.findViewById(R.id.list);
         return contentView;
     }
@@ -96,11 +106,11 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.toString()
           , mUpdateBeanCallback);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_DELETE_TASK.toString(),
-          mUpdateBeanCallback);
+                mUpdateBeanCallback);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_GROUP_NAME.toString(),
           mUpdateBeanCallback);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_DELETE_GROUP.toString(),
-          mUpdateBeanCallback);
+                mUpdateBeanCallback);
     }
 
     @Override

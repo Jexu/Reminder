@@ -323,4 +323,8 @@ public class Constant {
             return this.value;
         }
     }
+
+    public enum RENDER_ADAPTER_TYPE {
+        TASKS_CONTAINER, LEFT_DRAWER_AGENDA, LEFT_DRAWER_TASKS_CATEGORY;
+    }
 }
