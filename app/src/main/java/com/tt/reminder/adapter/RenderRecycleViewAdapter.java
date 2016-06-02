@@ -41,11 +41,11 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase imple
   public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     super.onBindViewHolder(holder, position);
     RenderViewHolder h = (RenderViewHolder) holder;
-    TaskBean taskBean = (TaskBean) mRenderObjectBeans.get(position);
+    TaskBean taskBean = (TaskBean) mRenderObjectBeans.get(holder.getLayoutPosition() == getItemCount()? holder.getLayoutPosition() - 1: holder.getLayoutPosition());
     h.mRightGroupName.setText(taskBean.getGroup());
     h.mRightTaskContent.setText(taskBean.getTaskContent());
     setDateTime(h, taskBean);
-    setCheckBox(h, taskBean, position);
+    setCheckBox(h, taskBean, holder.getLayoutPosition());
   }
 
   private void setDateTime(RenderViewHolder h, TaskBean taskBean) {

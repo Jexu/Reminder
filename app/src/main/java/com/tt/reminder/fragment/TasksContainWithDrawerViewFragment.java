@@ -12,15 +12,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import com.tt.reminder.R;
 import com.tt.reminder.activity.MainActivity;
 import com.tt.reminder.adapter.RenderRecycleViewAdapter;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.TaskContainFragmentBase;
 import com.tt.sharedbaseclass.model.GroupBean;
-import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.RenderCallback;
+import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 
 public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
@@ -38,6 +39,7 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     private GetGroupsCallback mGetGroupsCallback;
     private UpdateBeanCallback mUpdateBeanCallback;
     private RenderObjectBeans mRenderObjectBeansGroups;
+    private int mStartFrom;
 
     public TasksContainWithDrawerViewFragment() {
         // Required empty public constructor
@@ -55,6 +57,10 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mRenderRecycleViewAdapter = new RenderRecycleViewAdapter(getActivity());
+        Bundle args = getArguments();
+        if (args != null) {
+            mStartFrom = args.getInt(Constant.BundelExtra.EXTRA_START_FROM, Constant.BundelExtra.START_FROM_DEFAULT);
+        }
     }
 
     @Override
@@ -113,6 +119,10 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
         mLruCache.put(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN
           + mRenderObjectBeansGroups.get(requestCode).toString()
           , renderObjectBeans);
+        if (mStartFrom == Constant.BundelExtra.START_FROM_NOTIFICATION) {
+            navigateToEditFragment((TaskBean) getArguments().getSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN));
+            mStartFrom = Constant.BundelExtra.START_FROM_DEFAULT;
+        }
         updateRecycleView((GroupBean) mRenderObjectBeansGroups.get(requestCode));
     }
 
@@ -159,7 +169,7 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     @Override
     public void onItemLongClickListener(View view, final int position) {
         AlertDialog.Builder builder = getDefaultAlertDialogBuilder(getResources().getString(R.string.alert_dialog_title_are_you_sure)
-                , getResources().getString(R.string.alert_dialog_message_delete_this_task));
+          , getResources().getString(R.string.alert_dialog_message_delete_this_task));
         builder.setNegativeButton(R.string.alert_dialog_negative_button_cancel, null)
                 .setPositiveButton(R.string.alert_dialog_negative_button_delete
                         , new DialogInterface.OnClickListener() {
@@ -270,8 +280,13 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
           mRenderObjectBeansGroups);
         editTaskFragment.setArguments(args);
         MainActivity.navigateToForResultCode(editTaskFragment
-                , getFragmentManager()
-                , requestCode);
+          , getFragmentManager()
+          , requestCode);
+    }
+
+    private void navigateToEditFragment(TaskBean taskBean) {
+        int position = mRenderRecycleViewAdapter.findBeanPosition(taskBean);
+        navigateToEditFragment(Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value(), taskBean, position);
     }
 
     @Override
