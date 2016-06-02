@@ -161,6 +161,11 @@ public class Constant {
         public static final String EXTRA_REQUEST_CODE = "extra_request_code";
         public static final String EXTRA_RESULT_CODE = "extra_result_code";
 
+        public static final String EXTRA_START_FROM = "extra_start_from";
+
+        public static final int START_FROM_NOTIFICATION = -1;
+        public static final int START_FROM_DEFAULT = -100;
+
     }
 
     public enum WEEK {
@@ -322,5 +327,9 @@ public class Constant {
         public int value() {
             return this.value;
         }
+    }
+
+    public enum RENDER_ADAPTER_TYPE {
+        TASKS_CONTAINER, LEFT_DRAWER_AGENDA, LEFT_DRAWER_TASKS_CATEGORY;
     }
 }

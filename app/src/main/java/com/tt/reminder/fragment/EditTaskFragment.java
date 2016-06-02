@@ -19,6 +19,7 @@ import com.tt.sharedbaseclass.model.GroupBean;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 import com.tt.sharedbaseclass.model.RenderCallback;
+import com.tt.reminder.notification.RenderAlarm;
 import com.tt.sharedbaseclass.view.WheelView;
 
 import java.util.Arrays;
@@ -351,7 +352,34 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
             Log.i("Render", "update task successfully");
             bundle.putSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN, mTaskBean);
         }
+        setAlarm();
         finishWithResultCode(Constant.BundelExtra.FINISH_RESULT_CODE_SUCCESS, bundle);
+    }
+
+    private void setAlarm() {
+        if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
+            if (!mTaskBean.isClearedPickedDate()) {
+                //create
+                RenderAlarm.createAlarm(getActivity(), mTaskBean);
+            }
+        } else if (mFragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()) {
+            if (!mTaskBeanFromParent.isClearedPickedDate()
+              && mTaskBean.isClearedPickedDate()) {
+                //cancel
+                RenderAlarm.removeAlarm(getActivity(), mTaskBean);
+            } else if (mTaskBeanFromParent.isClearedPickedDate()
+              && !mTaskBean.isClearedPickedDate()) {
+                //create
+                RenderAlarm.createAlarm(getActivity(), mTaskBean);
+            } else if ((mTaskBeanFromParent.getTimeInMillis() != mTaskBeanFromParent.getTimeInMillis()
+              || mTaskBeanFromParent.getRepeatIntervalTimeInMillis() != mTaskBean.getRepeatIntervalTimeInMillis())
+              && !mTaskBeanFromParent.isClearedPickedDate()
+              && !mTaskBean.isClearedPickedDate()) {
+                //update
+                RenderAlarm.updateAlarm(getActivity(), mTaskBean);
+            }
+        }
+        Log.i("Render", "Alarm set");
     }
 
     @Override

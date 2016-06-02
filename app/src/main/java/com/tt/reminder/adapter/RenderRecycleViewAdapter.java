@@ -10,6 +10,8 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import com.tt.reminder.R;
 import com.tt.sharedbaseclass.adapter.RenderRecycleViewAdapterBase;
+import com.tt.sharedbaseclass.constant.Constant;
+import com.tt.sharedbaseclass.model.GroupBean;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 
@@ -18,22 +20,33 @@ import com.tt.sharedbaseclass.model.TaskBean;
  */
 public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase implements CompoundButton.OnCheckedChangeListener {
 
+  private Constant.RENDER_ADAPTER_TYPE mAdapterType;
+
   public RenderRecycleViewAdapter() {
     super();
   }
 
-  public RenderRecycleViewAdapter(Context context) {
+  public RenderRecycleViewAdapter(Context context, Constant.RENDER_ADAPTER_TYPE adapterType) {
     super(context);
+    mAdapterType = adapterType;
   }
 
-  public RenderRecycleViewAdapter(Context context, RenderObjectBeans renderObjectBeans) {
+  public RenderRecycleViewAdapter(Context context, Constant.RENDER_ADAPTER_TYPE adapterType,RenderObjectBeans renderObjectBeans) {
     super(context, renderObjectBeans);
+    mAdapterType = adapterType;
   }
 
   @Override
   public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    RenderViewHolder viewHolder = new RenderViewHolder(
-            LayoutInflater.from(mContext).inflate(R.layout.shared_list_item_view, null, false));
+    RenderViewHolder viewHolder;
+    if (mAdapterType == Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER) {
+      viewHolder = new RenderViewHolder(
+              LayoutInflater.from(mContext).inflate(R.layout.shared_list_item_view, null, false));
+    } else {
+      viewHolder = new RenderViewHolder(
+              LayoutInflater.from(mContext).inflate(R.layout.shared_list_item_in_drawer, null, false));
+    }
+
     return viewHolder;
   }
 
@@ -41,11 +54,17 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase imple
   public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     super.onBindViewHolder(holder, position);
     RenderViewHolder h = (RenderViewHolder) holder;
-    TaskBean taskBean = (TaskBean) mRenderObjectBeans.get(position);
-    h.mRightGroupName.setText(taskBean.getGroup());
-    h.mRightTaskContent.setText(taskBean.getTaskContent());
-    setDateTime(h, taskBean);
-    setCheckBox(h, taskBean, position);
+    if (mAdapterType == Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER) {
+      TaskBean taskBean = (TaskBean) mRenderObjectBeans.get(position);
+      h.mRightGroupName.setText(taskBean.getGroup());
+      h.mRightTaskContent.setText(taskBean.getTaskContent());
+      setDateTime(h, taskBean);
+      setCheckBox(h, taskBean, position);
+    } else if (mAdapterType == Constant.RENDER_ADAPTER_TYPE.LEFT_DRAWER_TASKS_CATEGORY){
+      GroupBean groupBean = (GroupBean) mRenderObjectBeans.get(position);
+      h.mLeftSymbol.setText(groupBean.getGroup());
+      //h.mRightTaskContent.setText();
+    }
   }
 
   private void setDateTime(RenderViewHolder h, TaskBean taskBean) {
@@ -84,13 +103,15 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase imple
 
   @Override
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-    TaskBean taskBean = (TaskBean) getBean(
-            Integer.parseInt(buttonView.getTag(R.id.shared_list_item_right_checkbox).toString()));
-    if ((taskBean.isFinished() == TaskBean.VALUE_FINISHED && isChecked)
-            || (taskBean.isFinished() == TaskBean.VALUE_NOT_FINISHED && !isChecked)) {
-      return;
+    if (mAdapterType == Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER) {
+      TaskBean taskBean = (TaskBean) getBean(
+              Integer.parseInt(buttonView.getTag(R.id.shared_list_item_right_checkbox).toString()));
+      if ((taskBean.isFinished() == TaskBean.VALUE_FINISHED && isChecked)
+              || (taskBean.isFinished() == TaskBean.VALUE_NOT_FINISHED && !isChecked)) {
+        return;
+      }
+      mOnItemClickListener.onCheckedChanged(buttonView, isChecked);
     }
-    mOnItemClickListener.onCheckedChanged(buttonView, isChecked);
   }
 
   class RenderViewHolder extends RenderViewHolderBase {
@@ -105,13 +126,18 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase imple
 
     public RenderViewHolder(View itemRootView) {
       super(itemRootView);
-      mLeftDateFrom = (TextView) itemRootView.findViewById(R.id.shared_list_item_left_date_from);
-      mLeftSymbol = (TextView) itemRootView.findViewById(R.id.shared_list_item_left_date_symbol);
-      mLeftDateTo = (TextView) itemRootView.findViewById(R.id.shared_list_item_left_date_to);
-      mRightGroupName = (TextView) itemRootView.findViewById(R.id.shared_list_item_right_task_group_name);
-      mRightCheckBox = (CheckBox) itemRootView.findViewById(R.id.shared_list_item_right_checkbox);
-      mRightTaskContent = (TextView) itemRootView.findViewById(R.id.shared_list_item_right_task_content);
-      mRightTime = (TextView) itemRootView.findViewById(R.id.shared_list_item_right_task_time);
+      if (mAdapterType == Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER) {
+        mLeftDateFrom = (TextView) itemRootView.findViewById(R.id.shared_list_item_left_date_from);
+        mLeftSymbol = (TextView) itemRootView.findViewById(R.id.shared_list_item_left_date_symbol);
+        mLeftDateTo = (TextView) itemRootView.findViewById(R.id.shared_list_item_left_date_to);
+        mRightGroupName = (TextView) itemRootView.findViewById(R.id.shared_list_item_right_task_group_name);
+        mRightCheckBox = (CheckBox) itemRootView.findViewById(R.id.shared_list_item_right_checkbox);
+        mRightTaskContent = (TextView) itemRootView.findViewById(R.id.shared_list_item_right_task_content);
+        mRightTime = (TextView) itemRootView.findViewById(R.id.shared_list_item_right_task_time);
+      } else {
+        mLeftSymbol = (TextView) itemRootView.findViewById(R.id.shared_list_item_in_drawer_item_subtitle);
+        mRightTaskContent = (TextView) itemRootView.findViewById(R.id.shared_list_item_in_drawer_item_count);
+      }
 
     }
   }

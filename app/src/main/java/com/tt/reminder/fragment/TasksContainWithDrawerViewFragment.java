@@ -12,16 +12,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.CompoundButton;
+import android.widget.ScrollView;
+
 import com.tt.reminder.R;
 import com.tt.reminder.activity.MainActivity;
 import com.tt.reminder.adapter.RenderRecycleViewAdapter;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.TaskContainFragmentBase;
 import com.tt.sharedbaseclass.model.GroupBean;
-import com.tt.sharedbaseclass.model.RenderObjectBeans;
+
+
 import com.tt.sharedbaseclass.model.RenderCallback;
+import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
+
+import java.util.ConcurrentModificationException;
 
 public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
         implements DrawerLayout.DrawerListener,
@@ -30,7 +36,7 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     private static TasksContainWithDrawerViewFragment mTasksContainWithDrawerViewFragment;
 
     private DrawerLayout mDrawerLayout;
-    private LinearLayout mLeftDrawer;
+    private ScrollView mLeftDrawer;
     private boolean mIsLeftDrawerOpened = false;
     private RecyclerView mRenderRecycleView;
     private RenderRecycleViewAdapter mRenderRecycleViewAdapter;
@@ -38,6 +44,7 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     private GetGroupsCallback mGetGroupsCallback;
     private UpdateBeanCallback mUpdateBeanCallback;
     private RenderObjectBeans mRenderObjectBeansGroups;
+    private int mStartFrom;
 
     public TasksContainWithDrawerViewFragment() {
         // Required empty public constructor
@@ -54,8 +61,13 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRenderRecycleViewAdapter = new RenderRecycleViewAdapter(getActivity());
+        mRenderRecycleViewAdapter = new RenderRecycleViewAdapter(getActivity(), Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER);
+        Bundle args = getArguments();
+        if(args != null) {
+            mStartFrom = args.getInt(Constant.BundelExtra.EXTRA_START_FROM);
+        }
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,7 +75,7 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
         super.onCreateView(inflater, container, savedInstanceState);
         View contentView = inflater.inflate(R.layout.fragment_tasks_containt_with_drawer_view, container, false);
         mDrawerLayout = (DrawerLayout) contentView.findViewById(R.id.drawer_layout);
-        mLeftDrawer = (LinearLayout) contentView.findViewById(R.id.left_drawer);
+        mLeftDrawer = (ScrollView) contentView.findViewById(R.id.left_drawer);
         mRenderRecycleView = (RecyclerView) contentView.findViewById(R.id.list);
         return contentView;
     }
@@ -90,17 +102,17 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
         mGetGroupsCallback = new GetGroupsCallback(this);
         mUpdateBeanCallback = new UpdateBeanCallback(this);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_TASKS_BY_GROUP_NAME.toString(),
-          mGetTasksByGroupNameCallback);
+                mGetTasksByGroupNameCallback);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_GROUPS.toString(),
-          mGetGroupsCallback);
+                mGetGroupsCallback);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.toString()
-          , mUpdateBeanCallback);
+                , mUpdateBeanCallback);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_DELETE_TASK.toString(),
-          mUpdateBeanCallback);
+                mUpdateBeanCallback);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_GROUP_NAME.toString(),
-          mUpdateBeanCallback);
+                mUpdateBeanCallback);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_DELETE_GROUP.toString(),
-          mUpdateBeanCallback);
+                mUpdateBeanCallback);
     }
 
     @Override
@@ -111,8 +123,12 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
             getGroupsExceptFinished(Constant.RenderServiceHelper.REQUEST_CODE_DEFAULT);
         }
         mLruCache.put(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN
-          + mRenderObjectBeansGroups.get(requestCode).toString()
-          , renderObjectBeans);
+                + mRenderObjectBeansGroups.get(requestCode).toString()
+                , renderObjectBeans);
+        if (mStartFrom == Constant.BundelExtra.START_FROM_NOTIFICATION) {
+            navigateToEditFragment((TaskBean) getArguments().getSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN));
+            mStartFrom = Constant.BundelExtra.START_FROM_DEFAULT;
+        }
         updateRecycleView((GroupBean) mRenderObjectBeansGroups.get(requestCode));
     }
 
@@ -159,7 +175,7 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     @Override
     public void onItemLongClickListener(View view, final int position) {
         AlertDialog.Builder builder = getDefaultAlertDialogBuilder(getResources().getString(R.string.alert_dialog_title_are_you_sure)
-                , getResources().getString(R.string.alert_dialog_message_delete_this_task));
+          , getResources().getString(R.string.alert_dialog_message_delete_this_task));
         builder.setNegativeButton(R.string.alert_dialog_negative_button_cancel, null)
                 .setPositiveButton(R.string.alert_dialog_negative_button_delete
                         , new DialogInterface.OnClickListener() {
@@ -182,11 +198,11 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
         newTaskBean.copy(oldTaskBean);
         newTaskBean.setIsFinished(isChecked? TaskBean.VALUE_FINISHED: TaskBean.VALUE_NOT_FINISHED);
         mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.value()
-          , Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
-          , oldTaskBean
-          , newTaskBean
-          , null
-          , position);
+                , Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
+                , oldTaskBean
+                , newTaskBean
+                , null
+                , position);
     }
 
     private void deleteBean(int action, String tableName, int id, int requestCode) {
@@ -270,8 +286,13 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
           mRenderObjectBeansGroups);
         editTaskFragment.setArguments(args);
         MainActivity.navigateToForResultCode(editTaskFragment
-                , getFragmentManager()
-                , requestCode);
+          , getFragmentManager()
+          , requestCode);
+    }
+
+    private void navigateToEditFragment(TaskBean taskBean) {
+        int position = mRenderRecycleViewAdapter.findBeanPosition(taskBean);
+        navigateToEditFragment(Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value(), taskBean, position);
     }
 
     @Override

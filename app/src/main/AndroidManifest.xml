@@ -15,6 +15,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".notification.RenderNotificationService">
+        <intent-filter>
+            <action android:name="com.tt.reminder.notification"/>
+        </intent-filter>
+        </service>
+
     </application>
 
 </manifest>
