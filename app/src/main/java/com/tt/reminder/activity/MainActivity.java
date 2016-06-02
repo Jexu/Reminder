@@ -32,26 +32,31 @@ public class MainActivity extends AppCompatActivity implements OnFragmentRegiste
 
     private void initMainActivityFragment() {
 
+        FragmentManager mFragmentManager = getFragmentManager();
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        //mTasksContainWithDrawerViewFragment = TasksContainWithDrawerViewFragment.newInstance();
+        mTasksContainWithDrawerViewFragment = new TasksContainWithDrawerViewFragment();
+
         Bundle bundle = getIntent().getExtras();
         if (bundle != null
           && bundle.getInt(Constant.BundelExtra.EXTRA_START_FROM) == Constant.BundelExtra.START_FROM_NOTIFICATION
           && bundle.getSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN)!= null) {
 
             Bundle args = mTasksContainWithDrawerViewFragment.getArguments();
+            if (args == null) {
+                args = new Bundle();
+            }
             args.putInt(Constant.BundelExtra.EXTRA_START_FROM, Constant.BundelExtra.START_FROM_NOTIFICATION);
             args.putSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN, bundle.getSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN));
             mTasksContainWithDrawerViewFragment.setArguments(args);
+            transaction.replace(R.id.main_activity_frame_layout, mTasksContainWithDrawerViewFragment
+                    , mTasksContainWithDrawerViewFragment.getFragmentTag());
+        } else {
+            transaction.add(R.id.main_activity_frame_layout, mTasksContainWithDrawerViewFragment
+                    , mTasksContainWithDrawerViewFragment.getFragmentTag());
         }
-
-        FragmentManager mFragmentManager = getFragmentManager();
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        //mTasksContainWithDrawerViewFragment = TasksContainWithDrawerViewFragment.newInstance();
-        mTasksContainWithDrawerViewFragment = new TasksContainWithDrawerViewFragment();
-        transaction.add(R.id.main_activity_frame_layout, mTasksContainWithDrawerViewFragment
-          , mTasksContainWithDrawerViewFragment.getFragmentTag());
         transaction.addToBackStack(null);
         transaction.commit();
-
 
     }
 

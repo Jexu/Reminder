@@ -25,7 +25,8 @@ public class RenderAlarm {
       isRepeating = false;
     }
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-    Intent intent = new Intent(context, RenderNotificationService.class);
+    Intent intent = new Intent();
+    intent.setAction(RenderNotificationService.ACTION);
     Bundle bundle = new Bundle();
     bundle.putSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN, taskBean);
     intent.putExtras(bundle);

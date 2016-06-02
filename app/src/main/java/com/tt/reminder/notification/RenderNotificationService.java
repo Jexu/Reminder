@@ -1,5 +1,6 @@
 package com.tt.reminder.notification;
 
+import android.annotation.SuppressLint;
 import android.app.*;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,8 @@ import com.tt.sharedbaseclass.model.TaskBean;
  */
 public class RenderNotificationService extends IntentService {
 
+  public static final String ACTION = "com.tt.reminder.notification";
+
   private NotificationManager mNotificationManager;
   private Notification.Builder mNotificationBuilder;
 
@@ -31,6 +34,7 @@ public class RenderNotificationService extends IntentService {
     mNotificationBuilder = new Notification.Builder(getApplicationContext());
   }
 
+  @SuppressLint("NewApi")
   @Override
   protected void onHandleIntent(Intent intent) {
     Log.i("Render", "RenderNotificationService onHandleIntent");
@@ -40,7 +44,7 @@ public class RenderNotificationService extends IntentService {
     bundle.putInt(Constant.BundelExtra.EXTRA_START_FROM, Constant.BundelExtra.START_FROM_NOTIFICATION);
     i.putExtras(bundle);
 
-    PendingIntent pi = PendingIntent.getActivity(this, 0, i, 0);
+    PendingIntent pi = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
     mNotificationBuilder
       .setAutoCancel(true)
       .setTicker("New schedule message")

@@ -27,6 +27,8 @@ import com.tt.sharedbaseclass.model.RenderCallback;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 
+import java.util.ConcurrentModificationException;
+
 public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
         implements DrawerLayout.DrawerListener,
         RenderRecycleViewAdapter.OnItemClickListener {
@@ -60,6 +62,10 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mRenderRecycleViewAdapter = new RenderRecycleViewAdapter(getActivity(), Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER);
+        Bundle args = getArguments();
+        if(args != null) {
+            mStartFrom = args.getInt(Constant.BundelExtra.EXTRA_START_FROM);
+        }
     }
 
 
