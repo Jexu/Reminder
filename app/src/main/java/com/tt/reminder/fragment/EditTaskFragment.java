@@ -35,6 +35,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
     private ArrayAdapter<String> mGroupsAdapter;
     private SaveTaskBeanCallback mSaveTaskBeanCallback;
     private AddNewGroupCallBack mAddNewGroupCallBack;
+    private boolean mIsAddNewGroup = false;
 
     public EditTaskFragment() {
         // Required empty public constructor
@@ -279,13 +280,15 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
         } else {
             String title = getResources().getString(R.string.alert_dialog_title_are_you_sure);
             String message = getResources().getString(R.string.edit_task_fragment_alert_dialog_message);
-            AlertDialog.Builder builder = getDefaultAlertDialogBuilder(title, message);
+            final AlertDialog.Builder builder = getDefaultAlertDialogBuilder(title, message);
             builder.setNegativeButton(R.string.edit_task_fragment_alert_dialog_discard,
               new DialogInterface.OnClickListener() {
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    finishWithResultCode(Constant.BundelExtra.FINISH_RESULT_CODE_DEFAULT, null);
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean(Constant.BundelExtra.EXTRA_IS_ADD_NEW_GROUP, mIsAddNewGroup);
+                    finishWithResultCode(Constant.BundelExtra.FINISH_RESULT_CODE_DEFAULT, bundle);
                 }
             })
               .setPositiveButton(R.string.edit_task_fragment_alert_dialog_save,
@@ -351,6 +354,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
             Log.i("Render", "update task successfully");
             bundle.putSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN, mTaskBean);
         }
+        bundle.putBoolean(Constant.BundelExtra.EXTRA_IS_ADD_NEW_GROUP, mIsAddNewGroup);
         setAlarm();
         finishWithResultCode(Constant.BundelExtra.FINISH_RESULT_CODE_SUCCESS, bundle);
     }
@@ -405,6 +409,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
             mGroupsBean.add(new GroupBean(mTaskBean.getGroup()));
             mGroupsAdapter.notifyDataSetChanged();
             mGroupSpinner.setSelection(mGroupsBean.indexOf(new GroupBean(mTaskBean.getGroup())));
+            mIsAddNewGroup = true;
         } else {
             Log.e("Render", "error request code or result code");
         }

@@ -11,7 +11,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
         android:orientation="vertical">
 
         <TextView
@@ -20,21 +19,65 @@
             android:text="My Agenda" />
 
         <android.support.v7.widget.RecyclerView
+          android:id="@+id/left_drawer_agenda_recycleview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
-
 
         <include layout="@layout/shared_divider_view" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Category"
-            android:textColor="@android:color/black" />
+            android:text="Category" />
 
         <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
+          android:id="@+id/left_drawer_category_recycleview"
+          android:layout_width="match_parent"
             android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+
+      <LinearLayout
+        style="@style/edit_view_style_in_layout_fragment_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+          android:layout_width="@dimen/image_button_size"
+          android:layout_height="@dimen/image_button_size"
+          android:layout_marginEnd="@dimen/header_view_margin_right_and_left_between_view"
+          android:layout_marginStart="@dimen/header_view_margin_right_and_left_between_view"
+          android:src="@drawable/label_outline2_24dp" />
+
+        <TextView
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
+          android:text="@string/remder_db_helper_group_finished" />
+
+      </LinearLayout>
+
+      <LinearLayout
+        style="@style/edit_view_style_in_layout_fragment_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+          android:layout_width="@dimen/image_button_size"
+          android:layout_height="@dimen/image_button_size"
+          android:layout_marginEnd="@dimen/header_view_margin_right_and_left_between_view"
+          android:layout_marginStart="@dimen/header_view_margin_right_and_left_between_view"
+          android:src="@drawable/add_group_list_gray_24dp" />
+
+        <TextView
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
+          android:text="@string/subtitle_in_left_drawer_create_new_group" />
+
+      </LinearLayout>
 
         <include layout="@layout/shared_divider_view" />
 
@@ -42,7 +85,6 @@
             style="@style/edit_view_style_in_layout_fragment_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
@@ -53,8 +95,9 @@
                 android:src="@drawable/settings_24dp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
                 android:text="@string/shared_list_item_in_drawer_subtitle_setting" />
 
@@ -64,7 +107,6 @@
             style="@style/edit_view_style_in_layout_fragment_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
@@ -75,8 +117,9 @@
                 android:src="@drawable/feedback_24dp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
                 android:text="@string/shared_list_item_in_drawer_subtitle_feedback_help" />
 

@@ -3,14 +3,13 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_vertical"
     style="@style/edit_view_style_in_layout_fragment_edit"
     >
 
     <ImageView
         android:layout_width="@dimen/image_button_size"
         android:layout_height="@dimen/image_button_size"
-        android:layout_marginStart="@dimen/header_view_margin_right_and_left_between_view"
+        android:layout_marginStart="@dimen/left_drawer_imageview_margrin_start_11dp"
         android:layout_marginEnd="@dimen/header_view_margin_right_and_left_between_view"
         android:src="@drawable/label_outline2_24dp"
         />
@@ -21,7 +20,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
-        android:text="Shopping"
         />
 
     <TextView
@@ -30,7 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
         android:layout_marginEnd="@dimen/shared_list_item_in_drawer_margin_start_20dp"
-        android:text="12"
         />
 
 </LinearLayout>

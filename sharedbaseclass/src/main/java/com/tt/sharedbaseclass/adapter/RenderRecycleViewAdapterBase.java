@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CompoundButton;
+import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 
@@ -15,10 +16,12 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
   protected RenderObjectBeans mRenderObjectBeans;
   protected OnItemClickListener mOnItemClickListener;
   protected Context mContext;
+  protected Constant.RENDER_ADAPTER_TYPE mAdapterType;
+
 
   public interface OnItemClickListener {
-    void onItemClickListener(View view, int position);
-    void onItemLongClickListener(View view, int position);
+    void onItemClickListener(View view, Constant.RENDER_ADAPTER_TYPE adapterType, int position);
+    void onItemLongClickListener(View view,Constant.RENDER_ADAPTER_TYPE adapterType, int position);
     void onCheckedChanged(CompoundButton buttonView, boolean isChecked);
   }
 
@@ -43,9 +46,16 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
     mContext = context;
   }
 
-  public void addBean(Object bean) {
+  public void addBeanInOrder(Object bean) {
     if (mRenderObjectBeans != null) {
       mRenderObjectBeans.addBeanInOrder(bean);
+      notifyDataSetChanged();
+    }
+  }
+
+  public void addBean(Object bean) {
+    if (mRenderObjectBeans != null) {
+      mRenderObjectBeans.add(bean);
       notifyDataSetChanged();
     }
   }
@@ -106,14 +116,14 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
     ((RenderViewHolderBase)holder).mItemRootView.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        mOnItemClickListener.onItemClickListener(v,
+        mOnItemClickListener.onItemClickListener(v, mAdapterType,
           holder.getLayoutPosition() == getItemCount()? holder.getLayoutPosition() - 1: holder.getLayoutPosition());
       }
     });
     ((RenderViewHolderBase)holder).mItemRootView.setOnLongClickListener(new View.OnLongClickListener() {
       @Override
       public boolean onLongClick(View v) {
-        mOnItemClickListener.onItemLongClickListener(v,
+        mOnItemClickListener.onItemLongClickListener(v, mAdapterType,
           holder.getLayoutPosition() == getItemCount()? holder.getLayoutPosition() - 1: holder.getLayoutPosition());
         return true;
       }

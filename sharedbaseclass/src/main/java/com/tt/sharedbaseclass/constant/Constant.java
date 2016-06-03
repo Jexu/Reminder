@@ -142,6 +142,7 @@ public class Constant {
         public static String EXTRA_TABLE_GROUP_COLUM_ID = "_id";
         public static String EXTRA_TABLE_NAME_GROUP = "table_group";
         public static String EXTRA_TABLE_GROUP_COLUM_GROUP = "colum_group";
+        public static final String EXTRA_UNFINISHED_TASKS_COUNT_EACH_GROUP = "extra_unfinished_count";
     }
 
     public static class BundelExtra {
@@ -162,6 +163,9 @@ public class Constant {
         public static final String EXTRA_RESULT_CODE = "extra_result_code";
 
         public static final String EXTRA_START_FROM = "extra_start_from";
+
+        public static final String EXTRA_IS_ADD_NEW_GROUP = "extra_is_add_new_group";
+
 
         public static final int START_FROM_NOTIFICATION = -1;
         public static final int START_FROM_DEFAULT = -100;
