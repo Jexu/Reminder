@@ -20,13 +20,6 @@
             <action android:name="com.tt.reminder.notification"/>
         </intent-filter>
         </service>
-        <receiver android:name="com.tt.sharedbaseclass.model.RenderInstallUninstallReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_INSTALL" />
-                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
-                <data android:scheme="package" />
-            </intent-filter>
-        </receiver>
 
     </application>
 

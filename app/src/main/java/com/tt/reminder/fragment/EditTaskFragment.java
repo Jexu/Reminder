@@ -13,16 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.tt.reminder.R;
+import com.tt.reminder.notification.RenderAlarm;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.EditTaskFragmentBase;
 import com.tt.sharedbaseclass.model.GroupBean;
+import com.tt.sharedbaseclass.model.RenderCallback;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
-import com.tt.sharedbaseclass.model.RenderCallback;
-import com.tt.reminder.notification.RenderAlarm;
 import com.tt.sharedbaseclass.view.WheelView;
 
-import java.util.Arrays;
 import java.util.Calendar;
 
 public class EditTaskFragment extends EditTaskFragmentBase implements View.OnClickListener,
@@ -114,7 +113,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
                         , mTaskBeanFromParent.getRepeatInterval()
                         , mRepeatUnits[mTaskBeanFromParent.getRepeatUnit()]));
             }
-            mGroupSpinner.setSelection(Arrays.binarySearch(mGroupsBean.toArray(), new GroupBean(mTaskBeanFromParent.getGroup())));
+            mGroupSpinner.setSelection(mGroupsBean.indexOf(new GroupBean(mTaskBeanFromParent.getGroup())));
         } else if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
             mHeaderViewTitle.setText(R.string.header_view_title_new_task);
         }
