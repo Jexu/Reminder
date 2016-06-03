@@ -85,6 +85,14 @@ public class RenderDbHelper extends SQLiteOpenHelper {
         Log.i("Render", "create group table successfully");
     }
 
+  private void createTriger(SQLiteDatabase db) {
+    StringBuffer createTriger = new StringBuffer();
+    createTriger.append("create trigger TT after update on ")
+      .append(Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS)
+      .append(" begin ")
+      .append("end");
+  }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("drop table if exists " + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS);

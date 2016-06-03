@@ -20,8 +20,6 @@ import com.tt.sharedbaseclass.model.TaskBean;
  */
 public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase implements CompoundButton.OnCheckedChangeListener {
 
-  private Constant.RENDER_ADAPTER_TYPE mAdapterType;
-
   public RenderRecycleViewAdapter() {
     super();
   }

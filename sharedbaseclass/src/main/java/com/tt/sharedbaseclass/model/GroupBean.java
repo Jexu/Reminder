@@ -49,8 +49,7 @@ public class GroupBean extends RenderBeanBase {
 
     @Override
     public boolean equals(Object groupBean) {
-        return mId == ((GroupBean)groupBean).mId
-                &&mGroup.equals(((GroupBean)groupBean).getGroup());
+        return mGroup.equals(((GroupBean)groupBean).getGroup());
     }
 
     @Override
