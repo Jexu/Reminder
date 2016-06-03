@@ -348,7 +348,7 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
             mTasksContainerAdapter.removeBean(requestCode);
             mTasksContainerAdapter.addBeanInOrder(taskBean);
         }
-        if (bundle.getBoolean(Constant.BundelExtra.EXTRA_IS_ADD_NEW_GROUP)) {
+        if (bundle != null && bundle.getBoolean(Constant.BundelExtra.EXTRA_IS_ADD_NEW_GROUP)) {
             mLeftDrawerGroupsAdapter.notifyDataSetChanged();
         }
     }
