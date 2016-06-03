@@ -17,6 +17,7 @@ import android.widget.ScrollView;
 import com.tt.reminder.R;
 import com.tt.reminder.activity.MainActivity;
 import com.tt.reminder.adapter.RenderRecycleViewAdapter;
+import com.tt.reminder.notification.RenderAlarm;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.TaskContainFragmentBase;
 import com.tt.sharedbaseclass.model.GroupBean;
@@ -95,8 +96,8 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
         mLeftDrawerCategoryRecycleView.setItemAnimator(new DefaultItemAnimator());
         mLeftDrawerCategoryRecycleView.setAdapter(mLeftDrawerGroupsAdapter);
 
-        mTasksContainerAdapter.setmOnItemClickLitener(this);
-        mLeftDrawerGroupsAdapter.setmOnItemClickLitener(this);
+        mTasksContainerAdapter.setOnItemClickListener(this);
+        mLeftDrawerGroupsAdapter.setOnItemClickListener(this);
     }
 
     @Override
@@ -106,17 +107,17 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
         mGetGroupsCallback = new GetGroupsCallback(this);
         mUpdateBeanCallback = new UpdateBeanCallback(this);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_TASKS_BY_GROUP_NAME.toString(),
-          mGetTasksByGroupNameCallback);
+                mGetTasksByGroupNameCallback);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_GROUPS.toString(),
-          mGetGroupsCallback);
+                mGetGroupsCallback);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.toString()
-          , mUpdateBeanCallback);
+                , mUpdateBeanCallback);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_DELETE_TASK.toString(),
-          mUpdateBeanCallback);
+                mUpdateBeanCallback);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_GROUP_NAME.toString(),
-          mUpdateBeanCallback);
+                mUpdateBeanCallback);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_DELETE_GROUP.toString(),
-          mUpdateBeanCallback);
+                mUpdateBeanCallback);
     }
 
     @Override
@@ -127,28 +128,22 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
             getGroupsExceptFinished(Constant.RenderServiceHelper.REQUEST_CODE_DEFAULT);
         }
         mLruCache.put(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN
-          + mRenderObjectBeansGroups.get(requestCode).toString()
-          , renderObjectBeans);
+                + (requestCode == RenderRecycleViewAdapter.POSITION_GROUP_FINISHED ?
+                Constant.RenderDbHelper.GROUP_NAME_FINISHED : mRenderObjectBeansGroups.get(requestCode).toString())
+                , renderObjectBeans);
         if (mStartFrom == Constant.BundelExtra.START_FROM_NOTIFICATION) {
             navigateToEditFragment((TaskBean) getArguments().getSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN));
             mStartFrom = Constant.BundelExtra.START_FROM_DEFAULT;
         }
-        updateRecycleView((GroupBean) mRenderObjectBeansGroups.get(requestCode));
+        updateRecycleView(renderObjectBeans);
     }
 
-    private void updateRecycleView(GroupBean groupBean) {
-        RenderObjectBeans renderObjectBeans
-                = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN
-                    + groupBean.toString());
+    private void updateRecycleView(RenderObjectBeans renderObjectBeans) {
         if (renderObjectBeans != null) {
+            mTasksContainerAdapter.addAllBeans(renderObjectBeans);
             if (renderObjectBeans.isEmpty()) {
 
-            } else {
-                mTasksContainerAdapter.addAllBeans(renderObjectBeans);
             }
-        } else {
-            getTasksByGroupName(groupBean.toString()
-                    , mRenderObjectBeansGroups.indexOf(groupBean));
         }
     }
 
@@ -172,12 +167,22 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     }
 
     @Override
-    public void onItemClickListener(View view, Constant.RENDER_ADAPTER_TYPE adapterType,  int position) {
+    public void onItemClickListener(View view, Constant.RENDER_ADAPTER_TYPE adapterType, int positionClickedBefore, int position) {
        if (adapterType == Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER) {
            TaskBean taskBean = (TaskBean) mTasksContainerAdapter.getBean(position);
            navigateToEditFragment(Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value(), taskBean, position);
        } else if (adapterType == Constant.RENDER_ADAPTER_TYPE.LEFT_DRAWER_TASKS_CATEGORY) {
-
+            //left drawer category
+           if (position != positionClickedBefore) {
+               String groupName = ((GroupBean)mRenderObjectBeansGroups.get(position)).getGroup();
+               mHeaderViewTitle.setText(groupName);
+               RenderObjectBeans taskBeans = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+groupName);
+               if (taskBeans == null) {
+                    getTasksByGroupName(groupName, position);
+               } else {
+                   mTasksContainerAdapter.addAllBeans(taskBeans);
+               }
+           }
        }
     }
 
@@ -219,6 +224,13 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
                 , position);
     }
 
+    @Override
+    public void onAdapterEmpty(Constant.RENDER_ADAPTER_TYPE adapterType, boolean isAdapterEmpty) {
+        if (isAdapterEmpty) {
+            Log.i("Render", "the group has no task");
+        }
+    }
+
     private void deleteBean(int action, String tableName, int id, int requestCode) {
         mRenderService.getOrUpdate(action
                 , tableName
@@ -234,7 +246,7 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
             case Constant.RenderServiceHelper.RESULT_CODE_DELETE_TASK_SUCCESS:
                 if( requestCode >= 0) {
                     // TODO: 2016/5/29 remove task bean
-                    mTasksContainerAdapter.removeBean(requestCode);
+                    taskDeleted(row, requestCode);
                 }
                 break;
             case Constant.RenderServiceHelper.RESULT_CODE_DELETE_GROUP_SUCCESS:
@@ -255,35 +267,83 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
 
     }
 
+    private void taskDeleted(long row, int requestCode) {
+        if (requestCode >= 0) {
+            TaskBean taskBean = (TaskBean) mTasksContainerAdapter.getBean(requestCode);
+            if (taskBean.isFinished() == TaskBean.VALUE_FINISHED) {
+                mTasksContainerAdapter.removeBean(requestCode, false);
+            } else {
+                RenderObjectBeans tasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+taskBean.getGroup());
+                if (!taskBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
+                    RenderObjectBeans myTasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+                    if (myTasks != null) {
+                        myTasks.remove(myTasks.indexOf(taskBean));
+                    }
+                }
+                if (tasks != null) {
+                    tasks.remove(tasks.indexOf(taskBean));
+                }
+                // TODO: 5/31/16 remove notification alarm
+                if (taskBean.getTimeInMillis() != TaskBean.DEFAULT_VALUE_OF_DATE_TIME) {
+                    RenderAlarm.removeAlarm(getActivity(), taskBean);
+                }
+            }
+            mTasksContainerAdapter.notifyDataSetChanged();
+        }
+    }
+
     private void taskFinishStatueChanged(long row, int requestCode) {
         if (requestCode >= 0) {
             TaskBean taskBean = (TaskBean) mTasksContainerAdapter.getBean(requestCode);
             if (taskBean.isFinished() == TaskBean.VALUE_FINISHED) {
-                if (!taskBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)
-                    && mLruCache.get(taskBean.getGroup()) != null) {
+                //finished --> unfinished
+                if (mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+taskBean.getGroup()) != null) {
                     TaskBean newTaskBean = new TaskBean();
                     newTaskBean.copy(taskBean);
                     newTaskBean.setIsFinished(TaskBean.VALUE_NOT_FINISHED);
-                    mLruCache.get(taskBean.getGroup()).addBeanInOrder(newTaskBean);
-                    // TODO: 5/31/16 create notification alarm again
-                } else if (taskBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)
-                  && mLruCache.get(Constant.RenderDbHelper.GROUP_NAME_MY_TASK) != null) {
-                    TaskBean newTaskBean = new TaskBean();
-                    newTaskBean.copy(taskBean);
-                    newTaskBean.setIsFinished(TaskBean.VALUE_NOT_FINISHED);
-                    mLruCache.get(Constant.RenderDbHelper.GROUP_NAME_MY_TASK).addBeanInOrder(newTaskBean);
-                    // TODO: 5/31/16 create notification alarm again
+                    //应该根据组信息add两次；myTasks和自身groupName
+                    RenderObjectBeans tasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+taskBean.getGroup());
+                    if (!taskBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
+                        RenderObjectBeans myTasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+                        if (myTasks != null) {
+                            myTasks.addBeanInOrder(newTaskBean);
+                        }
+                    }
+                    if (tasks != null) {
+                        tasks.addBeanInOrder(newTaskBean);
+                    }
+                }
+                mTasksContainerAdapter.removeBean(requestCode, false);
+                // TODO: 5/31/16 create notification alarm again
+                if (taskBean.getTimeInMillis() != TaskBean.DEFAULT_VALUE_OF_DATE_TIME) {
+                    RenderAlarm.createAlarm(getActivity(), taskBean);
                 }
             } else {
-                if (mLruCache.get(Constant.RenderDbHelper.GROUP_NAME_FINISHED) != null) {
+                //unfinished --> finished
+                if (mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+Constant.RenderDbHelper.GROUP_NAME_FINISHED) != null) {
                     TaskBean newTaskBean = new TaskBean();
                     newTaskBean.copy(taskBean);
                     newTaskBean.setIsFinished(TaskBean.VALUE_FINISHED);
-                    mLruCache.get(taskBean.getGroup()).addBeanInOrder(newTaskBean);
-                    // TODO: 5/31/16 remove notification alarm
+                    mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+Constant.RenderDbHelper.GROUP_NAME_FINISHED).addBeanInOrder(newTaskBean);
+                }
+                //应该根据组信息remove两次；myTasks和自身groupName
+                RenderObjectBeans tasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+taskBean.getGroup());
+                if (!taskBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
+                    RenderObjectBeans myTasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+                    if (myTasks != null) {
+                        myTasks.remove(myTasks.indexOf(taskBean));
+                    }
+                }
+                if (tasks != null) {
+                    tasks.remove(tasks.indexOf(taskBean));
+                }
+
+                // TODO: 5/31/16 remove notification alarm
+                if (taskBean.getTimeInMillis() != TaskBean.DEFAULT_VALUE_OF_DATE_TIME) {
+                    RenderAlarm.removeAlarm(getActivity(), taskBean);
                 }
             }
-            mTasksContainerAdapter.removeBean(requestCode);
+            mTasksContainerAdapter.notifyDataSetChanged();
         }
     }
 
@@ -340,13 +400,13 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
         if (resultCode == Constant.BundelExtra.FINISH_RESULT_CODE_SUCCESS
             && requestCode == Constant.BundelExtra.FINISH_REQUEST_CODE_NEW_TASK) {
             TaskBean newTaskBean = (TaskBean) bundle.get(Constant.BundelExtra.EXTRA_TASK_BEAN);
-            mTasksContainerAdapter.addBeanInOrder(newTaskBean);
+            mTasksContainerAdapter.addBeanInOrder(newTaskBean, true);
         } else if (resultCode == Constant.BundelExtra.FINISH_RESULT_CODE_SUCCESS
                 && requestCode >= 0) {
             //request code is old task position
             TaskBean taskBean = (TaskBean) bundle.get(Constant.BundelExtra.EXTRA_TASK_BEAN);
-            mTasksContainerAdapter.removeBean(requestCode);
-            mTasksContainerAdapter.addBeanInOrder(taskBean);
+            mTasksContainerAdapter.removeBean(requestCode, false);
+            mTasksContainerAdapter.addBeanInOrder(taskBean, true);
         }
         if (bundle != null && bundle.getBoolean(Constant.BundelExtra.EXTRA_IS_ADD_NEW_GROUP)) {
             mLeftDrawerGroupsAdapter.notifyDataSetChanged();
