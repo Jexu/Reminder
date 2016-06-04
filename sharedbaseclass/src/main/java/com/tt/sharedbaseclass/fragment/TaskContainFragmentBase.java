@@ -1,17 +1,23 @@
 package com.tt.sharedbaseclass.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
+import com.tt.sharedbaseclass.model.GroupBean;
+import com.tt.sharedbaseclass.model.RenderCallback;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 import com.tt.sharedutils.DeviceUtil;
@@ -29,6 +35,9 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
     protected LinearLayout mLeftDrawerCreateNewGroup;
     protected LinearLayout mLeftDrawerSetting;
     protected LinearLayout mLeftDrawerFeedback;
+
+    private AddNewGroupCallBack mAddNewGroupCallBack;
+
 
 
     protected LruCache<String, RenderObjectBeans> mLruCache;
@@ -52,6 +61,14 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
             mLeftDrawerGroupFinished.setOnClickListener(this);
             mLeftDrawerCreateNewGroup.setOnClickListener(this);
         }
+    }
+
+    @Override
+    public void initServices() {
+        super.initServices();
+        mAddNewGroupCallBack = new AddNewGroupCallBack(this);
+        mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.toString(),
+                mAddNewGroupCallBack);
     }
 
     @Override
@@ -109,7 +126,7 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
         } else if (viewId == R.id.left_drawer_group_finished ) {
             onLeftDrawerGroupFinishedClick();
         } else if (viewId == R.id.left_drawer_create_new_group) {
-
+            onLeftDrawerCreateNewGroupClick();
         } else if (viewId == R.id.left_drawer_setting) {
 
         } else if (viewId == R.id.left_drawer_feedback_help) {
@@ -120,6 +137,43 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
     protected abstract void onMainMenuClick();
 
     protected abstract void onLeftDrawerGroupFinishedClick();
+
+    private void onLeftDrawerCreateNewGroupClick() {
+        String title = getResources().getString(R.string.alert_dialog_title_new_group);
+        String message = getResources().getString(R.string.alert_dialog_message_add_new_group);
+        AlertDialog.Builder builder = getDefaultAlertDialogBuilder(title, message);
+        final EditText editText = new EditText(getActivity());
+        editText.setSingleLine(true);
+        builder.setView(editText)
+                .setNegativeButton(R.string.edit_task_fragment_alert_dialog_discard, null)
+                .setPositiveButton(R.string.edit_task_fragment_alert_dialog_save, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        addNewGroup(editText);
+                    }
+                }).show();
+    }
+
+    protected void addNewGroup(EditText editText) {
+        if (!TextUtils.isEmpty(editText.getText().toString().trim())) {
+            GroupBean groupBean = new GroupBean();
+            groupBean.setGroup(editText.getText().toString());
+            mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.value(),
+                    Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP, null, groupBean, null,
+                    Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP);
+            if (mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS) != null) {
+                mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS).add(groupBean);
+            }
+            // TODO: 2016/5/23 show loading view
+        } else {
+            Toast.makeText(getActivity(), com.tt.sharedbaseclass.R.string.edit_task_add_new_group_please_input_new_group_name,
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    protected abstract void onAddNewGroupSuccess(long row, int requestCode, int resultCode);
+
+    protected abstract void onAddNewGroupFail(int requestCode, int resultCode);
 
     protected abstract void navigateToEditFragment(int fragmentType, TaskBean taskBean, int requestCode);
 
@@ -133,6 +187,35 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
         if (mLruCache != null) {
             mLruCache.evictAll();
             mLruCache = null;
+        }
+    }
+
+    private static class AddNewGroupCallBack extends RenderCallback {
+
+        TaskContainFragmentBase mContext;
+        private AddNewGroupCallBack(TaskContainFragmentBase context) {
+            mContext = context;
+        }
+        @Override
+        public void onHandleSelectSuccess(RenderObjectBeans renderObjectBeans,
+                                          int requestCode, int resultCode) {
+
+        }
+
+        @Override
+        public void onHandleUpdateSuccess(long row, int requestCode, int resultCode) {
+            mContext.onAddNewGroupSuccess(row, requestCode, resultCode);
+        }
+
+        @Override
+        public void onHandleFail(int requestCode, int resultCode) {
+            if (requestCode == Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP
+                    && resultCode == Constant.RenderServiceHelper.RESULT_CODE_FAIL) {
+                // TODO: 2016/5/23 dismiss loading view
+                mContext.onAddNewGroupFail(requestCode, resultCode);
+            } else {
+                Log.e("Render", "error request code or result code");
+            }
         }
     }
 }

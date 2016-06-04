@@ -173,7 +173,7 @@ public class Constant {
     }
 
     public enum WEEK {
-        SUN(0), MON(1), TUE(2), WEN(3), THU(4), FRI(5), STA(6), ;
+        Sun(0), Mon(1), Tue(2), Wen(3), Thu(4), Fri(5), Sta(6), ;
         private int value = 1;
         WEEK(int value) {
             this.value = value;
@@ -182,25 +182,25 @@ public class Constant {
             WEEK result = null;
             switch (value) {
                 case 1:
-                    result = MON;
+                    result = Mon;
                 break;
                 case 2:
-                    result = TUE;
+                    result = Tue;
                     break;
                 case 3:
-                    result = WEN;
+                    result = Wen;
                     break;
                 case 4:
-                    result = THU;
+                    result = Thu;
                     break;
                 case 5:
-                    result = FRI;
+                    result = Fri;
                     break;
                 case 6:
-                    result = STA;
+                    result = Sta;
                     break;
                 case 0:
-                    result = SUN;
+                    result = Sun;
                     break;
             }
             return result;
@@ -264,7 +264,7 @@ public class Constant {
     }
 
     public enum REPEAT_UNIT {
-        MINUTE(7), HOUR(6), DAY(5), WEEK(4), MONTH(3), YEAR(2), NO_REPEAT(1);
+        Minute(7), Hour(6), Day(5), Week(4), Month(3), Year(2), NO_REPEAT(1);
         private int value = 0;
         REPEAT_UNIT(int value) {
             this.value = value;
@@ -273,22 +273,22 @@ public class Constant {
             REPEAT_UNIT result = NO_REPEAT;
             switch (value) {
                 case 2:
-                    result = YEAR;
+                    result = Year;
                     break;
                 case 3:
-                    result = MONTH;
+                    result = Month;
                     break;
                 case 4:
-                    result = WEEK;
+                    result = Week;
                     break;
                 case 5:
-                    result = DAY;
+                    result = Day;
                     break;
                 case 6:
-                    result = HOUR;
+                    result = Hour;
                     break;
                 case 7:
-                    result = MINUTE;
+                    result = Minute;
                     break;
                 default:
                     result = NO_REPEAT;

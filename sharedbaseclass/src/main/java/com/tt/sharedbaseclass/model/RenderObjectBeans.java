@@ -55,6 +55,31 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
         this.mCountTaskNoDate = countTaskNoDate;
     }
 
+    @Override
+    public boolean add(Object object) {
+        if (object instanceof TaskBean) {
+            if (((TaskBean) object).isClearedPickedDate()) {
+                mCountTaskNoDate++;
+            } else {
+                mCountTaskHasDate++;
+            }
+        }
+        return super.add(object);
+    }
+
+    @Override
+    public Object remove(int index) {
+        Object bean = get(index);
+        if (bean instanceof TaskBean) {
+            if (((TaskBean) bean).isClearedPickedDate()) {
+                mCountTaskNoDate--;
+            } else {
+                mCountTaskHasDate--;
+            }
+        }
+        return super.remove(index);
+    }
+
     public void addBeanInOrder(Object bean) {
         if (bean instanceof TaskBean) {
             TaskBean tb = (TaskBean)bean;
@@ -97,7 +122,9 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
                     index = mid;
                 }
                 add(index, tb);
-                mCountTaskHasDate++;
+                if (tb.getRepeatIntervalTimeInMillis() != TaskBean.DEFAULT_VALUE_OF_INTERVAL) {
+                    mCountTaskHasDate++;
+                }
             }
         }
     }

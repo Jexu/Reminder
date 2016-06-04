@@ -15,8 +15,6 @@ import com.tt.sharedbaseclass.model.GroupBean;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 
-import java.util.TreeMap;
-
 /**
  * Created by zhengguo on 5/27/16.
  */
@@ -90,6 +88,15 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase
       h.mRightTime.setText(taskBean.getPickedTime(false));
       h.mLeftSymbol.setVisibility(View.VISIBLE);
       h.mRightTime.setVisibility(View.VISIBLE);
+      if (taskBean.getRepeatIntervalTimeInMillis() != TaskBean.DEFAULT_VALUE_OF_INTERVAL) {
+        h.mRightRepeat.setVisibility(View.VISIBLE);
+        h.mRightRepeat.setText(mContext.getResources().getString(
+                R.string.repeat_every_interval_unit, taskBean.getRepeatInterval()
+                , Constant.REPEAT_UNIT.valueOf(taskBean.getRepeatUnit())));
+      } else {
+        h.mRightRepeat.setText("");
+        h.mRightRepeat.setVisibility(View.GONE);
+      }
     } else {
       if (mRenderObjectBeans.getCountTaskHasDate() > 0) {
         h.mLeftSymbol.setVisibility(View.INVISIBLE);
@@ -98,6 +105,8 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase
         h.mLeftSymbol.setVisibility(View.GONE);
         h.mRightTime.setVisibility(View.GONE);
       }
+      h.mRightRepeat.setText("");
+      h.mRightRepeat.setVisibility(View.GONE);
     }
   }
 
@@ -155,6 +164,7 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase
     CheckBox mRightCheckBox;
     TextView mRightTaskContent;
     TextView mRightTime;
+    TextView mRightRepeat;
 
     public RenderViewHolder(View itemRootView) {
       super(itemRootView);
@@ -166,6 +176,7 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase
         mRightCheckBox = (CheckBox) itemRootView.findViewById(R.id.shared_list_item_right_checkbox);
         mRightTaskContent = (TextView) itemRootView.findViewById(R.id.shared_list_item_right_task_content);
         mRightTime = (TextView) itemRootView.findViewById(R.id.shared_list_item_right_task_time);
+        mRightRepeat = (TextView) itemRootView.findViewById(R.id.shared_list_item_right_repeat);
       } else {
         mLeftSymbol = (TextView) itemRootView.findViewById(R.id.shared_list_item_in_drawer_item_subtitle);
         mRightTaskContent = (TextView) itemRootView.findViewById(R.id.shared_list_item_in_drawer_item_count);

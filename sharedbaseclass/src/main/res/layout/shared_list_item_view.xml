@@ -77,6 +77,15 @@
             android:textSize="@dimen/shared_list_item_left_textview_textsize"
           android:layout_below="@+id/shared_list_item_right_task_content"/>
 
+        <TextView
+            android:id="@+id/shared_list_item_right_repeat"
+            style="@style/shared_list_item_right_textview_style"
+            android:layout_marginTop="@dimen/shared_list_item_right_textview_margin_top"
+            android:textSize="@dimen/shared_list_item_left_textview_textsize"
+            android:layout_toRightOf="@+id/shared_list_item_right_task_time"
+            android:layout_below="@+id/shared_list_item_right_task_content"
+            android:visibility="gone"/>
+
     </RelativeLayout>
 
 </LinearLayout>

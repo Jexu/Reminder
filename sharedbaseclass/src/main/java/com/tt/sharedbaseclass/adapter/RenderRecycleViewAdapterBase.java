@@ -64,11 +64,6 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
 
   public void addBean(Object bean, boolean isNotifyDataSetChanged) {
     if (mRenderObjectBeans != null) {
-      if (bean instanceof TaskBean && ((TaskBean)bean).isClearedPickedDate()) {
-        mRenderObjectBeans.setCountTaskNoDate(mRenderObjectBeans.getCountTaskNoDate() + 1);
-      } else if (bean instanceof TaskBean && !((TaskBean)bean).isClearedPickedDate()){
-        mRenderObjectBeans.setCountTaskHasDate(mRenderObjectBeans.getCountTaskHasDate() + 1);
-      }
       mRenderObjectBeans.add(bean);
       onAdapterEmpty();
       if (isNotifyDataSetChanged) {
@@ -86,11 +81,6 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
 
   public void removeBean(int position, boolean isNotifyDataSetChanged) {
     if (mRenderObjectBeans != null) {
-       if (mRenderObjectBeans.get(position) instanceof TaskBean && ((TaskBean)mRenderObjectBeans.get(position)).isClearedPickedDate()) {
-         mRenderObjectBeans.setCountTaskNoDate(mRenderObjectBeans.getCountTaskNoDate() - 1);
-       } else if (mRenderObjectBeans.get(position) instanceof TaskBean && !((TaskBean)mRenderObjectBeans.get(position)).isClearedPickedDate()){
-         mRenderObjectBeans.setCountTaskHasDate(mRenderObjectBeans.getCountTaskHasDate() - 1);
-       }
       mRenderObjectBeans.remove(position);
       onAdapterEmpty();
       if (isNotifyDataSetChanged) {
@@ -101,11 +91,6 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
 
   public void removeBean(Object bean, boolean isNotifyDataSetChanged) {
     if (mRenderObjectBeans != null) {
-      if (bean instanceof TaskBean && ((TaskBean)bean).isClearedPickedDate()) {
-        mRenderObjectBeans.setCountTaskNoDate(mRenderObjectBeans.getCountTaskNoDate() - 1);
-      } else if (bean instanceof TaskBean && !((TaskBean)bean).isClearedPickedDate()){
-        mRenderObjectBeans.setCountTaskHasDate(mRenderObjectBeans.getCountTaskHasDate() - 1);
-      }
       int position = mRenderObjectBeans.indexOf(bean);
       mRenderObjectBeans.remove(position);
       onAdapterEmpty();

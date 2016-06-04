@@ -28,6 +28,8 @@ import com.tt.sharedbaseclass.model.RenderCallback;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 
+import java.util.Calendar;
+
 public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
         implements DrawerLayout.DrawerListener,
         RenderRecycleViewAdapter.OnItemClickListener {
@@ -234,13 +236,29 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
         TaskBean oldTaskBean = (TaskBean) mTasksContainerAdapter.getBean(position);
         TaskBean newTaskBean = new TaskBean();
         newTaskBean.copy(oldTaskBean);
-        newTaskBean.setIsFinished(isChecked? TaskBean.VALUE_FINISHED: TaskBean.VALUE_NOT_FINISHED);
+        if (isChecked && newTaskBean.getRepeatIntervalTimeInMillis() != TaskBean.DEFAULT_VALUE_OF_INTERVAL) {
+            //repeat --> reset alarm time
+           resetTaskBeanAlarmDate(newTaskBean);
+        } else {
+            //no repeat
+            newTaskBean.setIsFinished(isChecked ? TaskBean.VALUE_FINISHED : TaskBean.VALUE_NOT_FINISHED);
+        }
         mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.value()
                 , Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
                 , oldTaskBean
                 , newTaskBean
                 , null
                 , position);
+    }
+
+    private void resetTaskBeanAlarmDate(TaskBean taskBean) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis() + taskBean.getRepeatIntervalTimeInMillis());
+        taskBean.setYear(calendar.get(Calendar.YEAR));
+        taskBean.setMonth(calendar.get(Calendar.MONTH));
+        taskBean.setDayOfMonth(calendar.get(Calendar.DAY_OF_MONTH));
+        taskBean.setHour(calendar.get(Calendar.HOUR));
+        taskBean.setMinuse(calendar.get(Calendar.MINUTE));
     }
 
     @Override
@@ -343,16 +361,18 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
                 }
             } else {
                 //unfinished --> finished
-                if (mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+Constant.RenderDbHelper.GROUP_NAME_FINISHED) != null) {
+                boolean isRepeat = taskBean.getRepeatIntervalTimeInMillis()==TaskBean.DEFAULT_VALUE_OF_INTERVAL?false:true;
+                if (!isRepeat && mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+Constant.RenderDbHelper.GROUP_NAME_FINISHED) != null) {
                     TaskBean newTaskBean = new TaskBean();
                     newTaskBean.copy(taskBean);
                     newTaskBean.setIsFinished(TaskBean.VALUE_FINISHED);
                     mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+Constant.RenderDbHelper.GROUP_NAME_FINISHED).addBeanInOrder(newTaskBean);
                 }
-                //应该根据组信息remove两次；myTasks和自身groupName
+                //应该根据组信息update or remove两次；myTasks和自身groupName
                 RenderObjectBeans tasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+taskBean.getGroup());
+                RenderObjectBeans myTasks = null;
                 if (!taskBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
-                    RenderObjectBeans myTasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+                    myTasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
                     if (myTasks != null) {
                         myTasks.remove(myTasks.indexOf(taskBean));
                     }
@@ -361,13 +381,40 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
                     tasks.remove(tasks.indexOf(taskBean));
                 }
 
-                // TODO: 5/31/16 remove notification alarm
-                if (taskBean.getTimeInMillis() != TaskBean.DEFAULT_VALUE_OF_DATE_TIME) {
-                    RenderAlarm.removeAlarm(getActivity(), taskBean);
+                if (isRepeat) {
+                    resetTaskBeanAlarmDate(taskBean);
+                    if (tasks != null) {
+                        tasks.addBeanInOrder(taskBean);
+                    }
+                    if (myTasks != null) {
+                        myTasks.addBeanInOrder(taskBean);
+                    }
+                    // TODO: 5/31/16 reset notification alarm
+                    if (taskBean.getTimeInMillis() != TaskBean.DEFAULT_VALUE_OF_DATE_TIME) {
+                        RenderAlarm.updateAlarm(getActivity(), taskBean);
+                    }
+                } else {
+                    // TODO: 5/31/16 remove notification alarm
+                    if (taskBean.getTimeInMillis() != TaskBean.DEFAULT_VALUE_OF_DATE_TIME) {
+                        RenderAlarm.removeAlarm(getActivity(), taskBean);
+                    }
                 }
             }
             mTasksContainerAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    protected void onAddNewGroupSuccess(long row, int requestCode, int resultCode) {
+        Log.i("Render", "success to add new group");
+        mLeftDrawerGroupsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onAddNewGroupFail(int requestCode, int resultCode) {
+        Log.i("Render", "fail to add new group");
+        mRenderObjectBeansGroups.remove(mRenderObjectBeansGroups.size()-1);
+        mLeftDrawerGroupsAdapter.notifyDataSetChanged();
     }
 
     @Override
