@@ -318,6 +318,10 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
             Toast.makeText(getActivity(), "please set alarm time", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (mTaskBean.isClearedPickedDate() && mTaskBean.isClearedPickedTime()) {
+            mTaskBean.setRepeatInterval(TaskBean.DEFAULT_VALUE_OF_INTERVAL);
+            mTaskBean.setRepeatUnit(Constant.REPEAT_UNIT.NO_REPEAT.value());
+        }
         if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
             mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.value()
               ,Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS

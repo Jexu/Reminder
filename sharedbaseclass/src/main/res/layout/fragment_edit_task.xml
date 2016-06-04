@@ -143,13 +143,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableBottom="@drawable/shared_divider_2dp"
+                android:visibility="gone"
                 android:text="@string/subtitle_repeat"/>
 
             <LinearLayout
+                android:id="@+id/linearlayout_repeat"
                 style="@style/edit_view_style_in_layout_fragment_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <ImageView

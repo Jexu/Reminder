@@ -507,7 +507,8 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
         if (resultCode == Constant.BundelExtra.FINISH_RESULT_CODE_SUCCESS
             && requestCode == Constant.BundelExtra.FINISH_REQUEST_CODE_NEW_TASK) {
             TaskBean newTaskBean = (TaskBean) bundle.get(Constant.BundelExtra.EXTRA_TASK_BEAN);
-            RenderObjectBeans myTasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+            RenderObjectBeans myTasks = mLruCache.get(
+                    Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
             RenderObjectBeans tasks;
             if (myTasks != null) {
                 myTasks.addBeanInOrder(newTaskBean);
