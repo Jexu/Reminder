@@ -198,11 +198,11 @@ public class RenderService {
         Message msg = new Message();
         SQLiteDatabase dbReader = mRenderDbHelper.getReadableDatabase();
         Cursor cursor = dbReader.rawQuery("select * "
-          + " from "
-          + Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP
-          + " where "
-          + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
-          + " <> ?", new String[]{Constant.RenderDbHelper.GROUP_NAME_FINISHED});
+                + " from "
+                + Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP
+                + " where "
+                + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
+                + " <> ?", new String[]{Constant.RenderDbHelper.GROUP_NAME_FINISHED});
         if (cursor != null) {
             List<GroupBean> renderObjectBeansGroup  = new RenderObjectBeans<GroupBean>();
             while(cursor.moveToNext()) {
@@ -297,7 +297,7 @@ public class RenderService {
 
         SQLiteDatabase dbWrite = mRenderDbHelper.getWritableDatabase();
         long row = dbWrite.update(tableName, taskBeanToContentValues(oldBean, newBean, tempRequestCode)
-          , Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_ID + " = ?", new String[]{((GroupBean) oldBean).getId() + ""});
+                , Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_ID + " = ?", new String[]{((GroupBean) oldBean).getId() + ""});
         if (row != -1) {
             if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_UPDATE_SUCCESS;
@@ -319,12 +319,12 @@ public class RenderService {
         dbWrite.close();
     }
 
-    private void deleteDateById(int action, String tableName,String id, int requestCode) {
+    private void deleteDateById(int action, String tableName,String[] wheres, int requestCode) {
         RenderCallback handler = mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
         Bundle bundle = new Bundle();
         bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
         Message msg = new Message();
-        if (StringUtil.isEmpty(tableName)) {
+        if (StringUtil.isEmpty(tableName) || wheres == null || wheres.length < 1) {
             if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
                 bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_FAIL);
@@ -337,7 +337,16 @@ public class RenderService {
         }
         SQLiteDatabase dbWrite = mRenderDbHelper.getWritableDatabase();
         long row = dbWrite.delete(tableName, Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_ID + "=?"
-                , new String[]{id + ""});
+                , new String[]{wheres[0]});
+        if (action == Constant.RenderServiceHelper.ACTION.ACTION_DELETE_GROUP.value()) {
+            //update group of tasks
+            ContentValues cv = new ContentValues();
+            cv.put(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP, Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+            dbWrite.update(Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
+                    , cv
+                    , Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP+" = ?"
+                    , new String[]{wheres[1]});
+        }
         if (row != -1) {
             if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_UPDATE_SUCCESS;
@@ -508,7 +517,7 @@ public class RenderService {
                     //delete group
                     case 7:
                     case 8:
-                        deleteDateById(action, tableName, whereArgs[0], requestCode);
+                        deleteDateById(action, tableName, whereArgs, requestCode);
                         break;
                 }
                 return null;

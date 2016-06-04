@@ -24,6 +24,7 @@ import com.tt.sharedbaseclass.adapter.RenderRecycleViewAdapterBase;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.TaskContainFragmentBase;
 import com.tt.sharedbaseclass.model.GroupBean;
+import com.tt.sharedbaseclass.model.RenderBeanBase;
 import com.tt.sharedbaseclass.model.RenderCallback;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
@@ -209,24 +210,44 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
 
     @Override
     public void onItemLongClickListener(View view, Constant.RENDER_ADAPTER_TYPE adapterType, final int position) {
+        String alertTitle = getResources().getString(R.string.alert_dialog_title_are_you_sure);
+        String alertMessage = "";
+        int id = -1;
+        int action = Constant.RenderServiceHelper.ACTION.ACTION_DEFAULT.value();
+        String[] wheres = null;
         if (adapterType == Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER) {
-            AlertDialog.Builder builder = getDefaultAlertDialogBuilder(getResources().getString(R.string.alert_dialog_title_are_you_sure)
-              , getResources().getString(R.string.alert_dialog_message_delete_this_task));
-            builder.setNegativeButton(R.string.alert_dialog_negative_button_cancel, null)
-              .setPositiveButton(R.string.alert_dialog_negative_button_delete
-                , new DialogInterface.OnClickListener() {
-                  @Override
-                  public void onClick(DialogInterface dialog, int which) {
-                      deleteBean(Constant.RenderServiceHelper.ACTION.ACTION_DELETE_TASK.value()
-                        , Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
-                        , ((TaskBean) mTasksContainerAdapter.getBean(position)).getId()
-                        , position);
-                  }
-              }).show();
+           alertMessage = getResources().getString(R.string.alert_dialog_message_delete_this_task);
+           action = Constant.RenderServiceHelper.ACTION.ACTION_DELETE_TASK.value();
+           id = ((TaskBean)mTasksContainerAdapter.getBean(position)).getId();
+            wheres = new String[]{id+""};
         } else if (adapterType == Constant.RENDER_ADAPTER_TYPE.LEFT_DRAWER_TASKS_CATEGORY) {
-
+            GroupBean groupBean = (GroupBean)mRenderObjectBeansGroups.get(position);
+            if (groupBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
+                return;
+            }
+            id = groupBean.getId();
+            alertMessage = "Delete this group?";
+            action = Constant.RenderServiceHelper.ACTION.ACTION_DELETE_GROUP.value();
+            wheres = new String[]{id+"", groupBean.getGroup()};
         }
+        showDeleteAlertDialog(action, alertTitle, alertMessage, wheres, position);
+    }
 
+    private void showDeleteAlertDialog(final int action, String alertTitle, String alertMessage, final String[]wheres, final int position) {
+        AlertDialog.Builder builder = getDefaultAlertDialogBuilder(alertTitle
+                , alertMessage);
+        builder.setNegativeButton(R.string.alert_dialog_negative_button_cancel, null)
+                .setPositiveButton(R.string.alert_dialog_negative_button_delete
+                        , new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteBean(action
+                                , action == Constant.RenderServiceHelper.ACTION.ACTION_DELETE_TASK.value()
+                                ? Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS:Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP
+                                , wheres
+                                , position);
+                    }
+                }).show();
     }
 
     @Override
@@ -272,12 +293,12 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
         }
     }
 
-    private void deleteBean(int action, String tableName, int id, int requestCode) {
+    private void deleteBean(int action, String tableName, String[] wheres, int requestCode) {
         mRenderService.getOrUpdate(action
                 , tableName
                 , null
                 , null
-                , new String[]{id + ""}
+                , wheres
                 , requestCode);
     }
 
@@ -293,6 +314,7 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
             case Constant.RenderServiceHelper.RESULT_CODE_DELETE_GROUP_SUCCESS:
                 if (requestCode >= 0) {
                 // TODO: 2016/5/29 remove group bean
+                    groupDeleted(row, requestCode);
                 }
                 break;
             case Constant.RenderServiceHelper.RESULT_CODE_UPDATE_TASK_SUCCESS:
@@ -331,6 +353,21 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
             }
             mTasksContainerAdapter.notifyDataSetChanged();
         }
+    }
+
+    private void groupDeleted(long row, int requestCode) {
+        GroupBean groupBean = (GroupBean) mRenderObjectBeansGroups.get(requestCode);
+        RenderObjectBeans tasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+groupBean.getGroup());
+        if (mLeftDrawerGroupsAdapter.getPositionClickedBefore() == requestCode) {
+            mTasksContainerAdapter.addAllBeans(new RenderObjectBeans());
+        }
+        if (tasks != null) {
+            mLruCache.remove(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+groupBean.getGroup());
+        }
+        getTasksByGroupName(Constant.RenderDbHelper.GROUP_NAME_MY_TASK
+                , Constant.RenderServiceHelper.REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED);
+        mLeftDrawerGroupsAdapter.removeBean(requestCode, true);
+        mLeftDrawerGroupsAdapter.setPositionClicke(RenderRecycleViewAdapter.POSITION_GROUP_FINISHED-1);
     }
 
     private void taskFinishStatueChanged(long row, int requestCode) {
@@ -470,7 +507,18 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
         if (resultCode == Constant.BundelExtra.FINISH_RESULT_CODE_SUCCESS
             && requestCode == Constant.BundelExtra.FINISH_REQUEST_CODE_NEW_TASK) {
             TaskBean newTaskBean = (TaskBean) bundle.get(Constant.BundelExtra.EXTRA_TASK_BEAN);
-            mTasksContainerAdapter.addBeanInOrder(newTaskBean, true);
+            RenderObjectBeans myTasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+            RenderObjectBeans tasks;
+            if (myTasks != null) {
+                myTasks.addBeanInOrder(newTaskBean);
+            }
+            if (!newTaskBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
+                tasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+newTaskBean.getGroup());
+                if (tasks != null) {
+                    tasks.addBeanInOrder(newTaskBean);
+                }
+            }
+
         } else if (resultCode == Constant.BundelExtra.FINISH_RESULT_CODE_SUCCESS
                 && requestCode >= 0) {
             //request code is old task position
