@@ -366,6 +366,9 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
                 RenderAlarm.createAlarm(getActivity(), mTaskBean);
             }
         } else if (mFragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()) {
+            if (mTaskBean.isFinished() == TaskBean.VALUE_FINISHED) {
+                return;
+            }
             if (!mTaskBeanFromParent.isClearedPickedDate()
               && mTaskBean.isClearedPickedDate()) {
                 //cancel

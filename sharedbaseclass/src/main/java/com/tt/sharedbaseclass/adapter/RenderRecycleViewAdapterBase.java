@@ -175,6 +175,22 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
     return mRenderObjectBeans == null ? 0 : mRenderObjectBeans.size();
   }
 
+  public int getPositionClickedBefore() {
+    if (mAdapterType == Constant.RENDER_ADAPTER_TYPE.LEFT_DRAWER_TASKS_CATEGORY) {
+      return mGroupPositionClickedBeforeThisTime;
+    } else {
+      return mTaskPositionClickedBeforeThisTime;
+    }
+  }
+
+  public void setPositionClicke(int positionClicked) {
+    if (mAdapterType == Constant.RENDER_ADAPTER_TYPE.LEFT_DRAWER_TASKS_CATEGORY) {
+      mGroupPositionClickedBeforeThisTime = positionClicked;
+    } else {
+      mTaskPositionClickedBeforeThisTime = positionClicked;
+    }
+  }
+
   private void onAdapterEmpty() {
     if (!mRenderObjectBeans.isEmpty()) {
       mOnItemClickListener.onAdapterEmpty(mAdapterType, false);
@@ -185,7 +201,7 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
 
   protected class RenderViewHolderBase extends RecyclerView.ViewHolder {
 
-    protected View mItemRootView;
+    public View mItemRootView;
 
     public RenderViewHolderBase(View itemView) {
       super(itemView);

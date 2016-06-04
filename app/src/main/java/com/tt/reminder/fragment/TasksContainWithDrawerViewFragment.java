@@ -14,10 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ScrollView;
+import android.widget.TextView;
+
 import com.tt.reminder.R;
 import com.tt.reminder.activity.MainActivity;
 import com.tt.reminder.adapter.RenderRecycleViewAdapter;
 import com.tt.reminder.notification.RenderAlarm;
+import com.tt.sharedbaseclass.adapter.RenderRecycleViewAdapterBase;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.TaskContainFragmentBase;
 import com.tt.sharedbaseclass.model.GroupBean;
@@ -33,6 +36,7 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
 
     private DrawerLayout mDrawerLayout;
     private ScrollView mLeftDrawer;
+    private TextView mNoTaskPage;
     private boolean mIsLeftDrawerOpened = false;
     private RecyclerView mTasksContainerRecycleView;
     private RecyclerView mLeftDrawerCategoryRecycleView;
@@ -75,6 +79,7 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
         mDrawerLayout = (DrawerLayout) contentView.findViewById(R.id.drawer_layout);
         mLeftDrawer = (ScrollView) contentView.findViewById(R.id.left_drawer);
         mTasksContainerRecycleView = (RecyclerView) contentView.findViewById(R.id.list);
+        mNoTaskPage = (TextView) contentView.findViewById(R.id.no_task_page);
         mLeftDrawerCategoryRecycleView = (RecyclerView) contentView.findViewById(R.id.left_drawer_category_recycleview);
         return contentView;
     }
@@ -141,9 +146,6 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     private void updateRecycleView(RenderObjectBeans renderObjectBeans) {
         if (renderObjectBeans != null) {
             mTasksContainerAdapter.addAllBeans(renderObjectBeans);
-            if (renderObjectBeans.isEmpty()) {
-
-            }
         }
     }
 
@@ -167,6 +169,22 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     }
 
     @Override
+    protected void onLeftDrawerGroupFinishedClick() {
+        //left drawer group finished
+        if (mLeftDrawerGroupsAdapter.getPositionClickedBefore() != RenderRecycleViewAdapter.POSITION_GROUP_FINISHED) {
+            mHeaderViewTitle.setText(Constant.RenderDbHelper.GROUP_NAME_FINISHED);
+            RenderObjectBeans taskBeans = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+Constant.RenderDbHelper.GROUP_NAME_FINISHED);
+            if (taskBeans == null) {
+                getTasksByGroupName(Constant.RenderDbHelper.GROUP_NAME_FINISHED, RenderRecycleViewAdapter.POSITION_GROUP_FINISHED);
+            } else {
+                mTasksContainerAdapter.addAllBeans(taskBeans);
+            }
+            mLeftDrawerGroupsAdapter.setPositionClicke(RenderRecycleViewAdapterBase.POSITION_GROUP_FINISHED);
+        }
+        onMainMenuClick();
+    }
+
+    @Override
     public void onItemClickListener(View view, Constant.RENDER_ADAPTER_TYPE adapterType, int positionClickedBefore, int position) {
        if (adapterType == Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER) {
            TaskBean taskBean = (TaskBean) mTasksContainerAdapter.getBean(position);
@@ -183,6 +201,7 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
                    mTasksContainerAdapter.addAllBeans(taskBeans);
                }
            }
+           onMainMenuClick();
        }
     }
 
@@ -227,7 +246,11 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
     @Override
     public void onAdapterEmpty(Constant.RENDER_ADAPTER_TYPE adapterType, boolean isAdapterEmpty) {
         if (isAdapterEmpty) {
-            Log.i("Render", "the group has no task");
+            mTasksContainerRecycleView.setVisibility(View.GONE);
+            mNoTaskPage.setVisibility(View.VISIBLE);
+        } else {
+            mTasksContainerRecycleView.setVisibility(View.VISIBLE);
+            mNoTaskPage.setVisibility(View.GONE);
         }
     }
 

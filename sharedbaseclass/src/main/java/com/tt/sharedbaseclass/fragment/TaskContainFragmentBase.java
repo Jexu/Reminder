@@ -1,9 +1,13 @@
 package com.tt.sharedbaseclass.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.LruCache;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.tt.sharedbaseclass.R;
@@ -21,6 +25,12 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
     private static long INTERVAL_OF_DOUBLE_BACK_PRESSED_DOUBLE_CLICK = 500;
     private long mFirstBackPressedTime = 0;
 
+    protected LinearLayout mLeftDrawerGroupFinished;
+    protected LinearLayout mLeftDrawerCreateNewGroup;
+    protected LinearLayout mLeftDrawerSetting;
+    protected LinearLayout mLeftDrawerFeedback;
+
+
     protected LruCache<String, RenderObjectBeans> mLruCache;
 
 
@@ -28,6 +38,20 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mLruCache = new LruCache<>((int) DeviceUtil.getMaxMemory()/8);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (view != null) {
+            mLeftDrawerGroupFinished = (LinearLayout) view.findViewById(R.id.left_drawer_group_finished);
+            mLeftDrawerCreateNewGroup = (LinearLayout) view.findViewById(R.id.left_drawer_create_new_group);
+            mLeftDrawerSetting = (LinearLayout) view.findViewById(R.id.left_drawer_setting);
+            mLeftDrawerFeedback = (LinearLayout) view.findViewById(R.id.left_drawer_feedback_help);
+
+            mLeftDrawerGroupFinished.setOnClickListener(this);
+            mLeftDrawerCreateNewGroup.setOnClickListener(this);
+        }
     }
 
     @Override
@@ -75,17 +99,27 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
     @Override
     public void onClick(View view) {
 
-        int i = view.getId();
-        if (i == R.id.header_view_main_menu) {
+        int viewId = view.getId();
+        if (viewId == R.id.header_view_main_menu) {
             onMainMenuClick();
-        } else if (i == R.id.header_view_add_new_task) {
+        } else if (viewId == R.id.header_view_add_new_task) {
             navigateToEditFragment(Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()
                     , null
                     , Constant.BundelExtra.FINISH_REQUEST_CODE_NEW_TASK);
+        } else if (viewId == R.id.left_drawer_group_finished ) {
+            onLeftDrawerGroupFinishedClick();
+        } else if (viewId == R.id.left_drawer_create_new_group) {
+
+        } else if (viewId == R.id.left_drawer_setting) {
+
+        } else if (viewId == R.id.left_drawer_feedback_help) {
+
         }
     }
 
     protected abstract void onMainMenuClick();
+
+    protected abstract void onLeftDrawerGroupFinishedClick();
 
     protected abstract void navigateToEditFragment(int fragmentType, TaskBean taskBean, int requestCode);
 
