@@ -27,6 +27,22 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
     private int mCountTaskHasDate;
     private int mCountTaskNoDate;
 
+
+
+    private OnRenderObjectBeansEmptyListener mListener;
+
+    public interface OnRenderObjectBeansEmptyListener {
+        void onRenderObjectBeansEmpty();
+    }
+
+    public void setListener(OnRenderObjectBeansEmptyListener listener) {
+        this.mListener = listener;
+    }
+
+    public OnRenderObjectBeansEmptyListener getListener() {
+        return mListener;
+    }
+
     public RenderObjectBeans() {
         mType = TYPE_DEFAULT;
     }
@@ -55,13 +71,44 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
         this.mCountTaskNoDate = countTaskNoDate;
     }
 
+
+    @Override
+    public boolean add(Object object) {
+        if (object instanceof TaskBean) {
+            if (((TaskBean) object).isClearedPickedDate()) {
+                mCountTaskNoDate++;
+            } else {
+                mCountTaskHasDate++;
+            }
+        }
+        if (mListener != null) {
+            mListener.onRenderObjectBeansEmpty();
+        }
+        return super.add(object);
+    }
+
+    @Override
+    public Object remove(int index) {
+        Object bean = get(index);
+        if (bean instanceof TaskBean) {
+            if (((TaskBean) bean).isClearedPickedDate()) {
+                mCountTaskNoDate--;
+            } else {
+                mCountTaskHasDate--;
+            }
+        }
+        Object object = super.remove(index);
+        if (mListener != null) {
+            mListener.onRenderObjectBeansEmpty();
+        }
+        return object;
+    }
+
     public void addBeanInOrder(Object bean) {
         if (bean instanceof TaskBean) {
             TaskBean tb = (TaskBean)bean;
             if (tb.isClearedPickedDate() && tb.isClearedPickedTime()) {
                 add(tb);
-                mCountTaskNoDate++;
-                return;
             } else {
                 int index = 0;
 
@@ -97,8 +144,13 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
                     index = mid;
                 }
                 add(index, tb);
-                mCountTaskHasDate++;
+                if (tb.getRepeatIntervalTimeInMillis() != TaskBean.DEFAULT_VALUE_OF_INTERVAL) {
+                    mCountTaskHasDate++;
+                }
             }
+        }
+        if (mListener != null) {
+            mListener.onRenderObjectBeansEmpty();
         }
     }
 

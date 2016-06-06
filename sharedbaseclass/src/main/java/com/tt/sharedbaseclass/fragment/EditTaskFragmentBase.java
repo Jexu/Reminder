@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.tt.sharedbaseclass.R;
@@ -37,6 +38,8 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
     protected ImageView mTimePickerBtn;
     protected ImageView mClearTimeBtn;
     protected ImageView mClearDateBtn;
+    protected TextView mSubtitleRepeat;
+    protected LinearLayout mLinearLayoutRepeat;
     protected  ImageView mNewRepeatIntervalBtn;
     protected ImageView mNewGroupBtn;
     protected EDITED_VIEW mEditedView;
@@ -93,6 +96,8 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
         mTimePickerBtn  = (ImageView) view.findViewById(R.id.time_picker_dialog);
         mClearDateBtn = (ImageView) view.findViewById(R.id.cross_to_clear_picked_date);
         mClearTimeBtn = (ImageView) view.findViewById(R.id.cross_to_clear_picked_time);
+        mSubtitleRepeat = (TextView) view.findViewById(R.id.subtitle_repeat);
+        mLinearLayoutRepeat = (LinearLayout) view.findViewById(R.id.linearlayout_repeat);
         mTvRepeatInterval = (TextView) view.findViewById(R.id.repeat_interval);
         mNewRepeatIntervalBtn = (ImageView) view.findViewById(R.id.new_interval);
         mGroupSpinner = (Spinner) view.findViewById(R.id.spinner_group);
@@ -161,7 +166,22 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
                 mClearTimeBtn.setVisibility(View.VISIBLE);
             }
         }
+        if (TextUtils.isEmpty(mAlarmDate.getText().toString()) && TextUtils.isEmpty(mAlarmTime.getText().toString())) {
+            showRepeatView(false);
+        } else if (!TextUtils.isEmpty(mAlarmDate.getText().toString()) && !TextUtils.isEmpty(mAlarmTime.getText().toString())) {
+            showRepeatView(true);
+        }
         mEditedView = EDITED_VIEW.TASK_CONTENT;
+    }
+
+    protected void showRepeatView(boolean isShow) {
+        if (isShow) {
+            mSubtitleRepeat.setVisibility(View.VISIBLE);
+            mLinearLayoutRepeat.setVisibility(View.VISIBLE);
+        } else {
+            mSubtitleRepeat.setVisibility(View.GONE);
+            mLinearLayoutRepeat.setVisibility(View.GONE);
+        }
     }
 
     @Override

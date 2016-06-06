@@ -5,11 +5,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="alert_dialog_title_are_you_sure">Are you sure?</string>
     <string name="edit_task_fragment_alert_dialog_message">Quit without saving?</string>
-    <string name="repeat_every_interval_unit">Every %1$d %2$s</string>
+    <string name="every_interval_unit">Every %1$d %2$s</string>
+    <string name="repeat_every_interval_unit">Repeat Every %1$d %2$s</string>
     <string name="alert_dialog_message_delete_this_task">Delete this task?</string>
     <string name="alert_dialog_negative_button_cancel">Cancel</string>
     <string name="alert_dialog_negative_button_delete">Delete</string>
-    <string name="shared_list_item_in_drawer_subtitle_setting">Setting</string>
-    <string name="shared_list_item_in_drawer_subtitle_feedback_help">Feedback/Help</string>
-    <string name="subtitle_in_left_drawer_create_new_group">Create New Group</string>
+    <string name="fragment_tasks_container_there_is_no_task_here">oom...there is no task here</string>
 </resources>

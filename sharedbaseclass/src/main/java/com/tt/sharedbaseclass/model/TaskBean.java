@@ -103,17 +103,17 @@ public class TaskBean extends GroupBean {
     long repeatIntervalTimillis = DEFAULT_VALUE_OF_INTERVAL;
     if (mRepeatUnit == Constant.REPEAT_UNIT.NO_REPEAT.value()) {
       repeatIntervalTimillis = DEFAULT_VALUE_OF_INTERVAL;
-    } else if(mRepeatUnit == Constant.REPEAT_UNIT.DAY.value()) {
+    } else if(mRepeatUnit == Constant.REPEAT_UNIT.Day.value()) {
       repeatIntervalTimillis = mRepeatInterval * 24 * TIMILLS_ONE_HOUR;
-    } else if(mRepeatUnit == Constant.REPEAT_UNIT.HOUR.value()) {
+    } else if(mRepeatUnit == Constant.REPEAT_UNIT.Hour.value()) {
       repeatIntervalTimillis = mRepeatInterval * TIMILLS_ONE_HOUR;
-    } else if(mRepeatUnit == Constant.REPEAT_UNIT.WEEK.value()) {
+    } else if(mRepeatUnit == Constant.REPEAT_UNIT.Week.value()) {
       repeatIntervalTimillis = mRepeatInterval * 7 * 24 * TIMILLS_ONE_HOUR;
-    } else if(mRepeatUnit == Constant.REPEAT_UNIT.MONTH.value()) {
-      repeatIntervalTimillis = mRepeatInterval * 30 * 7 * 24 * TIMILLS_ONE_HOUR;
-    } else if(mRepeatUnit == Constant.REPEAT_UNIT.YEAR.value()) {
-      repeatIntervalTimillis = mRepeatInterval * 12 *  30 * 7 * 24 * TIMILLS_ONE_HOUR;
-    } else if(mRepeatUnit == Constant.REPEAT_UNIT.MINUTE.value()) {
+    } else if(mRepeatUnit == Constant.REPEAT_UNIT.Month.value()) {
+      repeatIntervalTimillis = mRepeatInterval * 30  * 24 * TIMILLS_ONE_HOUR;
+    } else if(mRepeatUnit == Constant.REPEAT_UNIT.Year.value()) {
+      repeatIntervalTimillis = mRepeatInterval * 12 *  30  * 24 * TIMILLS_ONE_HOUR;
+    } else if(mRepeatUnit == Constant.REPEAT_UNIT.Minute.value()) {
       repeatIntervalTimillis = mRepeatInterval * TIMILLS_ONE_HOUR / 60;
     }
     return repeatIntervalTimillis;

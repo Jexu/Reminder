@@ -22,16 +22,11 @@
             <TextView
                 android:id="@+id/tv_subtitle_what_to_do"
                 style="@style/subtitle_style_in_layout_fragment_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableBottom="@drawable/shared_divider_2dp"
                 android:paddingTop="@dimen/top_subtitle_padding_top_in_layout_fragment_edit"
                 android:text="@string/subtitle_what_to_do"/>
 
             <LinearLayout
                 style="@style/edit_view_style_in_layout_fragment_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -55,83 +50,50 @@
                 android:id="@+id/tv_subtitle_due_date"
                 style="@style/subtitle_style_in_layout_fragment_edit"
                 android:layout_marginTop="@dimen/subtitle_padding_top_in_layout_fragment_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableBottom="@drawable/shared_divider_2dp"
                 android:text="@string/subtitle_due_date"/>
 
             <LinearLayout
                 style="@style/edit_view_style_in_layout_fragment_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/date_picker_dialog"
-                    android:layout_width="@dimen/image_button_size"
-                    android:layout_height="@dimen/image_button_size"
-                    android:layout_marginEnd="@dimen/header_view_margin_right_and_left_between_view"
-                    android:layout_marginStart="@dimen/header_view_margin_right_and_left_between_view"
-                    android:scaleType="fitCenter"
+                    style="@style/image_button_style_in_edit_fragment"
                     android:src="@drawable/date_picker_24dp"/>
 
                 <TextView
                     android:id="@+id/edt_alarm_date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableBottom="@drawable/shared_divider_1dp"
+                    style="@style/textview_style_in_edit_fragment"
                     android:hint="@string/hint_alarm_date_date_not_set"
-                    android:textSize="@dimen/subtitle_text_size_in_layout_fragment_edit"
-                    android:textColor="@android:color/black"
                     />
 
                 <ImageView
                     android:id="@+id/cross_to_clear_picked_date"
-                    android:layout_width="@dimen/image_button_size"
-                    android:layout_height="@dimen/image_button_size"
-                    android:layout_marginEnd="@dimen/header_view_margin_right_and_left_between_view"
-                    android:layout_marginStart="@dimen/header_view_margin_right_and_left_between_view"
-                    android:scaleType="fitCenter"
+                    style="@style/image_button_style_in_edit_fragment"
                     android:src="@drawable/clear_cross_24dp"
                     android:visibility="gone"/>
             </LinearLayout>
 
             <LinearLayout
                 style="@style/edit_view_style_in_layout_fragment_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/time_picker_dialog"
-                    android:layout_width="@dimen/image_button_size"
-                    android:layout_height="@dimen/image_button_size"
-                    android:layout_marginEnd="@dimen/header_view_margin_right_and_left_between_view"
-                    android:layout_marginStart="@dimen/header_view_margin_right_and_left_between_view"
-                    android:scaleType="fitCenter"
+                    style="@style/image_button_style_in_edit_fragment"
                     android:src="@drawable/time_picker_24dp"/>
 
                 <TextView
                     android:id="@+id/edt_alarm_time"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableBottom="@drawable/shared_divider_1dp"
+                    style="@style/textview_style_in_edit_fragment"
                     android:hint="@string/hint_alarm_time_not_set"
-                    android:textSize="@dimen/subtitle_text_size_in_layout_fragment_edit"
-                    android:textColor="@android:color/black"
                     />
 
                 <ImageView
                     android:id="@+id/cross_to_clear_picked_time"
-                    android:layout_width="@dimen/image_button_size"
-                    android:layout_height="@dimen/image_button_size"
-                    android:layout_marginEnd="@dimen/header_view_margin_right_and_left_between_view"
-                    android:layout_marginStart="@dimen/header_view_margin_right_and_left_between_view"
-                    android:scaleType="fitCenter"
+                    style="@style/image_button_style_in_edit_fragment"
                     android:src="@drawable/clear_cross_24dp"
                     android:visibility="gone"/>
             </LinearLayout>
@@ -140,35 +102,25 @@
                 android:id="@+id/subtitle_repeat"
                 style="@style/subtitle_style_in_layout_fragment_edit"
                 android:layout_marginTop="@dimen/subtitle_padding_top_in_layout_fragment_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableBottom="@drawable/shared_divider_2dp"
+                android:visibility="gone"
                 android:text="@string/subtitle_repeat"/>
 
             <LinearLayout
+                android:id="@+id/linearlayout_repeat"
                 style="@style/edit_view_style_in_layout_fragment_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/new_interval"
-                    android:layout_width="@dimen/image_button_size"
-                    android:layout_height="@dimen/image_button_size"
-                    android:layout_marginEnd="@dimen/header_view_margin_right_and_left_between_view"
-                    android:layout_marginStart="@dimen/header_view_margin_right_and_left_between_view"
+                    style="@style/image_button_style_in_edit_fragment"
                     android:src="@drawable/repeat_24dp"/>
 
                 <TextView
                     android:id="@+id/repeat_interval"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableBottom="@drawable/shared_divider_1dp"
+                    style="@style/textview_style_in_edit_fragment"
                     android:text="@string/fragment_edit_tasi_no_repeat"
-                    android:textSize="@dimen/subtitle_text_size_in_layout_fragment_edit"
-                    android:textColor="@android:color/black"
                     />
 
             </LinearLayout>
@@ -177,30 +129,23 @@
                 android:id="@+id/subtitle_add_to_list"
                 style="@style/subtitle_style_in_layout_fragment_edit"
                 android:layout_marginTop="@dimen/subtitle_padding_top_in_layout_fragment_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableBottom="@drawable/shared_divider_2dp"
                 android:text="@string/subtitle_add_to_list"/>
 
             <LinearLayout
                 style="@style/edit_view_style_in_layout_fragment_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/new_group"
-                    android:layout_width="@dimen/image_button_size"
-                    android:layout_height="@dimen/image_button_size"
-                    android:layout_marginEnd="@dimen/header_view_margin_right_and_left_between_view"
-                    android:layout_marginStart="@dimen/header_view_margin_right_and_left_between_view"
+                    style="@style/image_button_style_in_edit_fragment"
                     android:src="@drawable/add_group_list_24dp"/>
 
                 <Spinner
                     android:id="@+id/spinner_group"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/subtitle_padding_top_in_layout_fragment_edit"
                     android:layout_weight="1"></Spinner>
 
             </LinearLayout>

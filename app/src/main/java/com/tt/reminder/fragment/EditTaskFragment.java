@@ -110,9 +110,9 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
             if (mTaskBeanFromParent.getRepeatInterval() == TaskBean.DEFAULT_VALUE_OF_INTERVAL) {
                 mTvRepeatInterval.setText(mRepeatUnits[0]);
             } else {
-                mTvRepeatInterval.setText(getResources().getString(R.string.repeat_every_interval_unit
+                mTvRepeatInterval.setText(getResources().getString(R.string.every_interval_unit
                         , mTaskBeanFromParent.getRepeatInterval()
-                        , mRepeatUnits[mTaskBeanFromParent.getRepeatUnit()]));
+                        , mRepeatUnits[mTaskBeanFromParent.getRepeatUnit() - 1]));
             }
             mGroupSpinner.setSelection(mGroupsBean.indexOf(new GroupBean(mTaskBeanFromParent.getGroup())));
         } else if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
@@ -129,10 +129,10 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
           mAddNewGroupCallBack);
         if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
             mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.toString(),
-              mSaveTaskBeanCallback);
+                    mSaveTaskBeanCallback);
         } else if(mFragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()) {
             mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.toString(),
-              mSaveTaskBeanCallback);
+                    mSaveTaskBeanCallback);
         }
     }
 
@@ -204,7 +204,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
                             mTaskBean.setRepeatInterval(Integer.parseInt(mEdtRepeatInterval.getText().toString()));
                             mTaskBean.setRepeatUnit(mSelectedWheelItemIndex);
                             // TODO: 2016/5/23 set textview
-                            mTvRepeatInterval.setText(getResources().getString(R.string.repeat_every_interval_unit,
+                            mTvRepeatInterval.setText(getResources().getString(R.string.every_interval_unit,
                                     mTaskBean.getRepeatInterval(),mRepeatUnits[mSelectedWheelItemIndex - 1]));
                         }else if(mSelectedWheelItemIndex != Constant.REPEAT_UNIT.NO_REPEAT.value()
                                 && TextUtils.isEmpty(mEdtRepeatInterval.getText().toString().trim())) {
@@ -318,6 +318,10 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
             Toast.makeText(getActivity(), "please set alarm time", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (mTaskBean.isClearedPickedDate() && mTaskBean.isClearedPickedTime()) {
+            mTaskBean.setRepeatInterval(TaskBean.DEFAULT_VALUE_OF_INTERVAL);
+            mTaskBean.setRepeatUnit(Constant.REPEAT_UNIT.NO_REPEAT.value());
+        }
         if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
             mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.value()
               ,Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
@@ -361,17 +365,20 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
 
     private void setAlarm() {
         if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
-            if (!mTaskBean.isClearedPickedDate()) {
+            if (!mTaskBean.isClearedPickedDate() && !mTaskBean.isDeadline()) {
                 //create
                 RenderAlarm.createAlarm(getActivity(), mTaskBean);
             }
         } else if (mFragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()) {
+            if (mTaskBean.isFinished() == TaskBean.VALUE_FINISHED) {
+                return;
+            }
             if (!mTaskBeanFromParent.isClearedPickedDate()
               && mTaskBean.isClearedPickedDate()) {
                 //cancel
                 RenderAlarm.removeAlarm(getActivity(), mTaskBean);
             } else if (mTaskBeanFromParent.isClearedPickedDate()
-              && !mTaskBean.isClearedPickedDate()) {
+              && !mTaskBean.isClearedPickedDate() && !mTaskBean.isDeadline()) {
                 //create
                 RenderAlarm.createAlarm(getActivity(), mTaskBean);
             } else if ((mTaskBeanFromParent.getTimeInMillis() != mTaskBeanFromParent.getTimeInMillis()
@@ -388,11 +395,11 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
     @Override
     protected void addNewGroup(EditText editText) {
         if (!TextUtils.isEmpty(editText.getText().toString().trim())) {
-            TaskBean taskBean = new TaskBean();
-            taskBean.setGroup(editText.getText().toString());
+            GroupBean groupBean = new GroupBean();
+            groupBean.setGroup(editText.getText().toString());
             mTaskBean.setGroup(editText.getText().toString());
             mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.value(),
-              Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP, null, taskBean, null,
+              Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP, null, groupBean, null,
               Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP);
             // TODO: 2016/5/23 show loading view
         } else {

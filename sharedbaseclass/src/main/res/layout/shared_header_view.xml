@@ -49,14 +49,15 @@
         android:id="@+id/header_view_search"
         android:layout_marginLeft="@dimen/header_view_margin_right_and_left_between_view"
         android:layout_marginRight="@dimen/header_view_margin_right_and_left_between_view"
-        android:background="@drawable/search_24dp"/>
+        android:src="@drawable/search_24dp"/>
 
     <ImageView
         style="@style/image_button_style_in_shared_header_view"
         android:id="@+id/header_view_add_new_task"
         android:layout_marginRight="@dimen/header_view_main_menu_margin_left"
         android:layout_marginLeft="@dimen/header_view_margin_right_and_left_between_view"
-        android:src="@drawable/add_24dp" />
+        android:src="@drawable/add_24dp"
+        />
 
     <ImageView
         style="@style/image_button_style_in_shared_header_view"

@@ -23,6 +23,10 @@
     <string name="toast_double_click_to_exit">double click to exit</string>
     <string name="shared_list_item_view_date_placeholder">00/00/0000</string>
 
+    <string name="shared_list_item_in_drawer_subtitle_setting">Setting</string>
+    <string name="shared_list_item_in_drawer_subtitle_feedback_help">Feedback/Help</string>
+    <string name="subtitle_in_left_drawer_create_new_group">Create New Group</string>
+
 
     <string-array name="repeat_interval_units">
         <item>No repeat</item>

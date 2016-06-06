@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
+
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
@@ -11,7 +13,8 @@ import com.tt.sharedbaseclass.model.TaskBean;
 /**
  * Created by zhengguo on 5/27/16.
  */
-public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter {
+public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter
+        implements RenderObjectBeans.OnRenderObjectBeansEmptyListener {
 
   public static final int POSITION_GROUP_MY_TASKS = 0;
   public static final int POSITION_GROUP_FINISHED = -100;
@@ -55,7 +58,6 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
   public void addBeanInOrder(Object bean, boolean isNotifyDataSetChanged) {
     if (mRenderObjectBeans != null) {
       mRenderObjectBeans.addBeanInOrder(bean);
-      onAdapterEmpty();
       if (isNotifyDataSetChanged) {
         notifyDataSetChanged();
       }
@@ -64,13 +66,7 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
 
   public void addBean(Object bean, boolean isNotifyDataSetChanged) {
     if (mRenderObjectBeans != null) {
-      if (bean instanceof TaskBean && ((TaskBean)bean).isClearedPickedDate()) {
-        mRenderObjectBeans.setCountTaskNoDate(mRenderObjectBeans.getCountTaskNoDate() + 1);
-      } else if (bean instanceof TaskBean && !((TaskBean)bean).isClearedPickedDate()){
-        mRenderObjectBeans.setCountTaskHasDate(mRenderObjectBeans.getCountTaskHasDate() + 1);
-      }
       mRenderObjectBeans.add(bean);
-      onAdapterEmpty();
       if (isNotifyDataSetChanged) {
         notifyDataSetChanged();
       }
@@ -80,19 +76,16 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
   public void addAllBeans(RenderObjectBeans renderObjectBeans) {
     //mRenderObjectBeans.clear();
     mRenderObjectBeans = renderObjectBeans;
-    onAdapterEmpty();
+    if (renderObjectBeans.getListener() == null) {
+      mRenderObjectBeans.setListener(this);
+    }
+    onRenderObjectBeansEmpty();
     notifyDataSetChanged();
   }
 
   public void removeBean(int position, boolean isNotifyDataSetChanged) {
     if (mRenderObjectBeans != null) {
-       if (mRenderObjectBeans.get(position) instanceof TaskBean && ((TaskBean)mRenderObjectBeans.get(position)).isClearedPickedDate()) {
-         mRenderObjectBeans.setCountTaskNoDate(mRenderObjectBeans.getCountTaskNoDate() - 1);
-       } else if (mRenderObjectBeans.get(position) instanceof TaskBean && !((TaskBean)mRenderObjectBeans.get(position)).isClearedPickedDate()){
-         mRenderObjectBeans.setCountTaskHasDate(mRenderObjectBeans.getCountTaskHasDate() - 1);
-       }
       mRenderObjectBeans.remove(position);
-      onAdapterEmpty();
       if (isNotifyDataSetChanged) {
         notifyDataSetChanged();
       }
@@ -101,14 +94,8 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
 
   public void removeBean(Object bean, boolean isNotifyDataSetChanged) {
     if (mRenderObjectBeans != null) {
-      if (bean instanceof TaskBean && ((TaskBean)bean).isClearedPickedDate()) {
-        mRenderObjectBeans.setCountTaskNoDate(mRenderObjectBeans.getCountTaskNoDate() - 1);
-      } else if (bean instanceof TaskBean && !((TaskBean)bean).isClearedPickedDate()){
-        mRenderObjectBeans.setCountTaskHasDate(mRenderObjectBeans.getCountTaskHasDate() - 1);
-      }
       int position = mRenderObjectBeans.indexOf(bean);
       mRenderObjectBeans.remove(position);
-      onAdapterEmpty();
       if (isNotifyDataSetChanged) {
         notifyDataSetChanged();
       }
@@ -140,7 +127,6 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
   public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
     if (onItemClickListener != null) {
       mOnItemClickListener = onItemClickListener;
-      onAdapterEmpty();
     }
   }
 
@@ -175,7 +161,24 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
     return mRenderObjectBeans == null ? 0 : mRenderObjectBeans.size();
   }
 
-  private void onAdapterEmpty() {
+  public int getPositionClickedBefore() {
+    if (mAdapterType == Constant.RENDER_ADAPTER_TYPE.LEFT_DRAWER_TASKS_CATEGORY) {
+      return mGroupPositionClickedBeforeThisTime;
+    } else {
+      return mTaskPositionClickedBeforeThisTime;
+    }
+  }
+
+  public void setPositionClicke(int positionClicked) {
+    if (mAdapterType == Constant.RENDER_ADAPTER_TYPE.LEFT_DRAWER_TASKS_CATEGORY) {
+      mGroupPositionClickedBeforeThisTime = positionClicked;
+    } else {
+      mTaskPositionClickedBeforeThisTime = positionClicked;
+    }
+  }
+
+  @Override
+  public void onRenderObjectBeansEmpty() {
     if (!mRenderObjectBeans.isEmpty()) {
       mOnItemClickListener.onAdapterEmpty(mAdapterType, false);
     } else {
@@ -185,7 +188,7 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
 
   protected class RenderViewHolderBase extends RecyclerView.ViewHolder {
 
-    protected View mItemRootView;
+    public View mItemRootView;
 
     public RenderViewHolderBase(View itemView) {
       super(itemView);
