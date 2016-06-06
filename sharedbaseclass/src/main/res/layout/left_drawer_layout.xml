@@ -21,7 +21,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/left_drawer_agenda_recycleview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content"/>
 
         <include layout="@layout/shared_divider_view" />
 
@@ -33,14 +33,14 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/left_drawer_category_recycleview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content"/>
 
         <LinearLayout
             android:id="@+id/left_drawer_group_finished"
             style="@style/edit_view_style_in_layout_fragment_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:clickable="true"
+            android:background="@drawable/shared_button_selector"
             android:orientation="horizontal">
 
             <ImageView
@@ -55,15 +55,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
                 android:layout_weight="1"
-                android:text="@string/remder_db_helper_group_finished" />
+                android:text="@string/remder_db_helper_group_finished"
+                />
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/left_drawer_create_new_group"
             style="@style/edit_view_style_in_layout_fragment_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:background="@drawable/shared_button_selector"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -79,7 +80,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
                 android:layout_weight="1"
-                android:text="@string/subtitle_in_left_drawer_create_new_group" />
+                android:text="@string/subtitle_in_left_drawer_create_new_group"
+                />
 
         </LinearLayout>
 
@@ -88,8 +90,8 @@
         <LinearLayout
             android:id="@+id/left_drawer_setting"
             style="@style/edit_view_style_in_layout_fragment_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:background="@drawable/shared_button_selector"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -105,15 +107,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
                 android:layout_weight="1"
-                android:text="@string/shared_list_item_in_drawer_subtitle_setting" />
+                android:text="@string/shared_list_item_in_drawer_subtitle_setting"
+                />
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/left_drawer_feedback_help"
             style="@style/edit_view_style_in_layout_fragment_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:background="@drawable/shared_button_selector"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -129,7 +132,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
                 android:layout_weight="1"
-                android:text="@string/shared_list_item_in_drawer_subtitle_feedback_help" />
+                android:text="@string/shared_list_item_in_drawer_subtitle_feedback_help"
+                />
 
         </LinearLayout>
 

@@ -41,6 +41,8 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
 
 
     protected LruCache<String, RenderObjectBeans> mLruCache;
+    protected boolean mIsGroupCached = false;
+    protected boolean mIsMyTasksCached = false;
 
 
     @Override
@@ -74,25 +76,31 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
     @Override
     public void fetchData() {
         Log.i("Render", "fetchData");
+        mIsGroupCached = mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS) == null ? false : true;
+        mIsMyTasksCached = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+Constant.RenderDbHelper.GROUP_NAME_MY_TASK) == null ? false : true;
         getGroupsExceptFinished(Constant.RenderServiceHelper.REQUEST_CODE_DEFAULT);
     }
 
     protected void getTasksByGroupName(String GroupName, int requestCode) {
-        mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_TASKS_BY_GROUP_NAME.value(),
-                Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS,
-                null,
-                null,
-                new String[]{GroupName},
-                requestCode);
+        if (!mIsMyTasksCached) {
+            mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_TASKS_BY_GROUP_NAME.value(),
+                    Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS,
+                    null,
+                    null,
+                    new String[]{GroupName},
+                    requestCode);
+        }
     }
 
     protected void getGroupsExceptFinished(int requestCode) {
-        mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_GROUPS.value(),
-                Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP,
-                null,
-                null,
-                null,
-                requestCode);
+        if (!mIsGroupCached) {
+            mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_GROUPS.value(),
+                    Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP,
+                    null,
+                    null,
+                    null,
+                    requestCode);
+        }
         //must getGroups firstly here, then get tasks
         getTasksByGroupName(Constant.RenderDbHelper.GROUP_NAME_MY_TASK
                 , Constant.RenderServiceHelper.REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED);

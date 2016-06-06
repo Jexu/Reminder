@@ -365,7 +365,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
 
     private void setAlarm() {
         if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
-            if (!mTaskBean.isClearedPickedDate()) {
+            if (!mTaskBean.isClearedPickedDate() && !mTaskBean.isDeadline()) {
                 //create
                 RenderAlarm.createAlarm(getActivity(), mTaskBean);
             }
@@ -378,7 +378,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
                 //cancel
                 RenderAlarm.removeAlarm(getActivity(), mTaskBean);
             } else if (mTaskBeanFromParent.isClearedPickedDate()
-              && !mTaskBean.isClearedPickedDate()) {
+              && !mTaskBean.isClearedPickedDate() && !mTaskBean.isDeadline()) {
                 //create
                 RenderAlarm.createAlarm(getActivity(), mTaskBean);
             } else if ((mTaskBeanFromParent.getTimeInMillis() != mTaskBeanFromParent.getTimeInMillis()

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_vertical"
-    style="@style/edit_view_style_in_layout_fragment_edit"
+      style="@style/edit_view_style_in_layout_fragment_edit"
+      android:background="@drawable/shared_button_selector"
+      android:clickable="true"
+      android:orientation="horizontal"
+      android:gravity="center_vertical"
     >
 
     <ImageView
@@ -19,8 +19,9 @@
         android:id="@+id/shared_list_item_in_drawer_item_subtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:maxLines="1"
         android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
+        android:layout_weight="1"
         />
 
     <TextView
@@ -29,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
         android:layout_marginEnd="@dimen/shared_list_item_in_drawer_margin_start_20dp"
+        android:visibility="gone"
         />
 
 </LinearLayout>

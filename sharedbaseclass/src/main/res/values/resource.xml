@@ -5,9 +5,13 @@
         <item name="android:layout_width">@dimen/image_button_size</item>
         <item name="android:layout_height">@dimen/image_button_size</item>
         <item name="android:scaleType">fitCenter</item>
+        <item name="android:background">@drawable/shared_header_button_selector</item>
     </style>
 
     <style name="subtitle_style_in_layout_fragment_edit">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawableBottom">@drawable/shared_divider_2dp</item>
         <item name="android:layout_marginStart">@dimen/subtitle_padding_start_in_layout_fragment_edit</item>
         <item name="android:layout_marginEnd">@dimen/subtitle_padding_end_in_layout_fragment_edit</item>
         <item name="android:layout_marginBottom">@dimen/subtitle_padding_top_in_layout_fragment_edit</item>
@@ -17,8 +21,30 @@
 
     <style name="edit_view_style_in_layout_fragment_edit"
         parent="subtitle_style_in_layout_fragment_edit">
+        <item name="android:drawableBottom">@null</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:paddingTop">@dimen/subtitle_padding_top_in_layout_fragment_edit</item>
+    </style>
+
+    <style name="image_button_style_in_edit_fragment">
+        <item name="android:layout_width">@dimen/image_button_size</item>
+        <item name="android:layout_height">@dimen/image_button_size</item>
+        <item name="android:layout_marginStart">@dimen/header_view_margin_right_and_left_between_view</item>
+        <item name="android:layout_marginTop">@dimen/image_button_margin_top_5dp</item>
+        <item name="android:layout_marginEnd">@dimen/header_view_margin_right_and_left_between_view</item>
+        <item name="android:background">@drawable/shared_button_selector</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+
+    <style name="textview_style_in_edit_fragment">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:drawableBottom">@drawable/shared_divider_1dp</item>
+        <item name="android:paddingTop">@dimen/subtitle_padding_top_in_layout_fragment_edit</item>
+        <item name="android:background">@drawable/shared_button_selector</item>
+        <item name="android:textSize">@dimen/subtitle_text_size_in_layout_fragment_edit</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="shared_list_item_left_textview_style">

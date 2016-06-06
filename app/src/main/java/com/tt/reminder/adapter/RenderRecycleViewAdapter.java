@@ -70,7 +70,7 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase
       setCheckBox(h, taskBean, position);
     } else if (mAdapterType == Constant.RENDER_ADAPTER_TYPE.LEFT_DRAWER_TASKS_CATEGORY){
       GroupBean groupBean = (GroupBean) mRenderObjectBeans.get(position);
-      h.mLeftSymbol.setText(groupBean.getGroup());
+      h.mLeftSymbol.setText(groupBean.getGroup()+"                                                                          ");
       //h.mRightTaskContent.setText();
     }
   }

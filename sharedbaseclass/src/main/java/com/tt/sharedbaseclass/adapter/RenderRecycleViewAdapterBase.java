@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
+
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
@@ -11,7 +13,8 @@ import com.tt.sharedbaseclass.model.TaskBean;
 /**
  * Created by zhengguo on 5/27/16.
  */
-public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter {
+public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter
+        implements RenderObjectBeans.OnRenderObjectBeansEmptyListener {
 
   public static final int POSITION_GROUP_MY_TASKS = 0;
   public static final int POSITION_GROUP_FINISHED = -100;
@@ -55,7 +58,6 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
   public void addBeanInOrder(Object bean, boolean isNotifyDataSetChanged) {
     if (mRenderObjectBeans != null) {
       mRenderObjectBeans.addBeanInOrder(bean);
-      onAdapterEmpty();
       if (isNotifyDataSetChanged) {
         notifyDataSetChanged();
       }
@@ -65,7 +67,6 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
   public void addBean(Object bean, boolean isNotifyDataSetChanged) {
     if (mRenderObjectBeans != null) {
       mRenderObjectBeans.add(bean);
-      onAdapterEmpty();
       if (isNotifyDataSetChanged) {
         notifyDataSetChanged();
       }
@@ -75,14 +76,16 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
   public void addAllBeans(RenderObjectBeans renderObjectBeans) {
     //mRenderObjectBeans.clear();
     mRenderObjectBeans = renderObjectBeans;
-    onAdapterEmpty();
+    if (renderObjectBeans.getListener() == null) {
+      mRenderObjectBeans.setListener(this);
+    }
+    onRenderObjectBeansEmpty();
     notifyDataSetChanged();
   }
 
   public void removeBean(int position, boolean isNotifyDataSetChanged) {
     if (mRenderObjectBeans != null) {
       mRenderObjectBeans.remove(position);
-      onAdapterEmpty();
       if (isNotifyDataSetChanged) {
         notifyDataSetChanged();
       }
@@ -93,7 +96,6 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
     if (mRenderObjectBeans != null) {
       int position = mRenderObjectBeans.indexOf(bean);
       mRenderObjectBeans.remove(position);
-      onAdapterEmpty();
       if (isNotifyDataSetChanged) {
         notifyDataSetChanged();
       }
@@ -125,7 +127,6 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
   public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
     if (onItemClickListener != null) {
       mOnItemClickListener = onItemClickListener;
-      onAdapterEmpty();
     }
   }
 
@@ -176,7 +177,8 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter 
     }
   }
 
-  private void onAdapterEmpty() {
+  @Override
+  public void onRenderObjectBeansEmpty() {
     if (!mRenderObjectBeans.isEmpty()) {
       mOnItemClickListener.onAdapterEmpty(mAdapterType, false);
     } else {

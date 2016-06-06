@@ -27,6 +27,22 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
     private int mCountTaskHasDate;
     private int mCountTaskNoDate;
 
+
+
+    private OnRenderObjectBeansEmptyListener mListener;
+
+    public interface OnRenderObjectBeansEmptyListener {
+        void onRenderObjectBeansEmpty();
+    }
+
+    public void setListener(OnRenderObjectBeansEmptyListener listener) {
+        this.mListener = listener;
+    }
+
+    public OnRenderObjectBeansEmptyListener getListener() {
+        return mListener;
+    }
+
     public RenderObjectBeans() {
         mType = TYPE_DEFAULT;
     }
@@ -55,6 +71,7 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
         this.mCountTaskNoDate = countTaskNoDate;
     }
 
+
     @Override
     public boolean add(Object object) {
         if (object instanceof TaskBean) {
@@ -63,6 +80,9 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
             } else {
                 mCountTaskHasDate++;
             }
+        }
+        if (mListener != null) {
+            mListener.onRenderObjectBeansEmpty();
         }
         return super.add(object);
     }
@@ -77,7 +97,11 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
                 mCountTaskHasDate--;
             }
         }
-        return super.remove(index);
+        Object object = super.remove(index);
+        if (mListener != null) {
+            mListener.onRenderObjectBeansEmpty();
+        }
+        return object;
     }
 
     public void addBeanInOrder(Object bean) {
@@ -85,8 +109,6 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
             TaskBean tb = (TaskBean)bean;
             if (tb.isClearedPickedDate() && tb.isClearedPickedTime()) {
                 add(tb);
-                mCountTaskNoDate++;
-                return;
             } else {
                 int index = 0;
 
@@ -126,6 +148,9 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
                     mCountTaskHasDate++;
                 }
             }
+        }
+        if (mListener != null) {
+            mListener.onRenderObjectBeansEmpty();
         }
     }
 

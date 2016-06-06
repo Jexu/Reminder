@@ -24,7 +24,6 @@ import com.tt.sharedbaseclass.adapter.RenderRecycleViewAdapterBase;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.TaskContainFragmentBase;
 import com.tt.sharedbaseclass.model.GroupBean;
-import com.tt.sharedbaseclass.model.RenderBeanBase;
 import com.tt.sharedbaseclass.model.RenderCallback;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
@@ -284,10 +283,10 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
 
     @Override
     public void onAdapterEmpty(Constant.RENDER_ADAPTER_TYPE adapterType, boolean isAdapterEmpty) {
-        if (isAdapterEmpty) {
+        if (adapterType == Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER && isAdapterEmpty) {
             mTasksContainerRecycleView.setVisibility(View.GONE);
             mNoTaskPage.setVisibility(View.VISIBLE);
-        } else {
+        } else if (adapterType == Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER && !isAdapterEmpty){
             mTasksContainerRecycleView.setVisibility(View.VISIBLE);
             mNoTaskPage.setVisibility(View.GONE);
         }
@@ -519,13 +518,44 @@ public class TasksContainWithDrawerViewFragment extends TaskContainFragmentBase
                     tasks.addBeanInOrder(newTaskBean);
                 }
             }
+            mTasksContainerAdapter.notifyDataSetChanged();
 
         } else if (resultCode == Constant.BundelExtra.FINISH_RESULT_CODE_SUCCESS
                 && requestCode >= 0) {
             //request code is old task position
-            TaskBean taskBean = (TaskBean) bundle.get(Constant.BundelExtra.EXTRA_TASK_BEAN);
-            mTasksContainerAdapter.removeBean(requestCode, false);
-            mTasksContainerAdapter.addBeanInOrder(taskBean, true);
+            TaskBean newBean = (TaskBean) bundle.get(Constant.BundelExtra.EXTRA_TASK_BEAN);
+            TaskBean oldBean = (TaskBean) mTasksContainerAdapter.getBean(requestCode);
+            RenderObjectBeans tasksOldBean = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+oldBean.getGroup());
+            RenderObjectBeans myTasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+
+            if (myTasks != null) {
+                myTasks.remove(myTasks.indexOf(oldBean));
+                myTasks.addBeanInOrder(newBean);
+            }
+            if (oldBean.getGroup().equals(newBean.getGroup())) {
+                if (oldBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
+                    //group of oldbean and newbean are equal and are MyTasks
+                } else {
+                    //group of oldbean and newbean are equal and both are not MyTasks
+                    if (tasksOldBean != null) {
+                        tasksOldBean.remove(tasksOldBean.indexOf(oldBean));
+                        tasksOldBean.addBeanInOrder(newBean);
+                    }
+                }
+            } else {
+                //group of oldben and newbean are not equal
+                if (oldBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
+                    //group of oldbean is myTasks
+                    RenderObjectBeans tasksNewBean = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+newBean.getGroup());
+                    if (tasksNewBean != null) {
+                        tasksNewBean.addBeanInOrder(newBean);
+                    }
+                } else {
+                    //group of oldbean is not myTasks
+                    tasksOldBean.remove(tasksOldBean.indexOf(oldBean));
+                }
+            }
+            mTasksContainerAdapter.notifyDataSetChanged();
         }
         if (bundle != null && bundle.getBoolean(Constant.BundelExtra.EXTRA_IS_ADD_NEW_GROUP)) {
             mLeftDrawerGroupsAdapter.notifyDataSetChanged();
