@@ -1,10 +1,15 @@
 package com.tt.reminder.activity;
 
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Fade;
+import android.transition.Slide;
+
 import com.tt.reminder.R;
 import com.tt.reminder.fragment.TasksContainWithDrawerViewFragment;
 import com.tt.sharedbaseclass.constant.Constant;
@@ -30,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentRegiste
         initMainActivityFragment();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void initMainActivityFragment() {
 
         FragmentManager mFragmentManager = getFragmentManager();
@@ -78,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentRegiste
         navigateToForResultCode(fragment, fragmentManager, Constant.BundelExtra.FINISH_REQUEST_CODE_DEFAULT);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void navigateToForResultCode(RenderFragmentBase fragment, android.app.FragmentManager fragmentManager, int requestCode) {
         android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         //fragmentTransaction.setCustomAnimations(R.animator.fragment_slide_in_bottom,R.animator.fragment_slide_out_top);
@@ -85,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentRegiste
         if (f != null && f.isAdded()) {
             fragmentTransaction.hide(f);
         }
+        fragment.setEnterTransition(new Slide().setDuration(300L));
         fragment.setContextAndReqCode(mSelectedFragment, requestCode);
         fragmentTransaction.add(R.id.main_activity_frame_layout, fragment, fragment.getFragmentTag());
         fragmentTransaction.addToBackStack(null);

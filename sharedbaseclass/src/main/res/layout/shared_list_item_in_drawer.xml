@@ -8,7 +8,7 @@
     >
 
     <ImageView
-        android:layout_width="@dimen/image_button_size"
+        android:layout_width="@dimen/image_button_size_25dp"
         android:layout_height="@dimen/image_button_size"
         android:layout_marginStart="@dimen/left_drawer_imageview_margrin_start_11dp"
         android:layout_marginEnd="@dimen/header_view_margin_right_and_left_between_view"
@@ -19,6 +19,7 @@
         android:id="@+id/shared_list_item_in_drawer_item_subtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
         android:maxLines="1"
         android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
         android:layout_weight="1"
@@ -28,6 +29,7 @@
         android:id="@+id/shared_list_item_in_drawer_item_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
         android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
         android:layout_marginEnd="@dimen/shared_list_item_in_drawer_margin_start_20dp"
         android:visibility="gone"

@@ -40,6 +40,7 @@
     <dimen name="shared_list_item_in_drawer_margin_start_20dp">20dp</dimen>
     <dimen name="left_drawer_imageview_margrin_start_11dp">11dp</dimen>
     <dimen name="image_button_margin_top_5dp">5dp</dimen>
+    <dimen name="image_button_size_25dp">25dp</dimen>
 
 
 </resources>

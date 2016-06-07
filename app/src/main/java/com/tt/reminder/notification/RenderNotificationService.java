@@ -48,8 +48,8 @@ public class RenderNotificationService extends IntentService {
     mNotificationBuilder
       .setAutoCancel(true)
       .setTicker("New schedule message")
-      .setSmallIcon(R.drawable.app_logo_48dp)
-      .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_logo_48dp))
+      .setSmallIcon(R.drawable.notification_icon)
+      .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_icon))
       .setContentTitle("Task at " + taskBean.getPickedTime(true) + taskBean.getPickedDate(true))
       .setContentText(taskBean.getTaskContent())
       .setDefaults(
