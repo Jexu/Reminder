@@ -144,9 +144,11 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
                     index = mid;
                 }
                 add(index, tb);
-                if (tb.getRepeatIntervalTimeInMillis() == TaskBean.DEFAULT_VALUE_OF_INTERVAL) {
-                    mCountTaskHasDate++;
-                }
+                mCountTaskHasDate++;
+//bug
+//                if (tb.getRepeatIntervalTimeInMillis() == TaskBean.DEFAULT_VALUE_OF_INTERVAL) {
+//                    mCountTaskHasDate++;
+//                }
             }
         }
         if (mListener != null) {

@@ -34,6 +34,7 @@ import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 import com.tt.sharedutils.IntentUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWithLoading
@@ -327,6 +328,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         RenderObjectBeans tasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+groupBean.getGroup());
         if (mLeftDrawerGroupsAdapter.getPositionClickedBefore() == requestCode) {
             mTasksContainerAdapter.addAllBeans(new RenderObjectBeans());
+            mHeaderViewTitle.setText(Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
         }
         if (tasks != null) {
             mLruCache.remove(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+groupBean.getGroup());

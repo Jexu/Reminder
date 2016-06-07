@@ -165,6 +165,8 @@ public class Constant {
         public static final String EXTRA_REQUEST_CODE = "extra_request_code";
         public static final String EXTRA_RESULT_CODE = "extra_result_code";
 
+        public static final String EXTRA_LRUCACHE = "extra_lrucache";
+
         public static final String EXTRA_START_FROM = "extra_start_from";
 
         public static final String EXTRA_IS_ADD_NEW_GROUP = "extra_is_add_new_group";

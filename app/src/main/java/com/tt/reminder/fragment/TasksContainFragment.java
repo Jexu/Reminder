@@ -57,8 +57,10 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
     Bundle args = getArguments();
     if (args != null) {
       mFragmentType = args.getInt(Constant.BundelExtra.EXTRA_FRAGMENT_TYPE);
+      //mLruCache = (LruCache<String, RenderObjectBeans>) args.getSerializable(Constant.BundelExtra.EXTRA_LRUCACHE);
+    } else {
+      mLruCache = new LruCache<>((int) DeviceUtil.getMaxMemory() / 8);
     }
-    mLruCache = new LruCache<>((int) DeviceUtil.getMaxMemory() / 8);
     mTasksContainerAdapter = new RenderRecycleViewAdapter(getActivity(), Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER);
   }
 
@@ -105,7 +107,7 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
     mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.toString()
       , mUpdateBeanCallback);
     mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_DELETE_TASK.toString(),
-      mUpdateBeanCallback);
+            mUpdateBeanCallback);
   }
 
   @Override

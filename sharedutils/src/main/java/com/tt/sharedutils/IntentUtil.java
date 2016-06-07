@@ -77,7 +77,7 @@ public class IntentUtil {
 
     public static final int REQUEST_CODE_VOICE_INPUT = -1;
     public static boolean voiceInput(Activity context, String languageModel) {
-        boolean isSupportVoiceInput = false;
+        boolean isSupportVoiceInput;
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, languageModel);
         try {
