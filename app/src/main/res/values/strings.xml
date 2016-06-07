@@ -10,5 +10,4 @@
     <string name="alert_dialog_message_delete_this_task">Delete this task?</string>
     <string name="alert_dialog_negative_button_cancel">Cancel</string>
     <string name="alert_dialog_negative_button_delete">Delete</string>
-    <string name="fragment_tasks_container_there_is_no_task_here">oom...there is no task here</string>
 </resources>

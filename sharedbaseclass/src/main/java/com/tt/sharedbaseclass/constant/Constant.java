@@ -6,7 +6,7 @@ package com.tt.sharedbaseclass.constant;
  */
 public class Constant {
     public enum FRAGMENT_TYPE {
-        TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT(0), EDIT_TASK_FRAGMENT(1), NEW_EDIT_TASK_FRAGMENT(2);
+        TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT(0), EDIT_TASK_FRAGMENT(1), NEW_EDIT_TASK_FRAGMENT(2), TASKS_CONTAIN_SEARCH_FRAGMENT(3);
 
         int value;
         FRAGMENT_TYPE(int value) {
@@ -24,6 +24,9 @@ public class Constant {
                     break;
                 case 2:
                     result = NEW_EDIT_TASK_FRAGMENT;
+                    break;
+                case 3:
+                    result = TASKS_CONTAIN_SEARCH_FRAGMENT;
                     break;
             }
             return result;

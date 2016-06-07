@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentRegiste
         if (f != null && f.isAdded()) {
             fragmentTransaction.hide(f);
         }
-        fragment.setEnterTransition(new Slide().setDuration(300L));
         fragment.setContextAndReqCode(mSelectedFragment, requestCode);
         fragmentTransaction.add(R.id.main_activity_frame_layout, fragment, fragment.getFragmentTag());
         fragmentTransaction.addToBackStack(null);

@@ -30,6 +30,9 @@
         Text
     </string>
 
+    <string name="fragment_tasks_container_there_is_no_task_here">oom...there is no task here</string>
+
+
 
     <string-array name="repeat_interval_units">
         <item>No repeat</item>

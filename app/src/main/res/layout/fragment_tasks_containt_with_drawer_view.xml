@@ -5,32 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".fragment.TasksContainWithDrawerViewFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <include layout="@layout/shared_header_view"></include>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@android:color/white"
-          ></android.support.v7.widget.RecyclerView>
-        <TextView
-            android:id="@+id/no_task_page"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal"
-            android:background="@android:color/white"
-            android:visibility="gone"
-            android:text="@string/fragment_tasks_container_there_is_no_task_here"
-            />
-
-    </LinearLayout>
+    <include layout="@layout/shared_tasks_container_view"/>
 
     <include layout="@layout/left_drawer_layout"/>
 
