@@ -26,6 +26,9 @@
     <string name="shared_list_item_in_drawer_subtitle_setting">Setting</string>
     <string name="shared_list_item_in_drawer_subtitle_feedback_help">Feedback/Help</string>
     <string name="subtitle_in_left_drawer_create_new_group">Create New Group</string>
+    <string name="toast_content_your_device_is_not_support_speech_to_text">Opps! Your device doesn\'t support Speech to
+        Text
+    </string>
 
 
     <string-array name="repeat_interval_units">

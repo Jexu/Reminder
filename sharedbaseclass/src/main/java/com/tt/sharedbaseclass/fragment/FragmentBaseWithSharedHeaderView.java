@@ -10,7 +10,6 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
@@ -73,7 +72,7 @@ public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBas
         if (!StringUtil.isEmpty(title)) {
             ssTitle = new SpannableString(title);
             ssTitle.setSpan(new ForegroundColorSpan(getResources()
-                            .getColor(android.R.color.holo_green_dark)),
+                            .getColor(R.color.app_theme)),
                     0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             builder.setTitle(ssTitle);
         }
@@ -81,7 +80,7 @@ public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBas
         if (!StringUtil.isEmpty(message)) {
             ssMessage = new SpannableString(message);
             ssMessage.setSpan(new ForegroundColorSpan(getResources()
-                            .getColor(android.R.color.holo_green_dark)),
+                            .getColor(R.color.app_theme)),
                     0, message.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             builder.setMessage(ssMessage);
         }

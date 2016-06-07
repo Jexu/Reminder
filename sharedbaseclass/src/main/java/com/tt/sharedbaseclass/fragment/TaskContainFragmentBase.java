@@ -1,19 +1,19 @@
 package com.tt.sharedbaseclass.fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.LruCache;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.model.GroupBean;
@@ -21,6 +21,9 @@ import com.tt.sharedbaseclass.model.RenderCallback;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 import com.tt.sharedutils.DeviceUtil;
+import com.tt.sharedutils.IntentUtil;
+
+import java.util.ArrayList;
 
 /**
  * Created by zhengguo on 2016/5/27.
@@ -36,7 +39,7 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
     protected LinearLayout mLeftDrawerSetting;
     protected LinearLayout mLeftDrawerFeedback;
 
-    private AddNewGroupCallBack mAddNewGroupCallBack;
+    private AddNewBeanCallBack mAddNewBeanCallBack;
 
 
 
@@ -60,6 +63,7 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
             mLeftDrawerSetting = (LinearLayout) view.findViewById(R.id.left_drawer_setting);
             mLeftDrawerFeedback = (LinearLayout) view.findViewById(R.id.left_drawer_feedback_help);
 
+            mHeaderViewVoiceInput.setOnClickListener(this);
             mLeftDrawerGroupFinished.setOnClickListener(this);
             mLeftDrawerCreateNewGroup.setOnClickListener(this);
         }
@@ -68,9 +72,11 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
     @Override
     public void initServices() {
         super.initServices();
-        mAddNewGroupCallBack = new AddNewGroupCallBack(this);
+        mAddNewBeanCallBack = new AddNewBeanCallBack(this);
         mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.toString(),
-                mAddNewGroupCallBack);
+          mAddNewBeanCallBack);
+        mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.toString(),
+          mAddNewBeanCallBack);
     }
 
     @Override
@@ -84,11 +90,11 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
     protected void getTasksByGroupName(String GroupName, int requestCode) {
         if (!mIsMyTasksCached) {
             mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_TASKS_BY_GROUP_NAME.value(),
-                    Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS,
-                    null,
-                    null,
-                    new String[]{GroupName},
-                    requestCode);
+              Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS,
+              null,
+              null,
+              new String[]{GroupName},
+              requestCode);
         }
     }
 
@@ -103,7 +109,7 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
         }
         //must getGroups firstly here, then get tasks
         getTasksByGroupName(Constant.RenderDbHelper.GROUP_NAME_MY_TASK
-                , Constant.RenderServiceHelper.REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED);
+          , Constant.RenderServiceHelper.REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED);
     }
 
     protected abstract void getTasksSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode);
@@ -131,6 +137,14 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
             navigateToEditFragment(Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()
                     , null
                     , Constant.BundelExtra.FINISH_REQUEST_CODE_NEW_TASK);
+        } else if (viewId == R.id.header_view_voice_input) {
+            if (!IntentUtil.voiceInput(getActivity(), "en-US")) {
+                Log.i("Render", "device does not support speech to text");
+                Toast t = Toast.makeText(getActivity(),
+                  R.string.toast_content_your_device_is_not_support_speech_to_text,
+                  Toast.LENGTH_SHORT);
+                t.show();
+            }
         } else if (viewId == R.id.left_drawer_group_finished ) {
             onLeftDrawerGroupFinishedClick();
         } else if (viewId == R.id.left_drawer_create_new_group) {
@@ -189,6 +203,30 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
         mainMenu.setRotation(drawerViewSlideOffset * 90);
     }
 
+    protected TaskBean mVoiceInputBean;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case IntentUtil.REQUEST_CODE_VOICE_INPUT:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    ArrayList<String> text = data
+                      .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    // TODO: 6/7/16 add new task to db
+                    TaskBean newBean = new TaskBean();
+                    newBean.setTaskContent(text.get(0));
+                    mVoiceInputBean = newBean;
+                    mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.value()
+                      ,Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
+                      ,null
+                      ,newBean
+                      ,null
+                      ,Constant.RenderServiceHelper.REQUEST_CODE_INSERT_TASK_BEAN);
+                }
+                break;
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -198,10 +236,10 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
         }
     }
 
-    private static class AddNewGroupCallBack extends RenderCallback {
+    private static class AddNewBeanCallBack extends RenderCallback {
 
         TaskContainFragmentBase mContext;
-        private AddNewGroupCallBack(TaskContainFragmentBase context) {
+        private AddNewBeanCallBack(TaskContainFragmentBase context) {
             mContext = context;
         }
         @Override
@@ -212,7 +250,17 @@ public abstract class TaskContainFragmentBase extends FragmentBaseWithSharedHead
 
         @Override
         public void onHandleUpdateSuccess(long row, int requestCode, int resultCode) {
-            mContext.onAddNewGroupSuccess(row, requestCode, resultCode);
+            if (requestCode == Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP
+                && resultCode == Constant.RenderServiceHelper.RESULT_CODE_INSERT_GROUP_SUCCESS) {
+                mContext.onAddNewGroupSuccess(row, requestCode, resultCode);
+            } else if (requestCode == Constant.RenderServiceHelper.REQUEST_CODE_INSERT_TASK_BEAN
+                && resultCode == Constant.RenderServiceHelper.RESULT_CODE_INSERT_TASK_SUCCESS) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN, mContext.mVoiceInputBean);
+                mContext.onFinishedWithResult(Constant.BundelExtra.FINISH_REQUEST_CODE_NEW_TASK
+                  , Constant.BundelExtra.FINISH_RESULT_CODE_SUCCESS, bundle);
+                mContext.mVoiceInputBean = null;
+            }
         }
 
         @Override
