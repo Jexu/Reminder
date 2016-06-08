@@ -11,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Slide;
 import android.util.Log;
-import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,7 @@ import com.tt.reminder.notification.RenderAlarm;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.FragmentBaseWithSharedHeaderView;
 import com.tt.sharedbaseclass.model.RenderCallback;
+import com.tt.sharedbaseclass.model.RenderLruCache;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 import com.tt.sharedutils.DeviceUtil;
@@ -36,7 +36,7 @@ import java.util.Calendar;
 public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
   implements RenderRecycleViewAdapter.OnItemClickListener, View.OnClickListener {
 
-  protected LruCache<String, RenderObjectBeans> mLruCache;
+  protected RenderLruCache<String, RenderObjectBeans> mLruCache;
 
   protected TextView mNoTaskPage;
   protected RecyclerView mTasksContainerRecycleView;
@@ -57,9 +57,9 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
     Bundle args = getArguments();
     if (args != null) {
       mFragmentType = args.getInt(Constant.BundelExtra.EXTRA_FRAGMENT_TYPE);
-      //mLruCache = (LruCache<String, RenderObjectBeans>) args.getSerializable(Constant.BundelExtra.EXTRA_LRUCACHE);
+      mLruCache = (RenderLruCache<String, RenderObjectBeans>) args.getSerializable(Constant.BundelExtra.EXTRA_LRUCACHE);
     } else {
-      mLruCache = new LruCache<>((int) DeviceUtil.getMaxMemory() / 8);
+      mLruCache = new RenderLruCache<>((int) DeviceUtil.getMaxMemory() / 8);
     }
     mTasksContainerAdapter = new RenderRecycleViewAdapter(getActivity(), Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER);
   }
@@ -238,9 +238,9 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
       if (taskBean.isFinished() == TaskBean.VALUE_FINISHED) {
         mTasksContainerAdapter.removeBean(requestCode, false);
       } else {
-        RenderObjectBeans tasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + taskBean.getGroup());
+        RenderObjectBeans tasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + taskBean.getGroup());
         if (!taskBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
-          RenderObjectBeans myTasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+          RenderObjectBeans myTasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
           if (myTasks != null) {
             myTasks.remove(myTasks.indexOf(taskBean));
           }
@@ -267,9 +267,9 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
           newTaskBean.copy(taskBean);
           newTaskBean.setIsFinished(TaskBean.VALUE_NOT_FINISHED);
           //应该根据组信息add两次；myTasks和自身groupName
-          RenderObjectBeans tasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + taskBean.getGroup());
+          RenderObjectBeans tasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + taskBean.getGroup());
           if (!taskBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
-            RenderObjectBeans myTasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+            RenderObjectBeans myTasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
             if (myTasks != null) {
               myTasks.addBeanInOrder(newTaskBean);
             }
@@ -290,13 +290,13 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
           TaskBean newTaskBean = new TaskBean();
           newTaskBean.copy(taskBean);
           newTaskBean.setIsFinished(TaskBean.VALUE_FINISHED);
-          mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_FINISHED).addBeanInOrder(newTaskBean);
+          mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_FINISHED).addBeanInOrder(newTaskBean);
         }
         //应该根据组信息update or remove两次；myTasks和自身groupName
-        RenderObjectBeans tasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + taskBean.getGroup());
+        RenderObjectBeans tasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + taskBean.getGroup());
         RenderObjectBeans myTasks = null;
         if (!taskBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
-          myTasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+          myTasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
           if (myTasks != null) {
             myTasks.remove(myTasks.indexOf(taskBean));
           }
@@ -353,14 +353,14 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
     if (resultCode == Constant.BundelExtra.FINISH_RESULT_CODE_SUCCESS
       && requestCode == Constant.BundelExtra.FINISH_REQUEST_CODE_NEW_TASK) {
       TaskBean newTaskBean = (TaskBean) bundle.get(Constant.BundelExtra.EXTRA_TASK_BEAN);
-      RenderObjectBeans myTasks = mLruCache.get(
+      RenderObjectBeans myTasks = mLruCache.getFromCache(
         Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
       RenderObjectBeans tasks;
       if (myTasks != null) {
         myTasks.addBeanInOrder(newTaskBean);
       }
       if (!newTaskBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
-        tasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + newTaskBean.getGroup());
+        tasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + newTaskBean.getGroup());
         if (tasks != null) {
           tasks.addBeanInOrder(newTaskBean);
         }
@@ -372,8 +372,8 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
       //request code is old task position
       TaskBean newBean = (TaskBean) bundle.get(Constant.BundelExtra.EXTRA_TASK_BEAN);
       TaskBean oldBean = (TaskBean) mTasksContainerAdapter.getBean(requestCode);
-      RenderObjectBeans tasksOldBean = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + oldBean.getGroup());
-      RenderObjectBeans myTasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+      RenderObjectBeans tasksOldBean = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + oldBean.getGroup());
+      RenderObjectBeans myTasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
 
       if (myTasks != null) {
         myTasks.remove(myTasks.indexOf(oldBean));
@@ -393,7 +393,7 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
         //group of oldben and newbean are not equal
         if (oldBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
           //group of oldbean is myTasks
-          RenderObjectBeans tasksNewBean = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + newBean.getGroup());
+          RenderObjectBeans tasksNewBean = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + newBean.getGroup());
           if (tasksNewBean != null) {
             tasksNewBean.addBeanInOrder(newBean);
           }
@@ -412,15 +412,6 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
   public boolean onBackPressed() {
     finish();
     return true;
-  }
-
-  @Override
-  public void onDestroy() {
-    super.onDestroy();
-    if (mLruCache != null) {
-      mLruCache.evictAll();
-      mLruCache = null;
-    }
   }
 
   private static class UpdateBeanCallback extends RenderCallback {

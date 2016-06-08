@@ -34,7 +34,6 @@ import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 import com.tt.sharedutils.IntentUtil;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWithLoading
@@ -137,7 +136,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         if (mRenderObjectBeansGroups == null) {
             getGroupsExceptFinished(Constant.RenderServiceHelper.REQUEST_CODE_DEFAULT);
         }
-        mLruCache.put(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN
+        mLruCache.addToCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN
           + (requestCode == RenderRecycleViewAdapter.POSITION_GROUP_FINISHED ?
           Constant.RenderDbHelper.GROUP_NAME_FINISHED : mRenderObjectBeansGroups.get(requestCode).toString())
           , renderObjectBeans);
@@ -150,7 +149,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
 
     protected void getGroupsSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
         // TODO: 5/25/16 update lrucache; update groups view; have to check size
-        mLruCache.put(Constant.BundelExtra.EXTRAL_GROUPS_BEANS, renderObjectBeans);
+        mLruCache.addToCache(Constant.BundelExtra.EXTRAL_GROUPS_BEANS, renderObjectBeans);
         mRenderObjectBeansGroups = renderObjectBeans;
         mLeftDrawerGroupsAdapter.addAllBeans(mRenderObjectBeansGroups);
     }
@@ -200,6 +199,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         TasksContainFragment searchFragment = new TasksContainFragment();
         Bundle args = new Bundle();
         args.putInt(Constant.BundelExtra.EXTRA_FRAGMENT_TYPE, Constant.FRAGMENT_TYPE.TASKS_CONTAIN_SEARCH_FRAGMENT.value());
+        args.putSerializable(Constant.BundelExtra.EXTRA_LRUCACHE, mLruCache);
         searchFragment.setArguments(args);
         searchFragment.setEnterTransition(new Fade().setDuration(250L));
         MainActivity.navigateTo(searchFragment, getFragmentManager());
@@ -243,7 +243,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
               Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP, null, groupBean, null,
               Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP);
             if (mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS) != null) {
-                mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS).add(groupBean);
+                ((RenderObjectBeans)mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS)).add(groupBean);
             }
             // TODO: 2016/5/23 show loading view
         } else {
@@ -256,7 +256,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         //left drawer group finished
         if (mLeftDrawerGroupsAdapter.getPositionClickedBefore() != RenderRecycleViewAdapter.POSITION_GROUP_FINISHED) {
             mHeaderViewTitle.setText(Constant.RenderDbHelper.GROUP_NAME_FINISHED);
-            RenderObjectBeans taskBeans = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+Constant.RenderDbHelper.GROUP_NAME_FINISHED);
+            RenderObjectBeans taskBeans = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_FINISHED);
             if (taskBeans == null) {
                 getTasksByGroupName(Constant.RenderDbHelper.GROUP_NAME_FINISHED, RenderRecycleViewAdapter.POSITION_GROUP_FINISHED);
             } else {
@@ -275,7 +275,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
            if (position != positionClickedBefore) {
                String groupName = ((GroupBean)mRenderObjectBeansGroups.get(position)).getGroup();
                mHeaderViewTitle.setText(groupName);
-               RenderObjectBeans taskBeans = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+groupName);
+               RenderObjectBeans taskBeans = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + groupName);
                if (taskBeans == null) {
                     getTasksByGroupName(groupName, position);
                } else {
@@ -325,7 +325,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
 
     private void groupDeleted(long row, int requestCode) {
         GroupBean groupBean = (GroupBean) mRenderObjectBeansGroups.get(requestCode);
-        RenderObjectBeans tasks = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+groupBean.getGroup());
+        RenderObjectBeans tasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + groupBean.getGroup());
         if (mLeftDrawerGroupsAdapter.getPositionClickedBefore() == requestCode) {
             mTasksContainerAdapter.addAllBeans(new RenderObjectBeans());
             mHeaderViewTitle.setText(Constant.RenderDbHelper.GROUP_NAME_MY_TASK);

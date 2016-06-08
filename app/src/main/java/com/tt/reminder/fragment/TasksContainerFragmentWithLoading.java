@@ -52,8 +52,8 @@ public abstract class TasksContainerFragmentWithLoading extends TasksContainFrag
   @Override
   public void fetchData() {
     Log.i("Render", "fetchData");
-    mIsGroupCached = mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS) == null ? false : true;
-    mIsMyTasksCached = mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+Constant.RenderDbHelper.GROUP_NAME_MY_TASK) == null ? false : true;
+    mIsGroupCached = mLruCache.getFromCache(Constant.BundelExtra.EXTRAL_GROUPS_BEANS) == null ? false : true;
+    mIsMyTasksCached = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+Constant.RenderDbHelper.GROUP_NAME_MY_TASK) == null ? false : true;
     getGroupsExceptFinished(Constant.RenderServiceHelper.REQUEST_CODE_DEFAULT);
   }
 
@@ -95,6 +95,15 @@ public abstract class TasksContainerFragmentWithLoading extends TasksContainFrag
       return true;
     }
     return false;
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    if (mLruCache != null) {
+      mLruCache.evictAll();
+      mLruCache = null;
+    }
   }
 
   private static class GetTasksByGroupNameCallback extends RenderCallback {
