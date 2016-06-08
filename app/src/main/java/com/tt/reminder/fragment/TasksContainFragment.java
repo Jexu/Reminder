@@ -87,9 +87,12 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
       mHeaderViewMainMenu.setVisibility(View.GONE);
       mHeaderViewVoiceInput.setVisibility(View.GONE);
       mHeaderViewTitle.setVisibility(View.GONE);
-      mHeaderViewSearch.setVisibility(View.GONE);
+      mHeaderViewSearchBtn.setVisibility(View.GONE);
       mHeaderViewAddNewTask.setVisibility(View.GONE);
       mHeaderViewSaveTask.setVisibility(View.GONE);
+      mHeaderViewSearch.setVisibility(View.VISIBLE);
+      mHeaderViewLeftArrow.setOnClickListener(this);
+      mHeaderViewSearch.setOnClickListener(this);
     } else {
       mHeaderViewLeftArrow.setVisibility(View.GONE);
     }
@@ -123,6 +126,13 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
 
   @Override
   public void onClick(View view) {
+    switch (view.getId()) {
+      case R.id.header_view_left_arrow:
+        finish();
+        break;
+      case R.id.header_view_search:
+        break;
+    }
   }
 
   @Override

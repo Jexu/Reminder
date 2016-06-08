@@ -95,7 +95,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         mLeftDrawerFeedback = (LinearLayout) view.findViewById(com.tt.sharedbaseclass.R.id.left_drawer_feedback_help);
 
         mHeaderViewVoiceInput.setOnClickListener(this);
-        mHeaderViewSearch.setOnClickListener(this);
+        mHeaderViewSearchBtn.setOnClickListener(this);
         mLeftDrawerGroupFinished.setOnClickListener(this);
         mLeftDrawerCreateNewGroup.setOnClickListener(this);
         mDrawerLayout = (DrawerLayout) view.findViewById(R.id.drawer_layout);
@@ -176,7 +176,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
                     t.show();
                 }
                 break;
-            case R.id.header_view_search:
+            case R.id.header_view_search_btn:
                 navigateToSearchFragment();
                 break;
             case com.tt.sharedbaseclass.R.id.left_drawer_group_finished:

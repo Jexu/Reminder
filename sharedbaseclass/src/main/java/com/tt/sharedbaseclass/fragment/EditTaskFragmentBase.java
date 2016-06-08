@@ -1,6 +1,5 @@
 package com.tt.sharedbaseclass.fragment;
 
-import android.animation.Animator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.view.WheelView;
 
-import java.lang.ref.SoftReference;
 import java.util.Arrays;
 
 /**
@@ -85,7 +83,7 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
         mHeaderViewLeftArrow.setVisibility(View.VISIBLE);
         mHeaderViewTitle.setText(R.string.header_view_title_new_task);
         mHeaderViewVoiceInput.setVisibility(View.GONE);
-        mHeaderViewSearch.setVisibility(View.GONE);
+        mHeaderViewSearchBtn.setVisibility(View.GONE);
         mHeaderViewAddNewTask.setVisibility(View.GONE);
         mHeaderViewSaveTask.setVisibility(View.VISIBLE);
 

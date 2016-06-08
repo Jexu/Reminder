@@ -10,6 +10,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
@@ -24,8 +25,9 @@ import static com.tt.sharedbaseclass.R.id.header_view_save_task;
 public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBase {
 
     protected ImageView mHeaderViewMainMenu, mHeaderViewLeftArrow, mHeaderViewVoiceInput, mHeaderViewAddNewTask, mHeaderViewSaveTask;
+    protected SearchView mHeaderViewSearch;
     protected TextView mHeaderViewTitle;
-    protected ImageView mHeaderViewSearch;
+    protected ImageView mHeaderViewSearchBtn;
     protected RenderService mRenderService;
 
     public FragmentBaseWithSharedHeaderView() {
@@ -38,7 +40,6 @@ public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBas
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initServices();
-        Log.e("Render", "Oncreate");
     }
 
     @Override
@@ -48,10 +49,10 @@ public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBas
         mHeaderViewLeftArrow = (ImageView) view.findViewById(R.id.header_view_left_arrow);
         mHeaderViewTitle = (TextView) view.findViewById(R.id.header_view_title);
         mHeaderViewVoiceInput = (ImageView) view.findViewById(R.id.header_view_voice_input);
-        mHeaderViewSearch = (ImageView) view.findViewById(R.id.header_view_search);
+        mHeaderViewSearchBtn = (ImageView) view.findViewById(R.id.header_view_search_btn);
         mHeaderViewAddNewTask = (ImageView) view.findViewById(R.id.header_view_add_new_task);
         mHeaderViewSaveTask = (ImageView) view.findViewById(header_view_save_task);
-        Log.e("Render", "onViewCreated");
+        mHeaderViewSearch = (SearchView) view.findViewById(R.id.header_view_search);
 
     }
 
@@ -61,6 +62,7 @@ public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBas
 
     public void destroyServices() {
         if (mRenderService != null) {
+            Log.i("Render", "service destroyed");
             mRenderService.removeAllHandlers();
             mRenderService.destroyService();
         }
@@ -85,29 +87,6 @@ public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBas
             builder.setMessage(ssMessage);
         }
         return builder;
-    }
-
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.e("Render", "onResume");
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.e("Render", "onPause");
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.e("Render", "onStop");
-
     }
 
     @Override
@@ -135,8 +114,6 @@ public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBas
     @Override
     public void onFinishedWithResult(int requestCode, int resultCode, Bundle bundle) {
     }
-
-
 
     @Override
     public void onDestroy() {
