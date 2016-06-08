@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.SearchView;
 import android.widget.TextView;
 import com.tt.reminder.R;
 import com.tt.reminder.activity.MainActivity;
@@ -27,6 +28,7 @@ import com.tt.sharedbaseclass.model.RenderLruCache;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 import com.tt.sharedutils.DeviceUtil;
+import com.tt.sharedutils.StringUtil;
 
 import java.util.Calendar;
 
@@ -34,7 +36,8 @@ import java.util.Calendar;
  * Created by zhengguo on 6/7/16.
  */
 public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
-  implements RenderRecycleViewAdapter.OnItemClickListener, View.OnClickListener {
+  implements RenderRecycleViewAdapter.OnItemClickListener, View.OnClickListener
+              , SearchView.OnQueryTextListener{
 
   protected RenderLruCache<String, RenderObjectBeans> mLruCache;
 
@@ -43,8 +46,7 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
   protected RenderRecycleViewAdapter mTasksContainerAdapter;
   protected RenderObjectBeans mRenderObjectBeansGroups;
   protected UpdateBeanCallback mUpdateBeanCallback;
-
-  protected int mFragmentType;
+  private SearchBeanCallback mSearchBeanCallback;
 
   public TasksContainFragment() {
     // Required empty public constructor
@@ -55,9 +57,10 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Bundle args = getArguments();
-    if (args != null) {
-      mFragmentType = args.getInt(Constant.BundelExtra.EXTRA_FRAGMENT_TYPE);
+    if (mFragmentType == Constant.FRAGMENT_TYPE.TASKS_CONTAIN_SEARCH_FRAGMENT.value()
+        && args != null) {
       mLruCache = (RenderLruCache<String, RenderObjectBeans>) args.getSerializable(Constant.BundelExtra.EXTRA_LRUCACHE);
+      mRenderObjectBeansGroups = (RenderObjectBeans) mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS);
     } else {
       mLruCache = new RenderLruCache<>((int) DeviceUtil.getMaxMemory() / 8);
     }
@@ -92,7 +95,7 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
       mHeaderViewSaveTask.setVisibility(View.GONE);
       mHeaderViewSearch.setVisibility(View.VISIBLE);
       mHeaderViewLeftArrow.setOnClickListener(this);
-      mHeaderViewSearch.setOnClickListener(this);
+      mHeaderViewSearch.setOnQueryTextListener(this);
     } else {
       mHeaderViewLeftArrow.setVisibility(View.GONE);
     }
@@ -106,11 +109,16 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
   @Override
   public void initServices() {
     super.initServices();
+    if (mFragmentType == Constant.FRAGMENT_TYPE.TASKS_CONTAIN_SEARCH_FRAGMENT.value()) {
+      mSearchBeanCallback = new SearchBeanCallback(this);
+      mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_SEARCH_BEANS.toString()
+        , mSearchBeanCallback);
+    }
     mUpdateBeanCallback = new UpdateBeanCallback(this);
     mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.toString()
       , mUpdateBeanCallback);
     mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_DELETE_TASK.toString(),
-            mUpdateBeanCallback);
+      mUpdateBeanCallback);
   }
 
   @Override
@@ -174,6 +182,34 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
   }
 
   @Override
+  public boolean onQueryTextSubmit(String query) {
+    if (StringUtil.isEmpty(query)) {
+      return false;
+    }
+    mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_SEARCH_BEANS.value()
+      , Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
+      , null
+      , null
+      , new String[]{query}
+      , Constant.RenderServiceHelper.REQUEST_CODE_SEARCH_BEANS);
+    return false;
+  }
+
+  @Override
+  public boolean onQueryTextChange(String newText) {
+    return false;
+  }
+
+  private void searchSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
+    mTasksContainerAdapter.clearAll();
+    mTasksContainerAdapter.addAllBeans(renderObjectBeans);
+  }
+
+  private void searchFail(int requestCode, int resultCode) {
+    mTasksContainerAdapter.addAllBeans(new RenderObjectBeans());
+  }
+
+  @Override
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
     int position = Integer.parseInt(buttonView.getTag(R.id.shared_list_item_right_checkbox).toString());
     //Log.i("Render", position+"");
@@ -210,6 +246,9 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
     if (adapterType == Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER && isAdapterEmpty) {
       mTasksContainerRecycleView.setVisibility(View.GONE);
       mNoTaskPage.setVisibility(View.VISIBLE);
+      if (mFragmentType == Constant.FRAGMENT_TYPE.TASKS_CONTAIN_SEARCH_FRAGMENT.value()) {
+        mNoTaskPage.setText(R.string.fragment_tasks_container_there_is_no_result);
+      }
     } else if (adapterType == Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER && !isAdapterEmpty) {
       mTasksContainerRecycleView.setVisibility(View.VISIBLE);
       mNoTaskPage.setVisibility(View.GONE);
@@ -424,6 +463,12 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
     return true;
   }
 
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    mTasksContainerAdapter.clearAll();
+  }
+
   private static class UpdateBeanCallback extends RenderCallback {
     private TasksContainFragment mContext;
 
@@ -446,6 +491,29 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
     @Override
     public void onHandleFail(int requestCode, int resultCode) {
       Log.e("Render", "fail to update");
+    }
+  }
+
+  private static class SearchBeanCallback extends RenderCallback {
+    private TasksContainFragment mContext;
+    private SearchBeanCallback(TasksContainFragment context) {
+      mContext = context;
+    }
+    @Override
+    protected void onHandleSelectSuccess(RenderObjectBeans renderObjectBeans, int requestCode, int resultCode) {
+      Log.i("Render", "success to search");
+      mContext.searchSuccess(renderObjectBeans, requestCode, resultCode);
+    }
+
+    @Override
+    protected void onHandleUpdateSuccess(long row, int requestCode, int resultCode) {
+
+    }
+
+    @Override
+    protected void onHandleFail(int requestCode, int resultCode) {
+      Log.i("Render", "fail to search");
+      mContext.searchFail(requestCode, resultCode);
     }
   }
 

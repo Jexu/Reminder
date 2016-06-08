@@ -43,7 +43,7 @@ public class Constant {
             ACTION_GET_ALL_GROUPS(2), ACTION__ADD_NEW_GROUP(3),
             ACTION_ADD_NEW_TASK(4), ACTION_UPDATE_GROUP_NAME(5),
             ACTION_UPDATE_TASK(6), ACTION_DELETE_GROUP(7),
-            ACTION_DELETE_TASK(8);
+            ACTION_DELETE_TASK(8), ACTION_SEARCH_BEANS(9);
             int value = 0;
             ACTION(int value) {
                 this.value = value;
@@ -76,6 +76,9 @@ public class Constant {
                     case 8:
                         result = ACTION_DELETE_TASK;
                         break;
+                    case 9:
+                        result = ACTION_SEARCH_BEANS;
+                        break;
                 }
                 return result;
             }
@@ -96,6 +99,8 @@ public class Constant {
         public static final int REQUEST_CODE_UPDATE_GROUP_NAME = -5;
         public static final int REQUEST_CODE_DELETE_TASK_BEAN = -6;
         public static final int REQUEST_CODE_DELETE_GROUP = -7;
+        public static final int REQUEST_CODE_SEARCH_BEANS = -8;
+
 
         //this value must equal to zero
         public static final int REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED = 0;

@@ -189,6 +189,91 @@ public class RenderService {
         dbReader.close();
     }
 
+    private void searchBeans(int action, String queryLike, int requestCode) {
+        RenderCallback handler = mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
+        Message msg = new Message();
+        if (StringUtil.isEmpty(queryLike)) {
+            if (handler != null) {
+                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_FAIL_ERROR);
+            } else {
+                Log.e("Render", "this is no handler when get tasks by group name");
+            }
+            msg.obj = bundle;
+            handler.sendMessage(msg);
+            return;
+        }
+        SQLiteDatabase dbReader = mRenderDbHelper.getReadableDatabase();
+        Cursor cursorHasDate = dbReader.rawQuery("select * from "
+          + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
+          + " where " + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_CONTENT
+          + " like ? and "
+          + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS
+          + " <> ?"
+          + " order by ? "
+          , new String[]{"%"+queryLike+"%"
+          , TaskBean.DEFAULT_VALUE_OF_DATE_TIME + ""
+          , Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS});
+        Cursor cursorNoDate = dbReader.rawQuery("select * from "
+          + Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
+          + " where " + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_CONTENT
+          + " like ? and "
+          + Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_TIMILLS
+          +" = ?",new String[]{"%"+queryLike+"%"
+          ,TaskBean.DEFAULT_VALUE_OF_DATE_TIME+""});
+
+        RenderObjectBeans<TaskBean> renderObjectBeans = new RenderObjectBeans<>();
+        boolean isCursorHasDate = false;
+        if (cursorHasDate != null) {
+            while (cursorHasDate.moveToNext()) {
+                renderObjectBeans.add(cursorRowToTaskBean(cursorHasDate));
+            }
+            isCursorHasDate = true;
+        }
+        boolean isCursorNoDate = false;
+        if (cursorNoDate != null) {
+            while (cursorNoDate.moveToNext()) {
+                renderObjectBeans.add(cursorRowToTaskBean(cursorNoDate));
+            }
+            isCursorNoDate = true;
+        }
+
+        if (isCursorHasDate || isCursorNoDate) {
+            msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_SELECT_SUCCESS;
+            bundle.putSerializable(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN
+              , (RenderObjectBeans) renderObjectBeans);
+            if (isCursorHasDate && !isCursorNoDate) {
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE
+                  , Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_SUCCESS_HAS_DATE_ONLY);
+                renderObjectBeans.setType(RenderObjectBeans.TYPE_TASK_BEANS_HAS_DATE_ONLY);
+            } else if (isCursorHasDate && isCursorNoDate) {
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE
+                  , Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_SUCCESS_HAS_DATE_AND_NO_DATE);
+                renderObjectBeans.setType(RenderObjectBeans.TYPE_TASK_BEANS_NO_DATE_ONLY);
+            } else if (!isCursorHasDate && isCursorNoDate) {
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE
+                  , Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_SUCCESS_NO_DATE_ONLY);
+                renderObjectBeans.setType(RenderObjectBeans.TYPE_TASK_BEANS_HAS_DATE_AND_NO_DATE);
+            }
+        }else {
+            if (handler != null) {
+                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
+                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_FAIL_NO_TASKS);
+            }
+        }
+        msg.obj = bundle;
+        handler.sendMessage(msg);
+        if (cursorHasDate != null) {
+            cursorHasDate.close();
+        }
+        if (cursorNoDate != null) {
+            cursorNoDate.close();
+        }
+        dbReader.close();
+    }
+
     private void getGroupsExceptFinished(int action, int requestCode) {
         RenderCallback handler = mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
         Bundle bundle = new Bundle();
@@ -516,6 +601,9 @@ public class RenderService {
                     case 7:
                     case 8:
                         deleteDateById(action, tableName, whereArgs, requestCode);
+                        break;
+                    case 9:
+                        searchBeans(action, whereArgs[0],requestCode);
                         break;
                 }
                 return null;

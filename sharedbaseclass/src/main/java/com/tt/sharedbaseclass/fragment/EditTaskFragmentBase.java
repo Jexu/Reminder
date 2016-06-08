@@ -10,13 +10,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.*;
 import com.tt.sharedbaseclass.R;
-import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.view.WheelView;
 
 import java.util.Arrays;
@@ -44,7 +39,6 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
     protected EditText mEdtRepeatInterval;
     protected WheelView mRepeatUnitWheel;
     protected String [] mRepeatUnits;
-    protected int mFragmentType;
 
     protected enum EDITED_VIEW {
         TASK_CONTENT, PICKED_DATE, PICKED_TIME, DEFAULT;
@@ -56,10 +50,6 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Bundle args = getArguments();
-        if (args != null) {
-            mFragmentType = args.getInt(Constant.BundelExtra.EXTRA_FRAGMENT_TYPE);
-        }
         mEditedView = EDITED_VIEW.TASK_CONTENT;
         mRepeatUnits = getResources().getStringArray(R.array.repeat_interval_units);
         super.onCreate(savedInstanceState);

@@ -4,11 +4,8 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
-
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
-import com.tt.sharedbaseclass.model.TaskBean;
 
 /**
  * Created by zhengguo on 5/27/16.
@@ -109,7 +106,7 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter
     return -1;
   }
 
-  private void clearAll() {
+  public void clearAll() {
     if (mRenderObjectBeans != null) {
       mRenderObjectBeans.clear();
       mRenderObjectBeans.setCountTaskHasDate(0);

@@ -30,6 +30,9 @@ public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBas
     protected ImageView mHeaderViewSearchBtn;
     protected RenderService mRenderService;
 
+    protected int mFragmentType;
+
+
     public FragmentBaseWithSharedHeaderView() {
         super();
         // Required empty public constructor
@@ -39,6 +42,10 @@ public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBas
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null) {
+            mFragmentType = args.getInt(Constant.BundelExtra.EXTRA_FRAGMENT_TYPE);
+        }
         initServices();
     }
 

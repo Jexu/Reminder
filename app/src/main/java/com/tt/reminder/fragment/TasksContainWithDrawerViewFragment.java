@@ -418,6 +418,12 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mLeftDrawerGroupsAdapter.clearAll();
+    }
+
     private static class AddNewBeanCallBack extends RenderCallback {
 
         TasksContainWithDrawerViewFragment mContext;
