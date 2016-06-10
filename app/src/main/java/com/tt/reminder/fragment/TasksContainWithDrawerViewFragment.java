@@ -1,11 +1,9 @@
 package com.tt.reminder.fragment;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
@@ -14,7 +12,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.transition.Fade;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -194,15 +191,13 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void navigateToSearchFragment() {
         TasksContainFragment searchFragment = new TasksContainFragment();
         Bundle args = new Bundle();
         args.putInt(Constant.BundelExtra.EXTRA_FRAGMENT_TYPE, Constant.FRAGMENT_TYPE.TASKS_CONTAIN_SEARCH_FRAGMENT.value());
         args.putSerializable(Constant.BundelExtra.EXTRA_LRUCACHE, mLruCache);
         searchFragment.setArguments(args);
-        searchFragment.setEnterTransition(new Fade().setDuration(250L));
-        MainActivity.navigateTo(searchFragment, getFragmentManager());
+        MainActivity.navigateToForResultCode(searchFragment, getFragmentManager(), Constant.BundelExtra.FINISH_REQUEST_CODE_SEARCH_BEAN);
     }
 
     protected void onMainMenuClick() {

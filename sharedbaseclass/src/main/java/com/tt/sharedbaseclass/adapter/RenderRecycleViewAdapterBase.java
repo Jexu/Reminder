@@ -27,7 +27,7 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter
   public interface OnItemClickListener {
     void onItemClickListener(View view, Constant.RENDER_ADAPTER_TYPE adapterType, int positionClickedBefore, int position);
     void onItemLongClickListener(View view,Constant.RENDER_ADAPTER_TYPE adapterType, int position);
-    void onCheckedChanged(CompoundButton buttonView, boolean isChecked);
+    void onCheckedChanged(CompoundButton buttonView, int position, boolean isChecked);
     void onAdapterEmpty(Constant.RENDER_ADAPTER_TYPE adapterType, boolean isAdapterEmpty);
   }
 
@@ -147,7 +147,7 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter
       @Override
       public boolean onLongClick(View v) {
         mOnItemClickListener.onItemLongClickListener(v, mAdapterType,
-          holder.getLayoutPosition() == getItemCount()? holder.getLayoutPosition() - 1: holder.getLayoutPosition());
+          holder.getLayoutPosition() == getItemCount() ? holder.getLayoutPosition() - 1 : holder.getLayoutPosition());
         return true;
       }
     });

@@ -1,15 +1,14 @@
 package com.tt.reminder.fragment;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Slide;
+import android.transition.Fade;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +36,7 @@ import java.util.Calendar;
  */
 public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
   implements RenderRecycleViewAdapter.OnItemClickListener, View.OnClickListener
-              , SearchView.OnQueryTextListener{
+              , SearchView.OnQueryTextListener {
 
   protected RenderLruCache<String, RenderObjectBeans> mLruCache;
 
@@ -47,6 +46,8 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
   protected RenderObjectBeans mRenderObjectBeansGroups;
   protected UpdateBeanCallback mUpdateBeanCallback;
   private SearchBeanCallback mSearchBeanCallback;
+
+  protected DefaultItemAnimator mRecycleViewIteamAnimator;
 
   public TasksContainFragment() {
     // Required empty public constructor
@@ -65,6 +66,7 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
       mLruCache = new RenderLruCache<>((int) DeviceUtil.getMaxMemory() / 8);
     }
     mTasksContainerAdapter = new RenderRecycleViewAdapter(getActivity(), Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER);
+    mRecycleViewIteamAnimator = new DefaultItemAnimator();
   }
 
   @Override
@@ -210,8 +212,8 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
   }
 
   @Override
-  public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-    int position = Integer.parseInt(buttonView.getTag(R.id.shared_list_item_right_checkbox).toString());
+  public void onCheckedChanged(CompoundButton buttonView, int position, boolean isChecked) {
+    //int position = Integer.parseInt(buttonView.getTag(R.id.shared_list_item_right_checkbox).toString());
     //Log.i("Render", position+"");
     TaskBean oldTaskBean = (TaskBean) mTasksContainerAdapter.getBean(position);
     TaskBean newTaskBean = new TaskBean();
@@ -285,7 +287,11 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
     if (requestCode >= 0) {
       TaskBean taskBean = (TaskBean) mTasksContainerAdapter.getBean(requestCode);
       if (taskBean.isFinished() == TaskBean.VALUE_FINISHED) {
-        mTasksContainerAdapter.removeBean(requestCode, false);
+        RenderObjectBeans tasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_FINISHED);
+        if (tasks != null) {
+          tasks.remove(mFragmentType == Constant.FRAGMENT_TYPE.TASKS_CONTAIN_SEARCH_FRAGMENT.value()
+            ?tasks.indexOf(taskBean):requestCode);
+        }
       } else {
         RenderObjectBeans tasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + taskBean.getGroup());
         if (!taskBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
@@ -302,6 +308,9 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
           RenderAlarm.removeAlarm(getActivity(), taskBean);
         }
       }
+      if (mFragmentType == Constant.FRAGMENT_TYPE.TASKS_CONTAIN_SEARCH_FRAGMENT.value()) {
+        mTasksContainerAdapter.removeBean(requestCode, false);
+      }
       mTasksContainerAdapter.notifyDataSetChanged();
     }
   }
@@ -311,7 +320,6 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
       TaskBean taskBean = (TaskBean) mTasksContainerAdapter.getBean(requestCode);
       if (taskBean.isFinished() == TaskBean.VALUE_FINISHED) {
         //finished --> unfinished
-        if (mLruCache.get(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + taskBean.getGroup()) != null) {
           TaskBean newTaskBean = new TaskBean();
           newTaskBean.copy(taskBean);
           newTaskBean.setIsFinished(TaskBean.VALUE_NOT_FINISHED);
@@ -326,8 +334,11 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
           if (tasks != null) {
             tasks.addBeanInOrder(newTaskBean);
           }
+        RenderObjectBeans tasksFinished = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_FINISHED);
+        if (tasksFinished != null) {
+          tasksFinished.remove(mFragmentType == Constant.FRAGMENT_TYPE.TASKS_CONTAIN_SEARCH_FRAGMENT.value()
+            ?tasksFinished.indexOf(taskBean):requestCode);
         }
-        mTasksContainerAdapter.removeBean(requestCode, false);
         // TODO: 5/31/16 create notification alarm again
         if (taskBean.getTimeInMillis() != TaskBean.DEFAULT_VALUE_OF_DATE_TIME) {
           RenderAlarm.createAlarm(getActivity(), taskBean);
@@ -373,11 +384,19 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
           }
         }
       }
+      if (mFragmentType == Constant.FRAGMENT_TYPE.TASKS_CONTAIN_SEARCH_FRAGMENT.value()) {
+        mTasksContainerAdapter.removeBean(requestCode, false);
+        if(taskBean.isFinished() == TaskBean.VALUE_NOT_FINISHED){
+          taskBean.setIsFinished(TaskBean.VALUE_FINISHED);
+        } else {
+          taskBean.setIsFinished(TaskBean.VALUE_NOT_FINISHED);
+        }
+        mTasksContainerAdapter.addBeanInOrder(taskBean, false);
+      }
       mTasksContainerAdapter.notifyDataSetChanged();
     }
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   protected void navigateToEditFragment(int fragmentType, TaskBean taskBean, int requestCode) {
     EditTaskFragment editTaskFragment = new EditTaskFragment();
     Bundle args = new Bundle();
@@ -389,7 +408,6 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
     args.putSerializable(Constant.BundelExtra.EXTRAL_GROUPS_BEANS,
       mRenderObjectBeansGroups);
     editTaskFragment.setArguments(args);
-    editTaskFragment.setEnterTransition(new Slide().setDuration(300L));
     MainActivity.navigateToForResultCode(editTaskFragment
       , getFragmentManager()
       , requestCode);
@@ -454,12 +472,25 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
         }
       }
       mTasksContainerAdapter.notifyDataSetChanged();
+    } else if (resultCode == Constant.BundelExtra.FINISH_RESULT_CODE_SUCCESS
+        && requestCode == Constant.BundelExtra.FINISH_REQUEST_CODE_SEARCH_BEAN) {
+      mTasksContainerAdapter.notifyDataSetChanged();
     }
   }
 
   @Override
+  public Transition enterTransition() {
+    return new Fade().setDuration(0xfaL);
+  }
+
+  @Override
+  public Transition exitTransition() {
+    return new Fade().setDuration(0xfaL);
+  }
+
+  @Override
   public boolean onBackPressed() {
-    finish();
+    finishWithResultCode(Constant.BundelExtra.FINISH_RESULT_CODE_SUCCESS, null);
     return true;
   }
 

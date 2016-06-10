@@ -7,8 +7,10 @@ import android.support.annotation.Nullable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -94,6 +96,17 @@ public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBas
             builder.setMessage(ssMessage);
         }
         return builder;
+    }
+
+    @Override
+    public Transition enterTransition() {
+        Transition transition = super.enterTransition();
+        return transition.setDuration(0xc8L).setInterpolator(new AccelerateInterpolator());
+    }
+
+    @Override
+    public Transition exitTransition() {
+        return super.exitTransition().setDuration(0xc8L).setInterpolator(new AccelerateInterpolator());
     }
 
     @Override

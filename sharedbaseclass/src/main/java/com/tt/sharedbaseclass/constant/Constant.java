@@ -160,6 +160,8 @@ public class Constant {
         public static final int FINISH_RESULT_CODE_SUCCESS = -5;
         public static final int FINISH_REQUEST_CODE_NEW_TASK = -3;
         public static final int FINISH_REQUEST_CODE_EDIT_TASK = -4;
+        public static final int FINISH_REQUEST_CODE_SEARCH_BEAN = -5;
+
 
 
         public static final String EXTRA_FRAGMENT_TYPE = "extra_fragment_type";

@@ -1,10 +1,14 @@
 package com.tt.sharedbaseclass.fragment;
 
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.transition.Slide;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,6 +87,18 @@ public abstract class RenderFragmentBase extends Fragment implements RenderBase 
     public void onResume() {
         super.onResume();
         Log.i("Render", "onResume");
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public Transition enterTransition() {
+        return new Slide();
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public Transition exitTransition() {
+        return new Slide();
     }
 
     @Override
