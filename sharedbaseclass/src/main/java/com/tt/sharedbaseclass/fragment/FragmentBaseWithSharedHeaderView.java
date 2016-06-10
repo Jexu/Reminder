@@ -83,7 +83,7 @@ public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBas
         if (!StringUtil.isEmpty(title)) {
             ssTitle = new SpannableString(title);
             ssTitle.setSpan(new ForegroundColorSpan(getResources()
-                            .getColor(R.color.app_theme)),
+                            .getColor(R.color.colorPrimaryDark)),
                     0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             builder.setTitle(ssTitle);
         }
@@ -91,7 +91,7 @@ public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBas
         if (!StringUtil.isEmpty(message)) {
             ssMessage = new SpannableString(message);
             ssMessage.setSpan(new ForegroundColorSpan(getResources()
-                            .getColor(R.color.app_theme)),
+                            .getColor(R.color.colorPrimaryDark)),
                     0, message.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             builder.setMessage(ssMessage);
         }

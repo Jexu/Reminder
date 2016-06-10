@@ -81,8 +81,8 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase
         h.mLeftSymbol.setTextColor(mContext.getResources().getColor(android.R.color.holo_red_dark));
         h.mRightTime.setTextColor(mContext.getResources().getColor(android.R.color.holo_red_dark));
       } else {
-        h.mLeftSymbol.setTextColor(mContext.getResources().getColor(android.R.color.black));
-        h.mRightTime.setTextColor(mContext.getResources().getColor(android.R.color.tertiary_text_dark));
+        h.mLeftSymbol.setTextColor(mContext.getResources().getColor(R.color.colorPrimaryDark));
+        h.mRightTime.setTextColor(mContext.getResources().getColor(R.color.app_theme));
       }
       h.mLeftSymbol.setText(taskBean.getPickedDate(false));
       h.mRightTime.setText(taskBean.getPickedTime(false));

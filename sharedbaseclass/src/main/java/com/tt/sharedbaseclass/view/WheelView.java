@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import com.tt.sharedbaseclass.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -207,7 +208,7 @@ public class WheelView extends ScrollView {
                 return;
             }
             if (position == i) {
-                itemView.setTextColor(Color.parseColor("#0288ce"));
+                itemView.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
             } else {
                 itemView.setTextColor(Color.parseColor("#bbbbbb"));
             }
@@ -243,7 +244,7 @@ public class WheelView extends ScrollView {
 
         if (null == paint) {
             paint = new Paint();
-            paint.setColor(Color.parseColor("#83cde6"));
+            paint.setColor(getResources().getColor(R.color.app_theme));
             paint.setStrokeWidth(dip2px(1f));
         }
 

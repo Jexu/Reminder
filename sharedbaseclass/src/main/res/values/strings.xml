@@ -12,10 +12,12 @@
     <string name="hint_alarm_time_not_set">Time not set</string>
     <string name="render_db_helper_group_my_task">My Tasks</string>
     <string name="remder_db_helper_group_finished">Finished</string>
-    <string name="edit_task_fragment_alert_dialog_discard">Discard</string>
-    <string name="edit_task_fragment_alert_dialog_save">Save</string>
+    <string name="alert_dialog_negative_button_discard">Discard</string>
+    <string name="alert_dialog_negative_button_save">Save</string>
     <string name="alert_dialog_title_new_group">New Group</string>
-    <string name="alert_dialog_message_add_new_group">Add a New Group</string>
+    <string name="alert_dialog_message_create_new_group">Create a New Group</string>
+    <string name="alert_dialog_negative_button_cancel">Cancel</string>
+    <string name="alert_dialog_negative_button_delete">Delete</string>
     <string name="edit_task_add_new_group_please_input_new_group_name">Please input new group name</string>
     <string name="fragment_edit_tasi_no_repeat">No Repeat</string>
     <string name="set_repeat_interval_dialog_title_set_repeat">Set Repeat</string>
@@ -32,6 +34,7 @@
 
     <string name="fragment_tasks_container_there_is_no_task_here">oom...there is no task here</string>
     <string name="hint_what_do_you_want_to_search">what do you want to search</string>
+    <string name="hint_enter_repeat_interval_here">Enter repeat interval here</string>
 
 
     <string-array name="repeat_interval_units">

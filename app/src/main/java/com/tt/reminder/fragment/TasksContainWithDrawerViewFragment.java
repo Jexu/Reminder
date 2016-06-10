@@ -216,13 +216,13 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
 
     private void onLeftDrawerCreateNewGroupClick() {
         String title = getResources().getString(com.tt.sharedbaseclass.R.string.alert_dialog_title_new_group);
-        String message = getResources().getString(com.tt.sharedbaseclass.R.string.alert_dialog_message_add_new_group);
+        String message = getResources().getString(com.tt.sharedbaseclass.R.string.alert_dialog_message_create_new_group);
         AlertDialog.Builder builder = getDefaultAlertDialogBuilder(title, message);
         final EditText editText = new EditText(getActivity());
         editText.setSingleLine(true);
         builder.setView(editText)
-          .setNegativeButton(com.tt.sharedbaseclass.R.string.edit_task_fragment_alert_dialog_discard, null)
-          .setPositiveButton(com.tt.sharedbaseclass.R.string.edit_task_fragment_alert_dialog_save, new DialogInterface.OnClickListener() {
+          .setNegativeButton(com.tt.sharedbaseclass.R.string.alert_dialog_negative_button_cancel, null)
+          .setPositiveButton(com.tt.sharedbaseclass.R.string.alert_dialog_negative_button_save, new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialog, int which) {
                   addNewGroup(editText);
