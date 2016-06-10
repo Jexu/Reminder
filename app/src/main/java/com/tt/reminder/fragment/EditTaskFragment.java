@@ -256,9 +256,19 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
         if (mTaskBean.isDeadline()) {
             mAlarmDate.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
             mAlarmTime.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+            if (isRepeatViewShow()) {
+                showRepeatView(false);
+            }
         } else {
             mAlarmDate.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
             mAlarmTime.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            if ((!mTaskBean.isClearedPickedDate() || !mTaskBean.isClearedPickedTime())) {
+                if (!isRepeatViewShow()){
+                    showRepeatView(true);
+                }
+            } else {
+                showRepeatView(false);
+            }
         }
         if (mEditedView == EDITED_VIEW.TASK_CONTENT) {
             if (TextUtils.isEmpty(mTaskContent.getText())) {

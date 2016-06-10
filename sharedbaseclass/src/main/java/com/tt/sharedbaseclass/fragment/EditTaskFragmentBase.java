@@ -157,11 +157,6 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
                 mClearTimeBtn.setVisibility(View.VISIBLE);
             }
         }
-        if (TextUtils.isEmpty(mAlarmDate.getText().toString()) && TextUtils.isEmpty(mAlarmTime.getText().toString())) {
-            showRepeatView(false);
-        } else if (!TextUtils.isEmpty(mAlarmDate.getText().toString()) && !TextUtils.isEmpty(mAlarmTime.getText().toString())) {
-            showRepeatView(true);
-        }
         mEditedView = EDITED_VIEW.TASK_CONTENT;
     }
 
@@ -173,6 +168,11 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
             mSubtitleRepeat.setVisibility(View.GONE);
             mLinearLayoutRepeat.setVisibility(View.GONE);
         }
+    }
+
+    protected boolean isRepeatViewShow() {
+        return mSubtitleRepeat.getVisibility() == View.VISIBLE
+          && mLinearLayoutRepeat.getVisibility() == View.VISIBLE;
     }
 
     @Override

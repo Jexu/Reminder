@@ -143,14 +143,14 @@ public class RenderService {
         boolean isCursorHasDate = false;
         if (cursorHasDate != null) {
             while (cursorHasDate.moveToNext()) {
-                renderObjectBeans.add(cursorRowToTaskBean(cursorHasDate));
+                renderObjectBeans.add(cursorRowToTaskBean(cursorHasDate), false);
             }
             isCursorHasDate = true;
         }
         boolean isCursorNoDate = false;
         if (cursorNoDate != null) {
             while (cursorNoDate.moveToNext()) {
-                renderObjectBeans.add(cursorRowToTaskBean(cursorNoDate));
+                renderObjectBeans.add(cursorRowToTaskBean(cursorNoDate), false);
             }
             isCursorNoDate = true;
         }
@@ -228,14 +228,14 @@ public class RenderService {
         boolean isCursorHasDate = false;
         if (cursorHasDate != null) {
             while (cursorHasDate.moveToNext()) {
-                renderObjectBeans.add(cursorRowToTaskBean(cursorHasDate));
+                renderObjectBeans.add(cursorRowToTaskBean(cursorHasDate), false);
             }
             isCursorHasDate = true;
         }
         boolean isCursorNoDate = false;
         if (cursorNoDate != null) {
             while (cursorNoDate.moveToNext()) {
-                renderObjectBeans.add(cursorRowToTaskBean(cursorNoDate));
+                renderObjectBeans.add(cursorRowToTaskBean(cursorNoDate), false);
             }
             isCursorNoDate = true;
         }
