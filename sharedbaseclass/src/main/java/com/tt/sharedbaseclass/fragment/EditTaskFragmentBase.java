@@ -10,7 +10,10 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.view.WheelView;
 
@@ -113,11 +116,10 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
 
     protected void showAddNewGroupDialog() {
         String title = getResources().getString(R.string.alert_dialog_title_new_group);
-        String message = getResources().getString(R.string.alert_dialog_message_create_new_group);
-        AlertDialog.Builder builder = getDefaultAlertDialogBuilder(title, message);
-        final EditText editText = new EditText(getActivity());
-        editText.setSingleLine(true);
-        builder.setView(editText)
+        AlertDialog.Builder builder = getDefaultAlertDialogBuilder(title, null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.shared_dialog_edit_view, null, false);
+        final EditText editText = (EditText) view.findViewById(R.id.dialog_edit_view);
+        builder.setView(view)
                 .setNegativeButton(R.string.alert_dialog_negative_button_cancel, null)
                 .setPositiveButton(R.string.alert_dialog_negative_button_save, new DialogInterface.OnClickListener() {
                     @Override

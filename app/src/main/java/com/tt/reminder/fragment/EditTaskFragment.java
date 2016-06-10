@@ -193,7 +193,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
                 mSelectedWheelItemIndex = selectedIndex;
                 if (mSelectedWheelItemIndex == 1) {
                     mEdtRepeatInterval.setVisibility(View.GONE);
-                } else if (mEdtRepeatInterval.getVisibility() == View.GONE){
+                } else if (mEdtRepeatInterval.getVisibility() == View.GONE) {
                     mEdtRepeatInterval.setVisibility(View.VISIBLE);
                 }
                 Log.i("Render", selectedIndex + "");
@@ -411,6 +411,10 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
         if (!TextUtils.isEmpty(editText.getText().toString().trim())) {
             GroupBean groupBean = new GroupBean();
             groupBean.setGroup(editText.getText().toString());
+            if (mGroupsBean.indexOf(groupBean) != -1) {
+                Toast.makeText(getActivity(), R.string.toast_message_group_has_been_exited, Toast.LENGTH_SHORT).show();
+                return;
+            }
             mTaskBean.setGroup(editText.getText().toString());
             mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.value(),
               Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP, null, groupBean, null,

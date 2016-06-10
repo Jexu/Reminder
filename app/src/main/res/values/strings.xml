@@ -14,4 +14,5 @@
     <string name="toast_message_please_set_alarm_date">please set alarm date</string>
     <string name="toast_message_please_set_alarm_time">please set alarm time</string>
     <string name="toast_message_please_input_repeat_interval">Please input repeat interval</string>
+    <string name="toast_message_group_has_been_exited">group has been existed</string>
 </resources>

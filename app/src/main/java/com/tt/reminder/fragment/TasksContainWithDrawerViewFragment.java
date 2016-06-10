@@ -216,11 +216,11 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
 
     private void onLeftDrawerCreateNewGroupClick() {
         String title = getResources().getString(com.tt.sharedbaseclass.R.string.alert_dialog_title_new_group);
-        String message = getResources().getString(com.tt.sharedbaseclass.R.string.alert_dialog_message_create_new_group);
-        AlertDialog.Builder builder = getDefaultAlertDialogBuilder(title, message);
-        final EditText editText = new EditText(getActivity());
+        AlertDialog.Builder builder = getDefaultAlertDialogBuilder(title, null);
+        View view = LayoutInflater.from(getActivity()).inflate(com.tt.sharedbaseclass.R.layout.shared_dialog_edit_view, null, false);
+        final EditText editText = (EditText) view.findViewById(com.tt.sharedbaseclass.R.id.dialog_edit_view);
         editText.setSingleLine(true);
-        builder.setView(editText)
+        builder.setView(view)
           .setNegativeButton(com.tt.sharedbaseclass.R.string.alert_dialog_negative_button_cancel, null)
           .setPositiveButton(com.tt.sharedbaseclass.R.string.alert_dialog_negative_button_save, new DialogInterface.OnClickListener() {
               @Override
@@ -234,6 +234,10 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         if (!TextUtils.isEmpty(editText.getText().toString().trim())) {
             GroupBean groupBean = new GroupBean();
             groupBean.setGroup(editText.getText().toString());
+            if (mRenderObjectBeansGroups.indexOf(groupBean) != -1) {
+                Toast.makeText(getActivity(), R.string.toast_message_group_has_been_exited, Toast.LENGTH_SHORT).show();
+                return;
+            }
             mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.value(),
               Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP, null, groupBean, null,
               Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP);
