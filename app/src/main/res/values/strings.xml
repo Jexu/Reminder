@@ -8,7 +8,11 @@
     <string name="every_interval_unit">Every %1$d %2$s</string>
     <string name="repeat_every_interval_unit">Repeat Every %1$d %2$s</string>
     <string name="alert_dialog_message_delete_this_task">Delete this task?</string>
-    <string name="alert_dialog_negative_button_cancel">Cancel</string>
-    <string name="alert_dialog_negative_button_delete">Delete</string>
-    <string name="fragment_tasks_container_there_is_no_task_here">oom...there is no task here</string>
+    <string name="alert_dialog_title_select_a_group">Select a group</string>
+    <string name="fragment_tasks_container_there_is_no_result">omm... no result found</string>
+    <string name="toast_message_please_input_task_content">please input task content</string>
+    <string name="toast_message_please_set_alarm_date">please set alarm date</string>
+    <string name="toast_message_please_set_alarm_time">please set alarm time</string>
+    <string name="toast_message_please_input_repeat_interval">Please input repeat interval</string>
+    <string name="toast_message_group_has_been_exited">group has been existed</string>
 </resources>

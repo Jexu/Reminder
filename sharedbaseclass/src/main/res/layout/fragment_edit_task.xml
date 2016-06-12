@@ -43,6 +43,7 @@
                     android:id="@+id/edt_subtitle_what_to_do"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryDark"
                     android:hint="@string/hint_subtitle_what_to_do"/>
 
             </LinearLayout>
@@ -122,6 +123,7 @@
                     android:id="@+id/repeat_interval"
                     style="@style/textview_style_in_edit_fragment"
                     android:text="@string/fragment_edit_tasi_no_repeat"
+                    android:drawableEnd="@drawable/expand_more_24dp"
                     />
 
             </LinearLayout>
@@ -142,12 +144,12 @@
                     style="@style/image_button_style_in_edit_fragment"
                     android:src="@drawable/add_group_list_24dp"/>
 
-                <Spinner
-                    android:id="@+id/spinner_group"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/subtitle_padding_top_in_layout_fragment_edit"
-                    android:layout_weight="1"></Spinner>
+                <TextView
+                  android:id="@+id/group_list"
+                  style="@style/textview_style_in_edit_fragment"
+                  android:text="@string/header_view_title_my_tasks"
+                  android:drawableEnd="@drawable/expand_more_24dp"
+                  />
 
             </LinearLayout>
         </LinearLayout>

@@ -19,8 +19,7 @@ import com.tt.sharedbaseclass.model.TaskBean;
  * Created by zhengguo on 5/27/16.
  */
 public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase
-        implements CompoundButton.OnCheckedChangeListener,
-        View.OnClickListener{
+         {
 
   public static final float FINISHED_ITEM_ALPHA = (float) 0.7;
   public static final float UNFINISHED_ITEM_ALPHA = (float) 1;
@@ -68,6 +67,7 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase
       h.mRightTaskContent.setText(taskBean.getTaskContent());
       setDateTime(h, taskBean);
       setCheckBox(h, taskBean, position);
+      setCheckBoxClickListener(h.mRightCheckBox, position);
     } else if (mAdapterType == Constant.RENDER_ADAPTER_TYPE.LEFT_DRAWER_TASKS_CATEGORY){
       GroupBean groupBean = (GroupBean) mRenderObjectBeans.get(position);
       h.mLeftSymbol.setText(groupBean.getGroup()+"                                                                          ");
@@ -81,8 +81,8 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase
         h.mLeftSymbol.setTextColor(mContext.getResources().getColor(android.R.color.holo_red_dark));
         h.mRightTime.setTextColor(mContext.getResources().getColor(android.R.color.holo_red_dark));
       } else {
-        h.mLeftSymbol.setTextColor(mContext.getResources().getColor(android.R.color.black));
-        h.mRightTime.setTextColor(mContext.getResources().getColor(android.R.color.tertiary_text_dark));
+        h.mLeftSymbol.setTextColor(mContext.getResources().getColor(R.color.colorPrimaryDark));
+        h.mRightTime.setTextColor(mContext.getResources().getColor(R.color.app_theme));
       }
       h.mLeftSymbol.setText(taskBean.getPickedDate(false));
       h.mRightTime.setText(taskBean.getPickedTime(false));
@@ -116,42 +116,25 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase
     } else {
       h.mRightCheckBox.setChecked(false);
     }
-    //h.mRightCheckBox.setOnCheckedChangeListener(this);
-    h.mRightCheckBox.setOnClickListener(this);
-    h.mRightCheckBox.setTag(R.id.shared_list_item_right_checkbox, position);
   }
 
-  @Override
-  public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//    if (mAdapterType == Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER) {
-//      TaskBean taskBean = (TaskBean) getBean(
-//              Integer.parseInt(buttonView.getTag(R.id.shared_list_item_right_checkbox).toString()));
-//      if ((taskBean.isFinished() == TaskBean.VALUE_FINISHED && isChecked)
-//              || (taskBean.isFinished() == TaskBean.VALUE_NOT_FINISHED && !isChecked)) {
-//        return;
-//      }
-//      mOnItemClickListener.onCheckedChanged(buttonView, isChecked);
-//    }
-  }
 
-  @Override
-  public void onClick(View v) {
-    if (v.getId() == R.id.shared_list_item_right_checkbox) {
-      if (mAdapterType == Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER) {
-      TaskBean taskBean = (TaskBean) getBean(
-              Integer.parseInt(v.getTag(R.id.shared_list_item_right_checkbox).toString()));
-//      if ((taskBean.isFinished() == TaskBean.VALUE_FINISHED && isChecked)
-//              || (taskBean.isFinished() == TaskBean.VALUE_NOT_FINISHED && !isChecked)) {
-//        return;
-//      }
-        boolean isChecked;
-        if (taskBean.isFinished() == TaskBean.VALUE_NOT_FINISHED) {
-          isChecked = true;
-        } else {
-          isChecked = false;
+  private void setCheckBoxClickListener(View v, final int position) {
+
+    if (mAdapterType == Constant.RENDER_ADAPTER_TYPE.TASKS_CONTAINER) {
+      v.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          TaskBean taskBean = (TaskBean) getBean(position);
+          boolean isChecked;
+          if (taskBean.isFinished() == TaskBean.VALUE_NOT_FINISHED) {
+            isChecked = true;
+          } else {
+            isChecked = false;
+          }
+          mOnItemClickListener.onCheckedChanged((CompoundButton) v, position, isChecked);
         }
-      mOnItemClickListener.onCheckedChanged((CompoundButton) v, isChecked);
-    }
+      });
     }
   }
 

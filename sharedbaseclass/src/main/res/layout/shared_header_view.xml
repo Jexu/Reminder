@@ -46,7 +46,7 @@
 
     <ImageView
         style="@style/image_button_style_in_shared_header_view"
-        android:id="@+id/header_view_search"
+        android:id="@+id/header_view_search_btn"
         android:layout_marginLeft="@dimen/header_view_margin_right_and_left_between_view"
         android:layout_marginRight="@dimen/header_view_margin_right_and_left_between_view"
         android:src="@drawable/search_24dp"/>
@@ -66,6 +66,20 @@
         android:layout_marginLeft="@dimen/header_view_margin_right_and_left_between_view"
         android:src="@drawable/save_24dp"
         android:visibility="gone"
+      />
+
+    <SearchView
+      android:layout_width="0dp"
+      android:layout_height="@dimen/shared_header_view_search_view_height_33dp"
+      android:foregroundGravity="bottom"
+      android:layout_weight="1"
+      android:iconifiedByDefault="false"
+      android:searchIcon="@drawable/search_24dp"
+      android:queryHint="@string/hint_what_do_you_want_to_search"
+      android:id="@+id/header_view_search"
+      android:layout_marginRight="@dimen/header_view_main_menu_margin_left"
+      android:layout_marginLeft="@dimen/header_view_margin_right_and_left_between_view"
+      android:visibility="gone"
       />
 
 </LinearLayout>

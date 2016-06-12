@@ -1,6 +1,5 @@
 package com.tt.sharedbaseclass.fragment;
 
-import android.animation.Animator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -14,13 +13,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import com.tt.sharedbaseclass.R;
-import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.view.WheelView;
 
-import java.lang.ref.SoftReference;
 import java.util.Arrays;
 
 /**
@@ -33,7 +29,7 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
     protected TextView mAlarmDate;
     protected TextView mAlarmTime;
     protected TextView mTvRepeatInterval;
-    protected Spinner mGroupSpinner;
+    protected TextView mGroupList;
     protected ImageView mDatePickerBtn;
     protected ImageView mTimePickerBtn;
     protected ImageView mClearTimeBtn;
@@ -46,7 +42,6 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
     protected EditText mEdtRepeatInterval;
     protected WheelView mRepeatUnitWheel;
     protected String [] mRepeatUnits;
-    protected int mFragmentType;
 
     protected enum EDITED_VIEW {
         TASK_CONTENT, PICKED_DATE, PICKED_TIME, DEFAULT;
@@ -58,10 +53,6 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Bundle args = getArguments();
-        if (args != null) {
-            mFragmentType = args.getInt(Constant.BundelExtra.EXTRA_FRAGMENT_TYPE);
-        }
         mEditedView = EDITED_VIEW.TASK_CONTENT;
         mRepeatUnits = getResources().getStringArray(R.array.repeat_interval_units);
         super.onCreate(savedInstanceState);
@@ -85,7 +76,7 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
         mHeaderViewLeftArrow.setVisibility(View.VISIBLE);
         mHeaderViewTitle.setText(R.string.header_view_title_new_task);
         mHeaderViewVoiceInput.setVisibility(View.GONE);
-        mHeaderViewSearch.setVisibility(View.GONE);
+        mHeaderViewSearchBtn.setVisibility(View.GONE);
         mHeaderViewAddNewTask.setVisibility(View.GONE);
         mHeaderViewSaveTask.setVisibility(View.VISIBLE);
 
@@ -100,7 +91,7 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
         mLinearLayoutRepeat = (LinearLayout) view.findViewById(R.id.linearlayout_repeat);
         mTvRepeatInterval = (TextView) view.findViewById(R.id.repeat_interval);
         mNewRepeatIntervalBtn = (ImageView) view.findViewById(R.id.new_interval);
-        mGroupSpinner = (Spinner) view.findViewById(R.id.spinner_group);
+        mGroupList = (TextView) view.findViewById(R.id.group_list);
         mNewGroupBtn = (ImageView) view.findViewById(R.id.new_group);
     }
 
@@ -117,6 +108,7 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
           getResources().getString(R.string.set_repeat_interval_dialog_title_set_repeat), "");
         mRepeatIntervalDialogView = getActivity().getLayoutInflater().inflate(R.layout.shared_wheel_view, null, false);
         mEdtRepeatInterval = (EditText) mRepeatIntervalDialogView.findViewById(R.id.edt_repeat_interval);
+        mEdtRepeatInterval.setHint(R.string.hint_enter_repeat_interval_here);
         mRepeatUnitWheel = (WheelView) mRepeatIntervalDialogView.findViewById(R.id.wheel_repeat_unit);
         mRepeatUnitWheel.setItems(Arrays.asList(mRepeatUnits));
         return  builder;
@@ -124,13 +116,12 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
 
     protected void showAddNewGroupDialog() {
         String title = getResources().getString(R.string.alert_dialog_title_new_group);
-        String message = getResources().getString(R.string.alert_dialog_message_add_new_group);
-        AlertDialog.Builder builder = getDefaultAlertDialogBuilder(title, message);
-        final EditText editText = new EditText(getActivity());
-        editText.setSingleLine(true);
-        builder.setView(editText)
-                .setNegativeButton(R.string.edit_task_fragment_alert_dialog_discard, null)
-                .setPositiveButton(R.string.edit_task_fragment_alert_dialog_save, new DialogInterface.OnClickListener() {
+        AlertDialog.Builder builder = getDefaultAlertDialogBuilder(title, null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.shared_dialog_edit_view, null, false);
+        final EditText editText = (EditText) view.findViewById(R.id.dialog_edit_view);
+        builder.setView(view)
+                .setNegativeButton(R.string.alert_dialog_negative_button_cancel, null)
+                .setPositiveButton(R.string.alert_dialog_negative_button_save, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         addNewGroup(editText);
@@ -166,11 +157,6 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
                 mClearTimeBtn.setVisibility(View.VISIBLE);
             }
         }
-        if (TextUtils.isEmpty(mAlarmDate.getText().toString()) && TextUtils.isEmpty(mAlarmTime.getText().toString())) {
-            showRepeatView(false);
-        } else if (!TextUtils.isEmpty(mAlarmDate.getText().toString()) && !TextUtils.isEmpty(mAlarmTime.getText().toString())) {
-            showRepeatView(true);
-        }
         mEditedView = EDITED_VIEW.TASK_CONTENT;
     }
 
@@ -182,6 +168,11 @@ public abstract class EditTaskFragmentBase extends FragmentBaseWithSharedHeaderV
             mSubtitleRepeat.setVisibility(View.GONE);
             mLinearLayoutRepeat.setVisibility(View.GONE);
         }
+    }
+
+    protected boolean isRepeatViewShow() {
+        return mSubtitleRepeat.getVisibility() == View.VISIBLE
+          && mLinearLayoutRepeat.getVisibility() == View.VISIBLE;
     }
 
     @Override
