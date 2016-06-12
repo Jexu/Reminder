@@ -6,7 +6,7 @@ package com.tt.sharedbaseclass.constant;
  */
 public class Constant {
     public enum FRAGMENT_TYPE {
-        TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT(0), EDIT_TASK_FRAGMENT(1), NEW_EDIT_TASK_FRAGMENT(2);
+        TASKS_CONTAIN_WITH_DRAWER_VIEW_FRAGMENT(0), EDIT_TASK_FRAGMENT(1), NEW_EDIT_TASK_FRAGMENT(2), TASKS_CONTAIN_SEARCH_FRAGMENT(3);
 
         int value;
         FRAGMENT_TYPE(int value) {
@@ -25,6 +25,9 @@ public class Constant {
                 case 2:
                     result = NEW_EDIT_TASK_FRAGMENT;
                     break;
+                case 3:
+                    result = TASKS_CONTAIN_SEARCH_FRAGMENT;
+                    break;
             }
             return result;
         }
@@ -40,7 +43,7 @@ public class Constant {
             ACTION_GET_ALL_GROUPS(2), ACTION__ADD_NEW_GROUP(3),
             ACTION_ADD_NEW_TASK(4), ACTION_UPDATE_GROUP_NAME(5),
             ACTION_UPDATE_TASK(6), ACTION_DELETE_GROUP(7),
-            ACTION_DELETE_TASK(8);
+            ACTION_DELETE_TASK(8), ACTION_SEARCH_BEANS(9);
             int value = 0;
             ACTION(int value) {
                 this.value = value;
@@ -73,6 +76,9 @@ public class Constant {
                     case 8:
                         result = ACTION_DELETE_TASK;
                         break;
+                    case 9:
+                        result = ACTION_SEARCH_BEANS;
+                        break;
                 }
                 return result;
             }
@@ -93,6 +99,8 @@ public class Constant {
         public static final int REQUEST_CODE_UPDATE_GROUP_NAME = -5;
         public static final int REQUEST_CODE_DELETE_TASK_BEAN = -6;
         public static final int REQUEST_CODE_DELETE_GROUP = -7;
+        public static final int REQUEST_CODE_SEARCH_BEANS = -8;
+
 
         //this value must equal to zero
         public static final int REQUEST_CODE_GET_ALL_TASKS_BEANS_EXCEPT_FINISHED = 0;
@@ -152,6 +160,8 @@ public class Constant {
         public static final int FINISH_RESULT_CODE_SUCCESS = -5;
         public static final int FINISH_REQUEST_CODE_NEW_TASK = -3;
         public static final int FINISH_REQUEST_CODE_EDIT_TASK = -4;
+        public static final int FINISH_REQUEST_CODE_SEARCH_BEAN = -5;
+
 
 
         public static final String EXTRA_FRAGMENT_TYPE = "extra_fragment_type";
@@ -161,6 +171,8 @@ public class Constant {
         public static final String EXTRA_UPDATE_ROW = "extra_update_row";
         public static final String EXTRA_REQUEST_CODE = "extra_request_code";
         public static final String EXTRA_RESULT_CODE = "extra_result_code";
+
+        public static final String EXTRA_LRUCACHE = "extra_lrucache";
 
         public static final String EXTRA_START_FROM = "extra_start_from";
 

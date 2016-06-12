@@ -54,7 +54,7 @@
         <TextView
             android:id="@+id/shared_list_item_right_task_group_name"
             style="@style/shared_list_item_right_textview_style"
-            android:textColor="@android:color/black"
+            android:textColor="@color/colorPrimaryDark"
             android:layout_margin="@dimen/shared_list_item_task_group_name_margin"
             android:drawableBottom="@drawable/shared_divider_1dp"
             android:textSize="@dimen/shared_list_item_task_group_name_textsize" />

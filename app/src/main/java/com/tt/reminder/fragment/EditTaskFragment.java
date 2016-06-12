@@ -25,14 +25,13 @@ import com.tt.sharedbaseclass.view.WheelView;
 import java.util.Calendar;
 
 public class EditTaskFragment extends EditTaskFragmentBase implements View.OnClickListener,
-        DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener,
-        Spinner.OnItemSelectedListener {
+        DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     private static EditTaskFragment mEditTaskFragment;
     private TaskBean mTaskBean;
     private TaskBean mTaskBeanFromParent;
     private RenderObjectBeans<GroupBean> mGroupsBean;
-    private ArrayAdapter<String> mGroupsAdapter;
+    private ArrayAdapter mGroupsAdapter;
     private SaveTaskBeanCallback mSaveTaskBeanCallback;
     private AddNewGroupCallBack mAddNewGroupCallBack;
     private boolean mIsAddNewGroup = false;
@@ -93,9 +92,8 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
         mClearTimeBtn.setOnClickListener(this);
         mNewRepeatIntervalBtn.setOnClickListener(this);
         mTvRepeatInterval.setOnClickListener(this);
+        mGroupList.setOnClickListener(this);
         mNewGroupBtn.setOnClickListener(this);
-        mGroupSpinner.setOnItemSelectedListener(this);
-        mGroupSpinner.setAdapter(mGroupsAdapter);
         initViewContent();
     }
 
@@ -114,7 +112,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
                         , mTaskBeanFromParent.getRepeatInterval()
                         , mRepeatUnits[mTaskBeanFromParent.getRepeatUnit() - 1]));
             }
-            mGroupSpinner.setSelection(mGroupsBean.indexOf(new GroupBean(mTaskBeanFromParent.getGroup())));
+            mGroupList.setText(mTaskBeanFromParent.getGroup());
         } else if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
             mHeaderViewTitle.setText(R.string.header_view_title_new_task);
         }
@@ -129,10 +127,10 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
           mAddNewGroupCallBack);
         if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
             mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.toString(),
-                    mSaveTaskBeanCallback);
+              mSaveTaskBeanCallback);
         } else if(mFragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()) {
             mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.toString(),
-                    mSaveTaskBeanCallback);
+              mSaveTaskBeanCallback);
         }
     }
 
@@ -163,6 +161,9 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
             case R.id.repeat_interval:
                 showSetRepeatIntervalDialog();
                 break;
+            case R.id.group_list:
+                onGroupListClicked();
+                break;
             case R.id.new_group:
                 showAddNewGroupDialog();
                 break;
@@ -190,13 +191,18 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
             public void onSelected(int selectedIndex, String item) {
                 super.onSelected(selectedIndex, item);
                 mSelectedWheelItemIndex = selectedIndex;
+                if (mSelectedWheelItemIndex == 1) {
+                    mEdtRepeatInterval.setVisibility(View.GONE);
+                } else if (mEdtRepeatInterval.getVisibility() == View.GONE) {
+                    mEdtRepeatInterval.setVisibility(View.VISIBLE);
+                }
                 Log.i("Render", selectedIndex + "");
                 Log.i("Render", item + "");
             }
         });
         mRepeatUnitWheel.setSeletion(2);
-        builder.setView(mRepeatIntervalDialogView).setNegativeButton("cancel", null)
-                .setPositiveButton("save", new DialogInterface.OnClickListener() {
+        builder.setView(mRepeatIntervalDialogView).setNegativeButton(R.string.alert_dialog_negative_button_cancel, null)
+                .setPositiveButton(R.string.alert_dialog_negative_button_save, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (mSelectedWheelItemIndex != Constant.REPEAT_UNIT.NO_REPEAT.value()
@@ -208,7 +214,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
                                     mTaskBean.getRepeatInterval(),mRepeatUnits[mSelectedWheelItemIndex - 1]));
                         }else if(mSelectedWheelItemIndex != Constant.REPEAT_UNIT.NO_REPEAT.value()
                                 && TextUtils.isEmpty(mEdtRepeatInterval.getText().toString().trim())) {
-                            Toast.makeText(getActivity(), "Please input repeat interval", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.toast_message_please_input_repeat_interval, Toast.LENGTH_SHORT).show();
                         } else if (mSelectedWheelItemIndex == Constant.REPEAT_UNIT.NO_REPEAT.value()) {
                             mTaskBean.setRepeatInterval(TaskBean.DEFAULT_VALUE_OF_INTERVAL);
                             mTaskBean.setRepeatUnit(mSelectedWheelItemIndex);
@@ -250,9 +256,19 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
         if (mTaskBean.isDeadline()) {
             mAlarmDate.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
             mAlarmTime.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+            if (isRepeatViewShow()) {
+                showRepeatView(false);
+            }
         } else {
-            mAlarmDate.setTextColor(getResources().getColor(android.R.color.black));
-            mAlarmTime.setTextColor(getResources().getColor(android.R.color.black));
+            mAlarmDate.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            mAlarmTime.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            if ((!mTaskBean.isClearedPickedDate() || !mTaskBean.isClearedPickedTime())) {
+                if (!isRepeatViewShow()){
+                    showRepeatView(true);
+                }
+            } else {
+                showRepeatView(false);
+            }
         }
         if (mEditedView == EDITED_VIEW.TASK_CONTENT) {
             if (TextUtils.isEmpty(mTaskContent.getText())) {
@@ -263,14 +279,22 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
         }
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mTaskBean.setGroup(mGroupsBean.get(position).toString());
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
+    public void onGroupListClicked() {
+        AlertDialog.Builder builder = getDefaultAlertDialogBuilder(
+          getResources().getString(R.string.alert_dialog_title_select_a_group), null);
+        builder.setAdapter(mGroupsAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mGroupList.setText(mGroupsAdapter.getItem(which).toString());
+                mTaskBean.setGroup(mGroupsAdapter.getItem(which).toString());
+            }
+        }).setPositiveButton(R.string.subtitle_in_left_drawer_create_new_group
+          , new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                showAddNewGroupDialog();
+            }
+        }).show();
     }
 
     @Override
@@ -281,7 +305,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
             String title = getResources().getString(R.string.alert_dialog_title_are_you_sure);
             String message = getResources().getString(R.string.edit_task_fragment_alert_dialog_message);
             final AlertDialog.Builder builder = getDefaultAlertDialogBuilder(title, message);
-            builder.setNegativeButton(R.string.edit_task_fragment_alert_dialog_discard,
+            builder.setNegativeButton(R.string.alert_dialog_negative_button_discard,
               new DialogInterface.OnClickListener() {
 
                 @Override
@@ -291,7 +315,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
                     finishWithResultCode(Constant.BundelExtra.FINISH_RESULT_CODE_DEFAULT, bundle);
                 }
             })
-              .setPositiveButton(R.string.edit_task_fragment_alert_dialog_save,
+              .setPositiveButton(R.string.alert_dialog_negative_button_save,
                 new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialog, int which) {
@@ -309,13 +333,13 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
 
     private void saveTask() {
         if (mTaskBean.checkTaskStatus() == Constant.TASK_BEAN_STATUS.TASK_CONTENT_NULL) {
-            Toast.makeText(getActivity(), "please input task content", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.toast_message_please_input_task_content, Toast.LENGTH_SHORT).show();
             return;
         } else if (mTaskBean.checkTaskStatus() == Constant.TASK_BEAN_STATUS.DATE_NOT_SET) {
-            Toast.makeText(getActivity(), "please set alarm date", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.toast_message_please_set_alarm_date, Toast.LENGTH_SHORT).show();
             return;
         } else if (mTaskBean.checkTaskStatus() == Constant.TASK_BEAN_STATUS.TIME_NOT_SET) {
-            Toast.makeText(getActivity(), "please set alarm time", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.toast_message_please_set_alarm_time, Toast.LENGTH_SHORT).show();
             return;
         }
         if (mTaskBean.isClearedPickedDate() && mTaskBean.isClearedPickedTime()) {
@@ -397,6 +421,10 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
         if (!TextUtils.isEmpty(editText.getText().toString().trim())) {
             GroupBean groupBean = new GroupBean();
             groupBean.setGroup(editText.getText().toString());
+            if (mGroupsBean.indexOf(groupBean) != -1) {
+                Toast.makeText(getActivity(), R.string.toast_message_group_has_been_exited, Toast.LENGTH_SHORT).show();
+                return;
+            }
             mTaskBean.setGroup(editText.getText().toString());
             mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.value(),
               Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP, null, groupBean, null,
@@ -415,7 +443,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
             Log.i("Render", "add new group successfully");
             mGroupsBean.add(new GroupBean(mTaskBean.getGroup()));
             mGroupsAdapter.notifyDataSetChanged();
-            mGroupSpinner.setSelection(mGroupsBean.indexOf(new GroupBean(mTaskBean.getGroup())));
+            mGroupList.setText(mTaskBean.getGroup());
             mIsAddNewGroup = true;
         } else {
             Log.e("Render", "error request code or result code");

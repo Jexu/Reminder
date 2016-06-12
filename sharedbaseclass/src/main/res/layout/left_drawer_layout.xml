@@ -16,7 +16,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
+            android:textColor="@color/colorPrimaryDark"
             android:text="My Agenda" />
 
         <android.support.v7.widget.RecyclerView
@@ -29,7 +29,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
+            android:textColor="@color/colorPrimaryDark"
             android:text="Category" />
 
         <android.support.v7.widget.RecyclerView
@@ -55,7 +55,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
+                android:textColor="@color/colorPrimaryDark"
                 android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
                 android:layout_weight="1"
                 android:text="@string/remder_db_helper_group_finished"
@@ -81,7 +81,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
+                android:textColor="@color/colorPrimaryDark"
                 android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
                 android:layout_weight="1"
                 android:text="@string/subtitle_in_left_drawer_create_new_group"
@@ -109,7 +109,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
+                android:textColor="@color/colorPrimaryDark"
                 android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
                 android:layout_weight="1"
                 android:text="@string/shared_list_item_in_drawer_subtitle_setting"
@@ -135,7 +135,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
+                android:textColor="@color/colorPrimaryDark"
                 android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
                 android:layout_weight="1"
                 android:text="@string/shared_list_item_in_drawer_subtitle_feedback_help"

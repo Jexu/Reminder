@@ -7,9 +7,6 @@ import android.app.FragmentTransaction;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.Fade;
-import android.transition.Slide;
-
 import com.tt.reminder.R;
 import com.tt.reminder.fragment.TasksContainWithDrawerViewFragment;
 import com.tt.sharedbaseclass.constant.Constant;
@@ -92,8 +89,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentRegiste
         if (f != null && f.isAdded()) {
             fragmentTransaction.hide(f);
         }
-        fragment.setEnterTransition(new Slide().setDuration(300L));
         fragment.setContextAndReqCode(mSelectedFragment, requestCode);
+        fragment.setEnterTransition(fragment.enterTransition());
         fragmentTransaction.add(R.id.main_activity_frame_layout, fragment, fragment.getFragmentTag());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();

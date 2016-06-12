@@ -72,8 +72,7 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
     }
 
 
-    @Override
-    public boolean add(Object object) {
+    public boolean add(Object object, boolean isCallbackBeansEmpty) {
         if (object instanceof TaskBean) {
             if (((TaskBean) object).isClearedPickedDate()) {
                 mCountTaskNoDate++;
@@ -81,10 +80,15 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
                 mCountTaskHasDate++;
             }
         }
-        if (mListener != null) {
+        if (isCallbackBeansEmpty && mListener != null) {
             mListener.onRenderObjectBeansEmpty();
         }
         return super.add(object);
+    }
+
+    @Override
+    public boolean add(Object object) {
+        return add(object, true);
     }
 
     @Override
@@ -144,9 +148,11 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
                     index = mid;
                 }
                 add(index, tb);
-                if (tb.getRepeatIntervalTimeInMillis() == TaskBean.DEFAULT_VALUE_OF_INTERVAL) {
-                    mCountTaskHasDate++;
-                }
+                mCountTaskHasDate++;
+//bug
+//                if (tb.getRepeatIntervalTimeInMillis() == TaskBean.DEFAULT_VALUE_OF_INTERVAL) {
+//                    mCountTaskHasDate++;
+//                }
             }
         }
         if (mListener != null) {

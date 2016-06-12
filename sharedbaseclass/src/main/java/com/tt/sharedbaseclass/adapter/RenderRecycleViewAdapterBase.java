@@ -4,11 +4,8 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
-
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
-import com.tt.sharedbaseclass.model.TaskBean;
 
 /**
  * Created by zhengguo on 5/27/16.
@@ -30,7 +27,7 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter
   public interface OnItemClickListener {
     void onItemClickListener(View view, Constant.RENDER_ADAPTER_TYPE adapterType, int positionClickedBefore, int position);
     void onItemLongClickListener(View view,Constant.RENDER_ADAPTER_TYPE adapterType, int position);
-    void onCheckedChanged(CompoundButton buttonView, boolean isChecked);
+    void onCheckedChanged(CompoundButton buttonView, int position, boolean isChecked);
     void onAdapterEmpty(Constant.RENDER_ADAPTER_TYPE adapterType, boolean isAdapterEmpty);
   }
 
@@ -109,7 +106,7 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter
     return -1;
   }
 
-  private void clearAll() {
+  public void clearAll() {
     if (mRenderObjectBeans != null) {
       mRenderObjectBeans.clear();
       mRenderObjectBeans.setCountTaskHasDate(0);
@@ -150,7 +147,7 @@ public abstract class RenderRecycleViewAdapterBase extends RecyclerView.Adapter
       @Override
       public boolean onLongClick(View v) {
         mOnItemClickListener.onItemLongClickListener(v, mAdapterType,
-          holder.getLayoutPosition() == getItemCount()? holder.getLayoutPosition() - 1: holder.getLayoutPosition());
+          holder.getLayoutPosition() == getItemCount() ? holder.getLayoutPosition() - 1 : holder.getLayoutPosition());
         return true;
       }
     });
