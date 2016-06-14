@@ -138,7 +138,9 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
   public void onClick(View view) {
     switch (view.getId()) {
       case R.id.header_view_left_arrow:
-        finish();
+        if (mFragmentType == Constant.FRAGMENT_TYPE.TASKS_CONTAIN_SEARCH_FRAGMENT.value()) {
+          finishWithResultCode(Constant.BundelExtra.FINISH_RESULT_CODE_SUCCESS,null);
+        }
         break;
       case R.id.header_view_search:
         break;
