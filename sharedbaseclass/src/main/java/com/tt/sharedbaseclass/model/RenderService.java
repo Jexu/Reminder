@@ -143,7 +143,7 @@ public class RenderService {
         boolean isCursorHasDate = false;
         if (cursorHasDate != null) {
             while (cursorHasDate.moveToNext()) {
-                renderObjectBeans.add(cursorRowToTaskBean(cursorHasDate), false);
+                renderObjectBeans.addBeanInOrder(cursorRowToTaskBean(cursorHasDate), false);
             }
             isCursorHasDate = true;
         }
@@ -228,7 +228,7 @@ public class RenderService {
         boolean isCursorHasDate = false;
         if (cursorHasDate != null) {
             while (cursorHasDate.moveToNext()) {
-                renderObjectBeans.add(cursorRowToTaskBean(cursorHasDate), false);
+                renderObjectBeans.addBeanInOrder(cursorRowToTaskBean(cursorHasDate), false);
             }
             isCursorHasDate = true;
         }

@@ -138,7 +138,9 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
   public void onClick(View view) {
     switch (view.getId()) {
       case R.id.header_view_left_arrow:
-        finish();
+        if (mFragmentType == Constant.FRAGMENT_TYPE.TASKS_CONTAIN_SEARCH_FRAGMENT.value()) {
+          finishWithResultCode(Constant.BundelExtra.FINISH_RESULT_CODE_SUCCESS,null);
+        }
         break;
       case R.id.header_view_search:
         break;
@@ -340,7 +342,7 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
             ?tasksFinished.indexOf(taskBean):requestCode);
         }
         // TODO: 5/31/16 create notification alarm again
-        if (taskBean.getTimeInMillis() != TaskBean.DEFAULT_VALUE_OF_DATE_TIME) {
+        if (taskBean.getTimeInMillis() != TaskBean.DEFAULT_VALUE_OF_DATE_TIME && !taskBean.isDeadline()) {
           RenderAlarm.createAlarm(getActivity(), taskBean);
         }
       } else {
