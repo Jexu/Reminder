@@ -394,7 +394,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
                 RenderAlarm.createAlarm(getActivity(), mTaskBean);
             }
         } else if (mFragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()) {
-            if (mTaskBean.isFinished() == TaskBean.VALUE_FINISHED) {
+            if (mTaskBean.isFinished() == TaskBean.VALUE_FINISHED || mTaskBean.isDeadline()) {
                 return;
             }
             if (!mTaskBeanFromParent.isClearedPickedDate()
@@ -405,7 +405,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
               && !mTaskBean.isClearedPickedDate() && !mTaskBean.isDeadline()) {
                 //create
                 RenderAlarm.createAlarm(getActivity(), mTaskBean);
-            } else if ((mTaskBeanFromParent.getTimeInMillis() != mTaskBeanFromParent.getTimeInMillis()
+            } else if ((mTaskBeanFromParent.getTimeInMillis() != mTaskBean.getTimeInMillis()
               || mTaskBeanFromParent.getRepeatIntervalTimeInMillis() != mTaskBean.getRepeatIntervalTimeInMillis())
               && !mTaskBeanFromParent.isClearedPickedDate()
               && !mTaskBean.isClearedPickedDate()) {

@@ -15,4 +15,6 @@
     <string name="toast_message_please_set_alarm_time">please set alarm time</string>
     <string name="toast_message_please_input_repeat_interval">Please input repeat interval</string>
     <string name="toast_message_group_has_been_exited">group has been existed</string>
+    <string name="notification_ticker_new_message">New message</string>
+    <string name="notification_title_task_at">"Task at %1$s %2$s"</string>
 </resources>
