@@ -342,7 +342,7 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
             ?tasksFinished.indexOf(taskBean):requestCode);
         }
         // TODO: 5/31/16 create notification alarm again
-        if (taskBean.getTimeInMillis() != TaskBean.DEFAULT_VALUE_OF_DATE_TIME) {
+        if (taskBean.getTimeInMillis() != TaskBean.DEFAULT_VALUE_OF_DATE_TIME && !taskBean.isDeadline()) {
           RenderAlarm.createAlarm(getActivity(), taskBean);
         }
       } else {

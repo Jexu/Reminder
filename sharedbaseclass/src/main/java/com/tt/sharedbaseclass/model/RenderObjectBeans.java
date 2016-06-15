@@ -108,7 +108,7 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
         return object;
     }
 
-    public void addBeanInOrder(Object bean) {
+    public void addBeanInOrder(Object bean, boolean isCallbackBeansEmpty) {
         if (bean instanceof TaskBean) {
             TaskBean tb = (TaskBean)bean;
             if (tb.isClearedPickedDate() && tb.isClearedPickedTime()) {
@@ -155,9 +155,13 @@ public class RenderObjectBeans<T> extends ArrayList implements Serializable {
 //                }
             }
         }
-        if (mListener != null) {
+        if (isCallbackBeansEmpty && mListener != null) {
             mListener.onRenderObjectBeansEmpty();
         }
+    }
+
+    public void addBeanInOrder(Object bean) {
+        addBeanInOrder(bean, true);
     }
 
 }
