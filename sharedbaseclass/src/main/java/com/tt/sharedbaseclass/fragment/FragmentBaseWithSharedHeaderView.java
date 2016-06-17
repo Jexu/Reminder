@@ -16,7 +16,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
-import com.tt.sharedbaseclass.model.RenderService;
+import com.tt.sharedbaseclass.model.RenderDbService;
 import com.tt.sharedutils.StringUtil;
 
 import static com.tt.sharedbaseclass.R.id.header_view_save_task;
@@ -30,7 +30,7 @@ public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBas
     protected SearchView mHeaderViewSearch;
     protected TextView mHeaderViewTitle;
     protected ImageView mHeaderViewSearchBtn;
-    protected RenderService mRenderService;
+    protected RenderDbService mRenderDbService;
 
     protected int mFragmentType;
 
@@ -66,14 +66,14 @@ public abstract class FragmentBaseWithSharedHeaderView extends RenderFragmentBas
     }
 
     public void initServices() {
-        mRenderService = new RenderService(getActivity());
+        mRenderDbService = new RenderDbService(getActivity());
     }
 
     public void destroyServices() {
-        if (mRenderService != null) {
+        if (mRenderDbService != null) {
             Log.i("Render", "service destroyed");
-            mRenderService.removeAllHandlers();
-            mRenderService.destroyService();
+            mRenderDbService.removeAllHandlers();
+            mRenderDbService.destroyService();
         }
     }
 

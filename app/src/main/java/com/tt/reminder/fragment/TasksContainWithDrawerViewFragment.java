@@ -26,7 +26,7 @@ import com.tt.reminder.adapter.RenderRecycleViewAdapter;
 import com.tt.sharedbaseclass.adapter.RenderRecycleViewAdapterBase;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.model.GroupBean;
-import com.tt.sharedbaseclass.model.RenderCallback;
+import com.tt.sharedbaseclass.model.RenderDbCallback;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 import com.tt.sharedutils.IntentUtil;
@@ -117,14 +117,14 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
     @Override
     public void initServices() {
         super.initServices();
-        mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_GROUP_NAME.toString(),
+        mRenderDbService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_GROUP_NAME.toString(),
           mUpdateBeanCallback);
-        mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_DELETE_GROUP.toString(),
+        mRenderDbService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_DELETE_GROUP.toString(),
           mUpdateBeanCallback);
         mAddNewBeanCallBack = new AddNewBeanCallBack(this);
-        mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.toString(),
+        mRenderDbService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.toString(),
           mAddNewBeanCallBack);
-        mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.toString(),
+        mRenderDbService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.toString(),
           mAddNewBeanCallBack);
     }
 
@@ -245,7 +245,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
                 Toast.makeText(getActivity(), R.string.toast_message_group_has_been_exited, Toast.LENGTH_SHORT).show();
                 return;
             }
-            mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.value(),
+            mRenderDbService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.value(),
               Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP, null, groupBean, null,
               Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP);
             if (mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS) != null) {
@@ -397,7 +397,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
                     TaskBean newBean = new TaskBean();
                     newBean.setTaskContent(text.get(0));
                     mVoiceInputBean = newBean;
-                    mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.value()
+                    mRenderDbService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.value()
                       ,Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
                       ,null
                       ,newBean
@@ -430,7 +430,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         mLeftDrawerGroupsAdapter.clearAll();
     }
 
-    private static class AddNewBeanCallBack extends RenderCallback {
+    private static class AddNewBeanCallBack extends RenderDbCallback {
 
         TasksContainWithDrawerViewFragment mContext;
         private AddNewBeanCallBack(TasksContainWithDrawerViewFragment context) {

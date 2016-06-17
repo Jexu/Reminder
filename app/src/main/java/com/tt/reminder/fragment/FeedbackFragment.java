@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.tt.reminder.R;
+import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.FragmentBaseWithSharedHeaderView;
+import com.tt.sharedbaseclass.model.RenderFeedbackCallback;
+import com.tt.sharedbaseclass.model.RenderFeedbackService;
 import com.tt.sharedutils.StringUtil;
 
 /**
@@ -24,6 +28,8 @@ public class FeedbackFragment extends FragmentBaseWithSharedHeaderView implement
   private Button mSend;
   private EditText mEditArea;
   private EditText mEmail;
+  private SendFeedbackCallback mSendFeedbackCallback;
+  private RenderFeedbackService mService;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,14 @@ public class FeedbackFragment extends FragmentBaseWithSharedHeaderView implement
   }
 
   @Override
+  public void initServices() {
+    super.initServices();
+    mSendFeedbackCallback = new SendFeedbackCallback(this);
+    mService = new RenderFeedbackService(getActivity());
+    mService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_SEND_FEEDBACK.toString(),mSendFeedbackCallback);
+  }
+
+  @Override
   public void onClick(View v) {
     switch (v.getId()) {
       case R.id.feedback_cancel_btn:
@@ -77,20 +91,19 @@ public class FeedbackFragment extends FragmentBaseWithSharedHeaderView implement
       Toast.makeText(getActivity(), R.string.toast_message_email_address_is_not_correct, Toast.LENGTH_SHORT).show();
       return;
     }
+    mService.sendFeedback(Constant.RenderServiceHelper.ACTION.ACTION_SEND_FEEDBACK.value()
+      , mEditArea.getText().toString()
+      , mEmail.getText().toString()
+      , Constant.RenderServiceHelper.REQUEST_CODE_SEND_FEEDBACK);
+  }
+
+  private void onSendFeedbackSuccess(int requestCode, int resultCode) {
     finish();
   }
 
-  @Override
-  public void fetchData() {
-
-  }
-
-  @Override
-  public boolean onBackPressed() {
+  private void onSendFeedbackFail(int requestCode, int resuleCode) {
     finish();
-    return true;
   }
-
 
   @Override
   public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -111,5 +124,35 @@ public class FeedbackFragment extends FragmentBaseWithSharedHeaderView implement
   @Override
   public void afterTextChanged(Editable s) {
 
+  }
+
+  @Override
+  public void fetchData() {
+
+  }
+
+  @Override
+  public boolean onBackPressed() {
+    finish();
+    return true;
+  }
+
+  private static class SendFeedbackCallback extends RenderFeedbackCallback {
+    private FeedbackFragment mContext;
+    protected SendFeedbackCallback(FeedbackFragment context) {
+      mContext = context;
+    }
+
+    @Override
+    protected void onSendSuccess(int requestCode, int resultCode) {
+      Log.i("Render", "success to send feedback");
+      mContext.onSendFeedbackSuccess(requestCode, resultCode);
+    }
+
+    @Override
+    protected void onSendFail(int requestCode, int resultCode) {
+      Log.i("Render", "fail to send feedback");
+      mContext.onSendFeedbackFail(requestCode, resultCode);
+    }
   }
 }

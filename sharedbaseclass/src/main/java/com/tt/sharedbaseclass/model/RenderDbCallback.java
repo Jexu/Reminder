@@ -9,7 +9,7 @@ import com.tt.sharedbaseclass.constant.Constant;
 /**
  * Created by zhengguo on 2016/5/21.
  */
-public abstract class RenderCallback extends Handler {
+public abstract class RenderDbCallback extends Handler {
 
     @Override
     public void handleMessage(Message msg){

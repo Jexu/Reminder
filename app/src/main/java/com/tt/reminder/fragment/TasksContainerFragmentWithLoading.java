@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.tt.sharedbaseclass.constant.Constant;
-import com.tt.sharedbaseclass.model.RenderCallback;
+import com.tt.sharedbaseclass.model.RenderDbCallback;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 
 /**
@@ -43,9 +43,9 @@ public abstract class TasksContainerFragmentWithLoading extends TasksContainFrag
     super.initServices();
     mGetTasksByGroupNameCallback = new GetTasksByGroupNameCallback(this);
     mGetGroupsCallback = new GetGroupsCallback(this);
-    mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_TASKS_BY_GROUP_NAME.toString(),
+    mRenderDbService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_TASKS_BY_GROUP_NAME.toString(),
       mGetTasksByGroupNameCallback);
-    mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_GROUPS.toString(),
+    mRenderDbService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_GROUPS.toString(),
       mGetGroupsCallback);
   }
 
@@ -59,7 +59,7 @@ public abstract class TasksContainerFragmentWithLoading extends TasksContainFrag
 
   protected void getTasksByGroupName(String GroupName, int requestCode) {
     if (!mIsMyTasksCached) {
-      mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_TASKS_BY_GROUP_NAME.value(),
+      mRenderDbService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_TASKS_BY_GROUP_NAME.value(),
         Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS,
         null,
         null,
@@ -70,7 +70,7 @@ public abstract class TasksContainerFragmentWithLoading extends TasksContainFrag
 
   protected void getGroupsExceptFinished(int requestCode) {
     if (!mIsGroupCached) {
-      mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_GROUPS.value(),
+      mRenderDbService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_GET_ALL_GROUPS.value(),
         Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP,
         null,
         null,
@@ -106,7 +106,7 @@ public abstract class TasksContainerFragmentWithLoading extends TasksContainFrag
     }
   }
 
-  private static class GetTasksByGroupNameCallback extends RenderCallback {
+  private static class GetTasksByGroupNameCallback extends RenderDbCallback {
 
     private TasksContainerFragmentWithLoading mContext;
     private GetTasksByGroupNameCallback(TasksContainerFragmentWithLoading context) {
@@ -129,7 +129,7 @@ public abstract class TasksContainerFragmentWithLoading extends TasksContainFrag
     }
   }
 
-  private static class GetGroupsCallback extends RenderCallback {
+  private static class GetGroupsCallback extends RenderDbCallback {
     private TasksContainerFragmentWithLoading mContext;
     private GetGroupsCallback(TasksContainerFragmentWithLoading context) {
       mContext = context;

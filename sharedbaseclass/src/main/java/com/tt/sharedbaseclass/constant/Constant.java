@@ -43,7 +43,8 @@ public class Constant {
             ACTION_GET_ALL_GROUPS(2), ACTION__ADD_NEW_GROUP(3),
             ACTION_ADD_NEW_TASK(4), ACTION_UPDATE_GROUP_NAME(5),
             ACTION_UPDATE_TASK(6), ACTION_DELETE_GROUP(7),
-            ACTION_DELETE_TASK(8), ACTION_SEARCH_BEANS(9);
+            ACTION_DELETE_TASK(8), ACTION_SEARCH_BEANS(9),
+            ACTION_SEND_FEEDBACK(10);
             int value = 0;
             ACTION(int value) {
                 this.value = value;
@@ -79,6 +80,9 @@ public class Constant {
                     case 9:
                         result = ACTION_SEARCH_BEANS;
                         break;
+                    case 10:
+                        result = ACTION_SEND_FEEDBACK;
+                        break;
                 }
                 return result;
             }
@@ -90,6 +94,8 @@ public class Constant {
         public static final int HANDLER_MSG_WHAT_ON_SELECT_SUCCESS = 1;
         public static final int HANDLER_MSG_WHAT_ON_UPDATE_SUCCESS = 2;
         public static final int HANDLER_MSG_WHAT_ON_HANDLE_FAIL = 3;
+        public static final int HANDLER_MSG_WHAT_ON_HANDLE_FEEDBACK_SUCCESS = 4;
+
 
 
         public static final int REQUEST_CODE_DEFAULT = -1;
@@ -100,6 +106,8 @@ public class Constant {
         public static final int REQUEST_CODE_DELETE_TASK_BEAN = -6;
         public static final int REQUEST_CODE_DELETE_GROUP = -7;
         public static final int REQUEST_CODE_SEARCH_BEANS = -8;
+        public static final int REQUEST_CODE_SEND_FEEDBACK = -9;
+
 
 
         //this value must equal to zero
@@ -124,6 +132,9 @@ public class Constant {
         public static final int RESULT_CODE_DELETE_GROUP_SUCCESS = 9;
         public static final int RESULT_CODE_UPDATE_TASK_SUCCESS = 10;
         public static final int RESULT_CODE_UPDATE_GROUP_SUCCESS = 11;
+
+        public static final int RESULT_CODE_SEND_FEEDBACK_SUCCESS = 12;
+        public static final int RESULT_CODE_SEND_FEEDBACK_FAIL = 13;
 
 
     }
