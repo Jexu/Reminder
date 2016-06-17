@@ -20,7 +20,7 @@
 
     <path
         android:name="arrow"
-        android:fillColor="#55D9D9DE"
+        android:fillColor="#33D9D9DE"
         android:pathData="M36 55, l -10 -5, l 10 -5"
         android:strokeWidth="1" />
 

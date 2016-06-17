@@ -36,6 +36,13 @@
     <string name="hint_what_do_you_want_to_search">what do you want to search</string>
     <string name="hint_enter_repeat_interval_here">Enter repeat interval here</string>
     <string name="hint_enter_new_group_here">Enter new group here</string>
+    <string name="feedback_subtitle_want_to_share_your_thought">Want to share your thought?</string>
+    <string name="feedback_subtitle_let_me_know_what_you_think_about_reminder">Let me know what you think about Reminder. I\'d love to hear your ideas for future features
+    </string>
+    <string name="feedback_hint_type_a_comment">Type a comment</string>
+    <string name="feedback_hint_provider_your_email">Provide your email (Optional)</string>
+    <string name="feedback_button_cancel">Cancel</string>
+    <string name="feedback_button_send">Send</string>
 
 
     <string-array name="repeat_interval_units">

@@ -105,6 +105,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         mHeaderViewLeftArrow.setVisibility(View.GONE);
         mHeaderViewVoiceInput.setOnClickListener(this);
         mHeaderViewAddNewTask.setOnClickListener(this);
+        mLeftDrawerFeedback.setOnClickListener(this);
 
         mLeftDrawerCategoryRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mLeftDrawerCategoryRecycleView.setItemAnimator(new DefaultItemAnimator());
@@ -186,9 +187,15 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
 
                 break;
             case com.tt.sharedbaseclass.R.id.left_drawer_feedback_help:
-
+                navigateToFeedbackFragment();
+                onMainMenuClick();
                 break;
         }
+    }
+
+    private void navigateToFeedbackFragment() {
+        FeedbackFragment feedbackFragment = new FeedbackFragment();
+        MainActivity.navigateTo(feedbackFragment, getFragmentManager());
     }
 
     private void navigateToSearchFragment() {
