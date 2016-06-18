@@ -3,7 +3,7 @@ package com.tt.sharedutils;
 import java.util.Calendar;
 
 /**
- * Created by lab307 on 2016/6/18.
+ * Created by zhengguo on 2016/6/18.
  */
 public class DateUtil {
 

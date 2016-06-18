@@ -23,6 +23,7 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase
 
   public static final float FINISHED_ITEM_ALPHA = (float) 0.7;
   public static final float UNFINISHED_ITEM_ALPHA = (float) 1;
+  private String[] mRepeatUtils;
 
   public RenderRecycleViewAdapter() {
     super();
@@ -31,11 +32,13 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase
   public RenderRecycleViewAdapter(Context context, Constant.RENDER_ADAPTER_TYPE adapterType) {
     super(context);
     mAdapterType = adapterType;
+    mRepeatUtils = context.getResources().getStringArray(R.array.repeat_interval_units);
   }
 
   public RenderRecycleViewAdapter(Context context, Constant.RENDER_ADAPTER_TYPE adapterType,RenderObjectBeans renderObjectBeans) {
     super(context, renderObjectBeans);
     mAdapterType = adapterType;
+    mRepeatUtils = context.getResources().getStringArray(R.array.repeat_interval_units);
   }
 
   @Override
@@ -92,7 +95,7 @@ public class RenderRecycleViewAdapter extends RenderRecycleViewAdapterBase
         h.mRightRepeat.setVisibility(View.VISIBLE);
         h.mRightRepeat.setText(mContext.getResources().getString(
                 R.string.repeat_every_interval_unit, taskBean.getRepeatInterval()
-                , Constant.REPEAT_UNIT.valueOf(taskBean.getRepeatUnit())));
+                , mRepeatUtils[taskBean.getRepeatUnit()-1]));
       } else {
         h.mRightRepeat.setText("");
         h.mRightRepeat.setVisibility(View.GONE);

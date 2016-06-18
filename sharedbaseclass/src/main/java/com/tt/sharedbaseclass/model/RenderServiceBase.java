@@ -11,10 +11,12 @@ import java.util.Map;
 public class RenderServiceBase {
   protected Map<String, Object> mHandlers;
   protected RenderDbHelper mRenderDbHelper;
+  protected Context mContext;
 
   public RenderServiceBase(Context context) {
     mHandlers = new HashMap<>();
     mRenderDbHelper = new RenderDbHelper(context);
+    mContext = context;
   }
 
   public void destroyService() {

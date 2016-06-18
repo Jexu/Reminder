@@ -43,6 +43,7 @@
     <string name="feedback_hint_provider_your_email">Provide your email (Optional)</string>
     <string name="feedback_button_cancel">Cancel</string>
     <string name="feedback_button_send">Send</string>
+    <string name="left_drawer_subtitle_category">Category</string>
 
 
     <string-array name="repeat_interval_units">

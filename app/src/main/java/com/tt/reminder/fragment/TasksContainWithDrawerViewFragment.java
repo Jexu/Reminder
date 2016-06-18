@@ -231,7 +231,6 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         AlertDialog.Builder builder = getDefaultAlertDialogBuilder(title, null);
         View view = LayoutInflater.from(getActivity()).inflate(com.tt.sharedbaseclass.R.layout.shared_dialog_edit_view, null, false);
         final EditText editText = (EditText) view.findViewById(com.tt.sharedbaseclass.R.id.dialog_edit_view);
-        editText.setSingleLine(true);
         builder.setView(view)
           .setNegativeButton(com.tt.sharedbaseclass.R.string.alert_dialog_negative_button_cancel, null)
           .setPositiveButton(com.tt.sharedbaseclass.R.string.alert_dialog_negative_button_save, new DialogInterface.OnClickListener() {
@@ -266,7 +265,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
     protected void onLeftDrawerGroupFinishedClick() {
         //left drawer group finished
         if (mLeftDrawerGroupsAdapter.getPositionClickedBefore() != RenderRecycleViewAdapter.POSITION_GROUP_FINISHED) {
-            mHeaderViewTitle.setText(Constant.RenderDbHelper.GROUP_NAME_FINISHED);
+            mHeaderViewTitle.setText(getResources().getString(R.string.remder_db_helper_group_finished));
             RenderObjectBeans taskBeans = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_FINISHED);
             if (taskBeans == null) {
                 getTasksByGroupName(Constant.RenderDbHelper.GROUP_NAME_FINISHED, RenderRecycleViewAdapter.POSITION_GROUP_FINISHED);
@@ -303,7 +302,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         if (adapterType == Constant.RENDER_ADAPTER_TYPE.LEFT_DRAWER_TASKS_CATEGORY) {
             GroupBean groupBean = (GroupBean)mRenderObjectBeansGroups.get(position);
 
-            if (groupBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
+            if (position == 0) {
                 return;
             }
             String alertTitle = getResources().getString(R.string.alert_dialog_title_are_you_sure);
@@ -339,7 +338,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         RenderObjectBeans tasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + groupBean.getGroup());
         if (mLeftDrawerGroupsAdapter.getPositionClickedBefore() == requestCode) {
             mTasksContainerAdapter.addAllBeans(new RenderObjectBeans());
-            mHeaderViewTitle.setText(Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+            mHeaderViewTitle.setText(getResources().getString(R.string.render_db_helper_group_my_task));
         }
         if (tasks != null) {
             mLruCache.remove(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+groupBean.getGroup());

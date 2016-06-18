@@ -53,7 +53,7 @@ public abstract class TasksContainerFragmentWithLoading extends TasksContainFrag
   public void fetchData() {
     Log.i("Render", "fetchData");
     mIsGroupCached = mLruCache.getFromCache(Constant.BundelExtra.EXTRAL_GROUPS_BEANS) == null ? false : true;
-    mIsMyTasksCached = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+Constant.RenderDbHelper.GROUP_NAME_MY_TASK) == null ? false : true;
+    mIsMyTasksCached = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+getResources().getString(com.tt.sharedbaseclass.R.string.render_db_helper_group_my_task)) == null ? false : true;
     getGroupsExceptFinished(Constant.RenderServiceHelper.REQUEST_CODE_DEFAULT);
   }
 

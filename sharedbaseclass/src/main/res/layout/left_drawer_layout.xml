@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimaryDark"
             android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_10dp"
-            android:text="Category" />
+            android:text="@string/left_drawer_subtitle_category" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/left_drawer_category_recycleview"

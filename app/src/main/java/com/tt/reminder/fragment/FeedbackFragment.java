@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.tt.reminder.R;
 import com.tt.sharedbaseclass.constant.Constant;
@@ -32,7 +33,8 @@ public class FeedbackFragment extends FragmentBaseWithSharedHeaderView implement
   private Button mSend;
   private EditText mEditArea;
   private EditText mEmail;
-  ProgressDialog mProgressDialog;
+  private TextView mAppVersionName;
+  private ProgressDialog mProgressDialog;
   private SendFeedbackCallback mSendFeedbackCallback;
   private RenderFeedbackService mService;
 
@@ -68,6 +70,10 @@ public class FeedbackFragment extends FragmentBaseWithSharedHeaderView implement
     mSend.setOnClickListener(this);
     mSend.setClickable(false);
     mSend.setBackgroundResource(R.drawable.shared_button_gray);
+    mAppVersionName = (TextView) view.findViewById(R.id.app_version_name);
+    if (AndroidUtil.getAppVersionName(getActivity()) != null) {
+      mAppVersionName.setText(getResources().getString(R.string.app_version, AndroidUtil.getAppVersionName(getActivity())));
+    }
   }
 
   @Override
@@ -92,7 +98,7 @@ public class FeedbackFragment extends FragmentBaseWithSharedHeaderView implement
 
   private void sendFeedback() {
     if (!DeviceUtil.isNetAvailable(getActivity())) {
-      Toast.makeText(getActivity(),"Network is not available",Toast.LENGTH_SHORT ).show();
+      Toast.makeText(getActivity(), R.string.toast_message_network_is_not_available,Toast.LENGTH_SHORT ).show();
       return;
     }
     if (TextUtils.isEmpty(mEditArea.getText())) {
@@ -111,15 +117,15 @@ public class FeedbackFragment extends FragmentBaseWithSharedHeaderView implement
   }
 
   private void showProgress() {
-    mProgressDialog.setTitle("Sending...");
+    mProgressDialog.setTitle(getResources().getString(R.string.progres_dialog_title_sending));
     mProgressDialog.show();
   }
 
   private void dismissProgress(boolean isSuccess) {
     if (isSuccess) {
-      mProgressDialog.setTitle("Success to send");
+      mProgressDialog.setTitle(getResources().getString(R.string.progress_dialog_title_success_to_send));
     } else {
-      mProgressDialog.setTitle("Fail to send");
+      mProgressDialog.setTitle(getResources().getString(R.string.progress_dialog_title_fail_to_send));
     }
     mProgressDialog.dismiss();
   }

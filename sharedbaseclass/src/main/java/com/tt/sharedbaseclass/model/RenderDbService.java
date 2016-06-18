@@ -8,8 +8,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
+import android.provider.ContactsContract;
 import android.util.Log;
+
+import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
+import com.tt.sharedutils.AndroidUtil;
 import com.tt.sharedutils.StringUtil;
 
 import java.util.List;
@@ -270,7 +274,12 @@ public class RenderDbService extends RenderServiceBase {
             while(cursor.moveToNext()) {
                 GroupBean groupBean = new GroupBean();
                 groupBean.setId(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_ID)));
-                groupBean.setGroup(cursor.getString(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP)));
+                String groupName = cursor.getString(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP));
+                if (groupName.equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
+                    groupBean.setGroup(mContext.getResources().getString(R.string.render_db_helper_group_my_task));
+                } else {
+                    groupBean.setGroup(groupName);
+                }
                 renderObjectBeansGroup.add(groupBean);
             }
             if (handler != null) {
@@ -523,7 +532,12 @@ public class RenderDbService extends RenderServiceBase {
         taskBean.setRepeatInterval(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_REPEAT_INTERVAL)));
         taskBean.setRepeatUnit(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_REPEAT_UNIT)));
         taskBean.setIsFinished(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_IS_FINISHED)));
-        taskBean.setGroup(cursor.getString(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP)));
+        String groupName = cursor.getString(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP));
+        if (groupName.equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
+            taskBean.setGroup(mContext.getResources().getString(R.string.render_db_helper_group_my_task));
+        } else {
+            taskBean.setGroup(groupName);
+        }
         return taskBean;
     }
 
