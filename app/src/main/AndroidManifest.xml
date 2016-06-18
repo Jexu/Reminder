@@ -16,12 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".notification.RenderNotificationService">
-        <intent-filter>
-            <action android:name="com.tt.reminder.notification"/>
-        </intent-filter>
-        </service>
+        <service android:name=".notification.RenderNotificationService"/>
 
     </application>
-
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 </manifest>

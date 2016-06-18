@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="140dp"
+              android:layout_height="wrap_content"
+              android:paddingTop="@dimen/profile_layout_margin_top_20dp"
+              android:paddingBottom="@dimen/profile_layout_margin_top_20dp"
               android:background="@drawable/profile_background">
 
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/profile_layout_margin_top_20dp"
     android:orientation="horizontal">
     <ImageView
       android:layout_width="@dimen/profile_image_width_48dp"
@@ -19,13 +20,23 @@
     <AnalogClock android:layout_width="@dimen/profile_image_width_48dp"
                  android:layout_height="@dimen/profile_image_width_48dp"
                  android:layout_marginStart="@dimen/profile_margin_clock_margin_start_20dp"/>
+    <TextView
+        android:id="@+id/profile_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:layout_weight="1"/>
+
 
   </LinearLayout>
 
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+      android:visibility="gone">
     <EditText
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"

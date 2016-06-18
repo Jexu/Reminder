@@ -1,6 +1,8 @@
 package com.tt.reminder.fragment;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -17,6 +19,8 @@ import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.FragmentBaseWithSharedHeaderView;
 import com.tt.sharedbaseclass.model.RenderFeedbackCallback;
 import com.tt.sharedbaseclass.model.RenderFeedbackService;
+import com.tt.sharedutils.AndroidUtil;
+import com.tt.sharedutils.DeviceUtil;
 import com.tt.sharedutils.StringUtil;
 
 /**
@@ -28,6 +32,7 @@ public class FeedbackFragment extends FragmentBaseWithSharedHeaderView implement
   private Button mSend;
   private EditText mEditArea;
   private EditText mEmail;
+  ProgressDialog mProgressDialog;
   private SendFeedbackCallback mSendFeedbackCallback;
   private RenderFeedbackService mService;
 
@@ -40,6 +45,8 @@ public class FeedbackFragment extends FragmentBaseWithSharedHeaderView implement
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
+    mProgressDialog = new ProgressDialog(getActivity());
+    mProgressDialog.setCanceledOnTouchOutside(false);
     View contentView = inflater.inflate(R.layout.shared_feedback_layout, container, false);
     return contentView;
   }
@@ -84,25 +91,46 @@ public class FeedbackFragment extends FragmentBaseWithSharedHeaderView implement
   }
 
   private void sendFeedback() {
+    if (!DeviceUtil.isNetAvailable(getActivity())) {
+      Toast.makeText(getActivity(),"Network is not available",Toast.LENGTH_SHORT ).show();
+      return;
+    }
     if (TextUtils.isEmpty(mEditArea.getText())) {
       Toast.makeText(getActivity(), R.string.toast_message_please_input_a_comment, Toast.LENGTH_SHORT).show();
       return;
-    } else if (!TextUtils.isEmpty(mEmail.getText()) && !StringUtil.emailPattern(mEmail.getText().toString().trim())) {
+    }
+    if (!TextUtils.isEmpty(mEmail.getText()) && !StringUtil.emailPattern(mEmail.getText().toString().trim())) {
       Toast.makeText(getActivity(), R.string.toast_message_email_address_is_not_correct, Toast.LENGTH_SHORT).show();
       return;
     }
+    showProgress();
     mService.sendFeedback(Constant.RenderServiceHelper.ACTION.ACTION_SEND_FEEDBACK.value()
       , mEditArea.getText().toString()
       , mEmail.getText().toString()
       , Constant.RenderServiceHelper.REQUEST_CODE_SEND_FEEDBACK);
   }
 
+  private void showProgress() {
+    mProgressDialog.setTitle("Sending...");
+    mProgressDialog.show();
+  }
+
+  private void dismissProgress(boolean isSuccess) {
+    if (isSuccess) {
+      mProgressDialog.setTitle("Success to send");
+    } else {
+      mProgressDialog.setTitle("Fail to send");
+    }
+    mProgressDialog.dismiss();
+  }
+
   private void onSendFeedbackSuccess(int requestCode, int resultCode) {
+    dismissProgress(true);
     finish();
   }
 
   private void onSendFeedbackFail(int requestCode, int resuleCode) {
-    finish();
+    dismissProgress(false);
   }
 
   @Override

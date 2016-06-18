@@ -6,10 +6,40 @@ package com.tt.sharedbaseclass.model;
 public class FeedbackBean {
   private String mComment;
   private String mUserMail;
+  private String mOsVersion;
+  private String mDeviceName;
+  private String mAndroidVersion;
 
-  public FeedbackBean(String comment, String userMail) {
-    this.mComment = comment;
-    this.mUserMail = userMail;
+  public FeedbackBean(String mComment, String mUserMail, String mOsVersion, String mDeviceName, String mAndroidVersion) {
+    this.mComment = mComment;
+    this.mUserMail = mUserMail;
+    this.mOsVersion = mOsVersion;
+    this.mDeviceName = mDeviceName;
+    this.mAndroidVersion = mAndroidVersion;
+  }
+
+  public String getOsVersion() {
+    return mOsVersion;
+  }
+
+  public void setOsVersion(String osVersion) {
+    this.mOsVersion = osVersion;
+  }
+
+  public String getDeviceName() {
+    return mDeviceName;
+  }
+
+  public void setDeviceName(String deviceName) {
+    this.mDeviceName = deviceName;
+  }
+
+  public String getAndroidVersion() {
+    return mAndroidVersion;
+  }
+
+  public void setAndroidVersion(String androidVersion) {
+    this.mAndroidVersion = androidVersion;
   }
 
   public String getComment() {

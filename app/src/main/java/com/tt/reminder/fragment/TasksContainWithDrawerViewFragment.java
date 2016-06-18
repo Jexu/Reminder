@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.tt.reminder.R;
 import com.tt.reminder.activity.MainActivity;
@@ -29,6 +30,7 @@ import com.tt.sharedbaseclass.model.GroupBean;
 import com.tt.sharedbaseclass.model.RenderDbCallback;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
+import com.tt.sharedutils.DateUtil;
 import com.tt.sharedutils.IntentUtil;
 
 import java.util.ArrayList;
@@ -46,6 +48,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
 
     private DrawerLayout mDrawerLayout;
     private ScrollView mLeftDrawer;
+    private TextView mProfileDate;
     private boolean mIsLeftDrawerOpened = false;
     private RecyclerView mLeftDrawerCategoryRecycleView;
     private RenderRecycleViewAdapter mLeftDrawerGroupsAdapter;
@@ -90,6 +93,8 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         mLeftDrawerCreateNewGroup = (LinearLayout) view.findViewById(com.tt.sharedbaseclass.R.id.left_drawer_create_new_group);
         mLeftDrawerSetting = (LinearLayout) view.findViewById(com.tt.sharedbaseclass.R.id.left_drawer_setting);
         mLeftDrawerFeedback = (LinearLayout) view.findViewById(com.tt.sharedbaseclass.R.id.left_drawer_feedback_help);
+        mProfileDate = (TextView) view.findViewById(R.id.profile_date);
+        mProfileDate.setText(DateUtil.getCurrentDate());
 
         mHeaderViewVoiceInput.setOnClickListener(this);
         mHeaderViewSearchBtn.setOnClickListener(this);

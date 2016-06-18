@@ -1,6 +1,7 @@
 package com.tt.sharedbaseclass.model;
 
 import com.tt.sharedbaseclass.constant.Constant;
+import com.tt.sharedutils.DateUtil;
 import com.tt.sharedutils.StringUtil;
 
 import java.util.Calendar;
@@ -172,9 +173,9 @@ public class TaskBean extends GroupBean {
     mCalendar.set(this.mYear, this.mMonth, this.mDayOfMonth);
     StringBuffer sb = new StringBuffer();
     if (isInEditFragment) {
-      sb.append(Constant.WEEK.valueOf(mCalendar.get(Calendar.DAY_OF_WEEK) - 1))
+      sb.append(DateUtil.WEEK.valueOf(mCalendar.get(Calendar.DAY_OF_WEEK) - 1))
               .append(", ")
-              .append(Constant.MONTH.valueOf(mCalendar.get(Calendar.MONTH) + 1))
+              .append(DateUtil.MONTH.valueOf(mCalendar.get(Calendar.MONTH) + 1))
               .append(" ")
               .append(this.mDayOfMonth)
               .append(",")
@@ -208,7 +209,7 @@ public class TaskBean extends GroupBean {
     StringBuffer sb = new StringBuffer();
     if (!isInEditFragment) {
       mCalendar.set(this.mYear, this.mMonth, this.mDayOfMonth);
-      sb.append(Constant.WEEK.valueOf(mCalendar.get(Calendar.DAY_OF_WEEK) - 1))
+      sb.append(DateUtil.WEEK.valueOf(mCalendar.get(Calendar.DAY_OF_WEEK) - 1))
               .append(", ");
     }
     if (mHour < 10) {

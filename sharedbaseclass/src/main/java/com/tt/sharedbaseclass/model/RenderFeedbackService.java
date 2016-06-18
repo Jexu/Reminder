@@ -6,6 +6,8 @@ import android.os.Message;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.tt.sharedbaseclass.constant.Constant;
+import com.tt.sharedutils.AndroidUtil;
+import com.tt.sharedutils.DeviceUtil;
 import com.tt.sharedutils.MailUtil;
 import com.tt.sharedutils.StringUtil;
 import org.apache.commons.mail.EmailException;
@@ -25,12 +27,17 @@ public class RenderFeedbackService extends RenderServiceBase {
     bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
     final Message msg = new Message();
     final Gson gson = new Gson();
-    final FeedbackBean feedbackBean = new FeedbackBean(comment, StringUtil.isEmpty(userMailAddr)?"":userMailAddr);
+    final FeedbackBean feedbackBean = new FeedbackBean(comment
+            , StringUtil.isEmpty(userMailAddr)?"":userMailAddr
+            , DeviceUtil.getOSVersion()
+            , DeviceUtil.getDeviceName()
+            , AndroidUtil.getAndroidVersion()+"");
     new Thread(new Runnable() {
       @Override
       public void run() {
         try {
-          MailUtil.sendEmail("from", "frompass", "to", "sub", gson.toJson(feedbackBean));
+          //suvdexofamapdaci
+          MailUtil.sendEmail("3338449608@qq.com", "suvdexofamapdaci", "3338449608@qq.com", "Feedback", gson.toJson(feedbackBean));
           msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FEEDBACK_SUCCESS;
           bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_SEND_FEEDBACK_SUCCESS);
         } catch (EmailException e) {

@@ -1,9 +1,9 @@
 package com.tt.sharedutils;
 
+
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
-
 
 /**
  * Created by zhengguo on 6/16/16.
@@ -19,5 +19,6 @@ public class MailUtil {
       email.setFrom(from);
       email.addTo(to);
       email.setSubject(subject);
+      email.send();
   }
 }
