@@ -43,7 +43,8 @@ public class Constant {
             ACTION_GET_ALL_GROUPS(2), ACTION__ADD_NEW_GROUP(3),
             ACTION_ADD_NEW_TASK(4), ACTION_UPDATE_GROUP_NAME(5),
             ACTION_UPDATE_TASK(6), ACTION_DELETE_GROUP(7),
-            ACTION_DELETE_TASK(8), ACTION_SEARCH_BEANS(9);
+            ACTION_DELETE_TASK(8), ACTION_SEARCH_BEANS(9),
+            ACTION_SEND_FEEDBACK(10);
             int value = 0;
             ACTION(int value) {
                 this.value = value;
@@ -79,6 +80,9 @@ public class Constant {
                     case 9:
                         result = ACTION_SEARCH_BEANS;
                         break;
+                    case 10:
+                        result = ACTION_SEND_FEEDBACK;
+                        break;
                 }
                 return result;
             }
@@ -90,6 +94,8 @@ public class Constant {
         public static final int HANDLER_MSG_WHAT_ON_SELECT_SUCCESS = 1;
         public static final int HANDLER_MSG_WHAT_ON_UPDATE_SUCCESS = 2;
         public static final int HANDLER_MSG_WHAT_ON_HANDLE_FAIL = 3;
+        public static final int HANDLER_MSG_WHAT_ON_HANDLE_FEEDBACK_SUCCESS = 4;
+
 
 
         public static final int REQUEST_CODE_DEFAULT = -1;
@@ -100,6 +106,8 @@ public class Constant {
         public static final int REQUEST_CODE_DELETE_TASK_BEAN = -6;
         public static final int REQUEST_CODE_DELETE_GROUP = -7;
         public static final int REQUEST_CODE_SEARCH_BEANS = -8;
+        public static final int REQUEST_CODE_SEND_FEEDBACK = -9;
+
 
 
         //this value must equal to zero
@@ -124,6 +132,9 @@ public class Constant {
         public static final int RESULT_CODE_DELETE_GROUP_SUCCESS = 9;
         public static final int RESULT_CODE_UPDATE_TASK_SUCCESS = 10;
         public static final int RESULT_CODE_UPDATE_GROUP_SUCCESS = 11;
+
+        public static final int RESULT_CODE_SEND_FEEDBACK_SUCCESS = 12;
+        public static final int RESULT_CODE_SEND_FEEDBACK_FAIL = 13;
 
 
     }
@@ -184,96 +195,96 @@ public class Constant {
 
     }
 
-    public enum WEEK {
-        Sun(0), Mon(1), Tue(2), Wen(3), Thu(4), Fri(5), Sta(6), ;
-        private int value = 1;
-        WEEK(int value) {
-            this.value = value;
-        }
-        public static WEEK valueOf(int value) {
-            WEEK result = null;
-            switch (value) {
-                case 1:
-                    result = Mon;
-                break;
-                case 2:
-                    result = Tue;
-                    break;
-                case 3:
-                    result = Wen;
-                    break;
-                case 4:
-                    result = Thu;
-                    break;
-                case 5:
-                    result = Fri;
-                    break;
-                case 6:
-                    result = Sta;
-                    break;
-                case 0:
-                    result = Sun;
-                    break;
-            }
-            return result;
-        }
-        public int value() {
-            return this.value;
-        }
-    }
-
-    public enum MONTH {
-        Jan(1), Feb(2), Mar(3), Apr(4), May(5), Jun(6), Jul(7), Aug(8), Sept(9), Oct(10), Nov(11), Dec(12);
-        private int value = 1;
-        MONTH(int value) {
-            this.value = value;
-        }
-        public static MONTH valueOf(int value) {
-            MONTH result = null;
-            switch (value) {
-                case 1:
-                    result = Jan;
-                    break;
-                case 2:
-                    result = Feb;
-                    break;
-                case 3:
-                    result = Mar;
-                    break;
-                case 4:
-                    result = Apr;
-                    break;
-                case 5:
-                    result = May;
-                    break;
-                case 6:
-                    result = Jun;
-                    break;
-                case 7:
-                    result = Jul;
-                    break;
-                case 8:
-                    result = Aug;
-                    break;
-                case 9:
-                    result = Sept;
-                    break;
-                case 10:
-                    result = Oct;
-                    break;
-                case 11:
-                    result = Nov;
-                    break;
-                case 12:
-                    result = Dec;
-                    break;
-            }
-            return result;
-        }
-        public int value() {
-            return this.value;
-        }
-    }
+//    public enum WEEK {
+//        Sun(0), Mon(1), Tue(2), Wen(3), Thu(4), Fri(5), Sta(6), ;
+//        private int value = 1;
+//        WEEK(int value) {
+//            this.value = value;
+//        }
+//        public static WEEK valueOf(int value) {
+//            WEEK result = null;
+//            switch (value) {
+//                case 1:
+//                    result = Mon;
+//                break;
+//                case 2:
+//                    result = Tue;
+//                    break;
+//                case 3:
+//                    result = Wen;
+//                    break;
+//                case 4:
+//                    result = Thu;
+//                    break;
+//                case 5:
+//                    result = Fri;
+//                    break;
+//                case 6:
+//                    result = Sta;
+//                    break;
+//                case 0:
+//                    result = Sun;
+//                    break;
+//            }
+//            return result;
+//        }
+//        public int value() {
+//            return this.value;
+//        }
+//    }
+//
+//    public enum MONTH {
+//        Jan(1), Feb(2), Mar(3), Apr(4), May(5), Jun(6), Jul(7), Aug(8), Sept(9), Oct(10), Nov(11), Dec(12);
+//        private int value = 1;
+//        MONTH(int value) {
+//            this.value = value;
+//        }
+//        public static MONTH valueOf(int value) {
+//            MONTH result = null;
+//            switch (value) {
+//                case 1:
+//                    result = Jan;
+//                    break;
+//                case 2:
+//                    result = Feb;
+//                    break;
+//                case 3:
+//                    result = Mar;
+//                    break;
+//                case 4:
+//                    result = Apr;
+//                    break;
+//                case 5:
+//                    result = May;
+//                    break;
+//                case 6:
+//                    result = Jun;
+//                    break;
+//                case 7:
+//                    result = Jul;
+//                    break;
+//                case 8:
+//                    result = Aug;
+//                    break;
+//                case 9:
+//                    result = Sept;
+//                    break;
+//                case 10:
+//                    result = Oct;
+//                    break;
+//                case 11:
+//                    result = Nov;
+//                    break;
+//                case 12:
+//                    result = Dec;
+//                    break;
+//            }
+//            return result;
+//        }
+//        public int value() {
+//            return this.value;
+//        }
+//    }
 
     public enum REPEAT_UNIT {
         Minute(7), Hour(6), Day(5), Week(4), Month(3), Year(2), NO_REPEAT(1);

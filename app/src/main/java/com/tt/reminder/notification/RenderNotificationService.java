@@ -47,11 +47,11 @@ public class RenderNotificationService extends IntentService {
     PendingIntent pi = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
     mNotificationBuilder
       .setAutoCancel(true)
-      .setTicker("New schedule message")
-      .setSmallIcon(R.drawable.notification_icon)
-      .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_icon))
-      .setContentTitle("Task at " + taskBean.getPickedTime(true) + taskBean.getPickedDate(true))
-      .setContentText(taskBean.getTaskContent())
+      .setTicker(getString(com.tt.reminder.R.string.notification_ticker_new_message))
+      .setSmallIcon(R.drawable.notification)
+      .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification))
+      .setContentTitle(getString(com.tt.reminder.R.string.notification_title_task_at, taskBean.getPickedTime(true), taskBean.getPickedDate(true)))
+    .setContentText(taskBean.getTaskContent())
       .setDefaults(
         Notification.DEFAULT_SOUND
           | Notification.DEFAULT_LIGHTS

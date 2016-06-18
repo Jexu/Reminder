@@ -8,67 +8,48 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
+import android.provider.ContactsContract;
 import android.util.Log;
+
+import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
+import com.tt.sharedutils.AndroidUtil;
 import com.tt.sharedutils.StringUtil;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by zhengguo on 2016/5/21.
  */
-public class RenderService {
-    private Map<String, RenderCallback> mHandlers;
-    private RenderDbHelper mRenderDbHelper;
+public class RenderDbService extends RenderServiceBase {
 
-    public RenderService(Context context) {
-        mHandlers = new HashMap<>();
-        mRenderDbHelper = new RenderDbHelper(context);
+    public RenderDbService(Context context) {
+        super(context);
     }
 
+    @Override
     public void destroyService() {
         if (mRenderDbHelper != null) {
             mRenderDbHelper.close();
             mRenderDbHelper = null;
         }
-        removeAllHandlers();
-        mHandlers = null;
-    }
-
-    public void addHandler(String action, RenderCallback handler) {
-        if (mHandlers != null && !mHandlers.containsKey(action)) {
-            mHandlers.put(action, handler);
-        }
-    }
-
-    public void removeHandler(RenderCallback handler) {
-        if (mHandlers != null) {
-            mHandlers.remove(handler);
-        }
-    }
-
-    public void removeAllHandlers() {
-        if (mHandlers != null && mHandlers.size() > 0) {
-            mHandlers.clear();
-        }
+        super.destroyService();
     }
 
     private void getTasksByGroupName(int action, String groupName, int requestCode) {
-        RenderCallback handler = mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
+        RenderDbCallback handler = (RenderDbCallback) mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
         Bundle bundle = new Bundle();
         bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
         Message msg = new Message();
         if (StringUtil.isEmpty(groupName)) {
-            if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
                 bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_FAIL_ERROR);
+            if (handler != null) {
+                msg.obj = bundle;
+                handler.sendMessage(msg);
             } else {
                 Log.e("Render", "this is no handler when get tasks by group name");
             }
-            msg.obj = bundle;
-            handler.sendMessage(msg);
             return;
         }
         Cursor cursorHasDate;
@@ -173,13 +154,13 @@ public class RenderService {
                 renderObjectBeans.setType(RenderObjectBeans.TYPE_TASK_BEANS_HAS_DATE_AND_NO_DATE);
             }
         }else {
-            if (handler != null) {
-                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
-                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_FAIL_NO_TASKS);
-            }
+            msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
+            bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_FAIL_NO_TASKS);
         }
         msg.obj = bundle;
-        handler.sendMessage(msg);
+        if (handler != null) {
+            handler.sendMessage(msg);
+        }
         if (cursorHasDate != null) {
             cursorHasDate.close();
         }
@@ -190,19 +171,19 @@ public class RenderService {
     }
 
     private void searchBeans(int action, String queryLike, int requestCode) {
-        RenderCallback handler = mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
+        RenderDbCallback handler = (RenderDbCallback) mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
         Bundle bundle = new Bundle();
         bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
         Message msg = new Message();
         if (StringUtil.isEmpty(queryLike)) {
+            msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
+            bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_FAIL_ERROR);
+            msg.obj = bundle;
             if (handler != null) {
-                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
-                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_GET_TASKS_FAIL_ERROR);
+                handler.sendMessage(msg);
             } else {
                 Log.e("Render", "this is no handler when get tasks by group name");
             }
-            msg.obj = bundle;
-            handler.sendMessage(msg);
             return;
         }
         SQLiteDatabase dbReader = mRenderDbHelper.getReadableDatabase();
@@ -264,7 +245,9 @@ public class RenderService {
             }
         }
         msg.obj = bundle;
-        handler.sendMessage(msg);
+        if (handler != null) {
+            handler.sendMessage(msg);
+        }
         if (cursorHasDate != null) {
             cursorHasDate.close();
         }
@@ -275,23 +258,28 @@ public class RenderService {
     }
 
     private void getGroupsExceptFinished(int action, int requestCode) {
-        RenderCallback handler = mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
+        RenderDbCallback handler = (RenderDbCallback) mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
         Bundle bundle = new Bundle();
         bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
         Message msg = new Message();
         SQLiteDatabase dbReader = mRenderDbHelper.getReadableDatabase();
         Cursor cursor = dbReader.rawQuery("select * "
-                + " from "
-                + Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP
-                + " where "
-                + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
-                + " <> ?", new String[]{Constant.RenderDbHelper.GROUP_NAME_FINISHED});
+          + " from "
+          + Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP
+          + " where "
+          + Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP
+          + " <> ?", new String[]{Constant.RenderDbHelper.GROUP_NAME_FINISHED});
         if (cursor != null) {
             List<GroupBean> renderObjectBeansGroup  = new RenderObjectBeans<GroupBean>();
             while(cursor.moveToNext()) {
                 GroupBean groupBean = new GroupBean();
                 groupBean.setId(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_ID)));
-                groupBean.setGroup(cursor.getString(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP)));
+                String groupName = cursor.getString(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP));
+                if (groupName.equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
+                    groupBean.setGroup(mContext.getResources().getString(R.string.render_db_helper_group_my_task));
+                } else {
+                    groupBean.setGroup(groupName);
+                }
                 renderObjectBeansGroup.add(groupBean);
             }
             if (handler != null) {
@@ -306,7 +294,9 @@ public class RenderService {
             }
         }
         msg.obj = bundle;
-        handler.sendMessage(msg);
+        if (handler != null) {
+            handler.sendMessage(msg);
+        }
         if (cursor != null) {
             cursor.close();
         }
@@ -314,19 +304,19 @@ public class RenderService {
     }
 
     private void addDataToTable(int action, String tableName,RenderBeanBase bean, int requestCode) {
-        RenderCallback handler = mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
+        RenderDbCallback handler = (RenderDbCallback) mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
         Bundle bundle = new Bundle();
         bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
         Message msg = new Message();
         if (StringUtil.isEmpty(tableName) || bean == null) {
+            msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
+            bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_FAIL);
+            msg.obj = bundle;
             if (handler != null) {
-                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
-                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_FAIL);
+                handler.sendMessage(msg);
             } else {
                 Log.e("Render", "this is no handler when get tasks by group name");
             }
-            msg.obj = bundle;
-            handler.sendMessage(msg);
             return;
         }
         SQLiteDatabase dbWrite = mRenderDbHelper.getWritableDatabase();
@@ -348,24 +338,26 @@ public class RenderService {
             }
         }
         msg.obj = bundle;
-        handler.sendMessage(msg);
+        if (handler != null) {
+            handler.sendMessage(msg);
+        }
         dbWrite.close();
     }
 
     private void updateTable(int action, String tableName,RenderBeanBase oldBean, RenderBeanBase newBean, int requestCode) {
-        RenderCallback handler = mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
+        RenderDbCallback handler = (RenderDbCallback) mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
         Bundle bundle = new Bundle();
         bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
         Message msg = new Message();
         if (StringUtil.isEmpty(tableName) || oldBean == null || newBean == null) {
+            msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
+            bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_FAIL);
+            msg.obj = bundle;
             if (handler != null) {
-                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
-                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_FAIL);
+                handler.sendMessage(msg);
             } else {
                 Log.e("Render", "this is no handler when get tasks by group name");
             }
-            msg.obj = bundle;
-            handler.sendMessage(msg);
             return;
         }
 
@@ -380,7 +372,7 @@ public class RenderService {
 
         SQLiteDatabase dbWrite = mRenderDbHelper.getWritableDatabase();
         long row = dbWrite.update(tableName, taskBeanToContentValues(oldBean, newBean, tempRequestCode)
-                , Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_ID + " = ?", new String[]{((GroupBean) oldBean).getId() + ""});
+          , Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_ID + " = ?", new String[]{((GroupBean) oldBean).getId() + ""});
         if (row != -1) {
             if (handler != null) {
                 msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_UPDATE_SUCCESS;
@@ -398,24 +390,26 @@ public class RenderService {
             }
         }
         msg.obj = bundle;
-        handler.sendMessage(msg);
+        if (handler != null) {
+            handler.sendMessage(msg);
+        }
         dbWrite.close();
     }
 
     private void deleteDateById(int action, String tableName,String[] wheres, int requestCode) {
-        RenderCallback handler = mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
+        RenderDbCallback handler = (RenderDbCallback) mHandlers.get(Constant.RenderServiceHelper.ACTION.valueOf(action).toString());
         Bundle bundle = new Bundle();
         bundle.putInt(Constant.BundelExtra.EXTRA_REQUEST_CODE, requestCode);
         Message msg = new Message();
         if (StringUtil.isEmpty(tableName) || wheres == null || wheres.length < 1) {
+            msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
+            bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_FAIL);
+            msg.obj = bundle;
             if (handler != null) {
-                msg.what = Constant.RenderServiceHelper.HANDLER_MSG_WHAT_ON_HANDLE_FAIL;
-                bundle.putInt(Constant.BundelExtra.EXTRA_RESULT_CODE, Constant.RenderServiceHelper.RESULT_CODE_FAIL);
+                handler.sendMessage(msg);
             } else {
                 Log.e("Render", "this is no handler when get tasks by group name");
             }
-            msg.obj = bundle;
-            handler.sendMessage(msg);
             return;
         }
         SQLiteDatabase dbWrite = mRenderDbHelper.getWritableDatabase();
@@ -447,7 +441,9 @@ public class RenderService {
             }
         }
         msg.obj = bundle;
-        handler.sendMessage(msg);
+        if (handler != null) {
+            handler.sendMessage(msg);
+        }
         dbWrite.close();
     }
 
@@ -536,7 +532,12 @@ public class RenderService {
         taskBean.setRepeatInterval(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_REPEAT_INTERVAL)));
         taskBean.setRepeatUnit(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_REPEAT_UNIT)));
         taskBean.setIsFinished(cursor.getInt(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_TASKS_COLUM_IS_FINISHED)));
-        taskBean.setGroup(cursor.getString(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP)));
+        String groupName = cursor.getString(cursor.getColumnIndex(Constant.RenderDbHelper.EXTRA_TABLE_GROUP_COLUM_GROUP));
+        if (groupName.equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
+            taskBean.setGroup(mContext.getResources().getString(R.string.render_db_helper_group_my_task));
+        } else {
+            taskBean.setGroup(groupName);
+        }
         return taskBean;
     }
 

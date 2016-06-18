@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Reminder</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="alert_dialog_title_are_you_sure">确定?</string>
+    <string name="edit_task_fragment_alert_dialog_message">放弃修改?</string>
+    <string name="every_interval_unit">每 %1$d %2$s</string>
+    <string name="repeat_every_interval_unit">每 %1$d %2$s 重复一次</string>
+    <string name="alert_dialog_message_delete_this_task">删除这个任务?</string>
+    <string name="alert_dialog_title_select_a_group">请选择分组</string>
+    <string name="fragment_tasks_container_there_is_no_result">(⊙o⊙)…没有查到匹配的结果</string>
+    <string name="toast_message_please_input_task_content">任务内容不能为空</string>
+    <string name="toast_message_please_set_alarm_date">日期不能为空</string>
+    <string name="toast_message_please_set_alarm_time">时间不能为空</string>
+    <string name="toast_message_please_input_repeat_interval">重复间隔不能为空</string>
+    <string name="toast_message_group_has_been_exited">改组已经存在</string>
+    <string name="notification_ticker_new_message">新消息</string>
+    <string name="notification_title_task_at">%1$s %2$s 任务</string>
+    <string name="shared_headerview_title_feedback">反馈</string>
+    <string name="toast_message_please_input_a_comment">请输入内容</string>
+    <string name="toast_message_email_address_is_not_correct">邮箱地址不正确</string>
+    <string name="progres_dialog_title_sending">发送中...</string>
+    <string name="progress_dialog_title_success_to_send">发送成功</string>
+    <string name="progress_dialog_title_fail_to_send">发送失败</string>
+    <string name="toast_message_network_is_not_available">网络不可用</string>
+    <string name="app_version">版本:%1$s</string>
+
+</resources>

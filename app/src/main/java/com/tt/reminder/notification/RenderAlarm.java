@@ -18,7 +18,7 @@ public class RenderAlarm {
   }
 
   public static void createAlarm(Context context, TaskBean taskBean) {
-    boolean isRepeating = false;
+    boolean isRepeating;
     if (taskBean.getRepeatIntervalTimeInMillis() != TaskBean.DEFAULT_VALUE_OF_INTERVAL) {
       isRepeating = true;
     } else {
@@ -26,7 +26,7 @@ public class RenderAlarm {
     }
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     Intent intent = new Intent();
-    intent.setAction(RenderNotificationService.ACTION);
+    intent.setClass(context, RenderNotificationService.class);
     Bundle bundle = new Bundle();
     bundle.putSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN, taskBean);
     intent.putExtras(bundle);

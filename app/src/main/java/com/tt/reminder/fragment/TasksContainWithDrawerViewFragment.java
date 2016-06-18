@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.tt.reminder.R;
 import com.tt.reminder.activity.MainActivity;
@@ -26,9 +27,10 @@ import com.tt.reminder.adapter.RenderRecycleViewAdapter;
 import com.tt.sharedbaseclass.adapter.RenderRecycleViewAdapterBase;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.model.GroupBean;
-import com.tt.sharedbaseclass.model.RenderCallback;
+import com.tt.sharedbaseclass.model.RenderDbCallback;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
+import com.tt.sharedutils.DateUtil;
 import com.tt.sharedutils.IntentUtil;
 
 import java.util.ArrayList;
@@ -46,6 +48,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
 
     private DrawerLayout mDrawerLayout;
     private ScrollView mLeftDrawer;
+    private TextView mProfileDate;
     private boolean mIsLeftDrawerOpened = false;
     private RecyclerView mLeftDrawerCategoryRecycleView;
     private RenderRecycleViewAdapter mLeftDrawerGroupsAdapter;
@@ -90,6 +93,8 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         mLeftDrawerCreateNewGroup = (LinearLayout) view.findViewById(com.tt.sharedbaseclass.R.id.left_drawer_create_new_group);
         mLeftDrawerSetting = (LinearLayout) view.findViewById(com.tt.sharedbaseclass.R.id.left_drawer_setting);
         mLeftDrawerFeedback = (LinearLayout) view.findViewById(com.tt.sharedbaseclass.R.id.left_drawer_feedback_help);
+        mProfileDate = (TextView) view.findViewById(R.id.profile_date);
+        mProfileDate.setText(DateUtil.getCurrentDate());
 
         mHeaderViewVoiceInput.setOnClickListener(this);
         mHeaderViewSearchBtn.setOnClickListener(this);
@@ -105,6 +110,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         mHeaderViewLeftArrow.setVisibility(View.GONE);
         mHeaderViewVoiceInput.setOnClickListener(this);
         mHeaderViewAddNewTask.setOnClickListener(this);
+        mLeftDrawerFeedback.setOnClickListener(this);
 
         mLeftDrawerCategoryRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mLeftDrawerCategoryRecycleView.setItemAnimator(new DefaultItemAnimator());
@@ -116,14 +122,14 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
     @Override
     public void initServices() {
         super.initServices();
-        mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_GROUP_NAME.toString(),
+        mRenderDbService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_GROUP_NAME.toString(),
           mUpdateBeanCallback);
-        mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_DELETE_GROUP.toString(),
+        mRenderDbService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_DELETE_GROUP.toString(),
           mUpdateBeanCallback);
         mAddNewBeanCallBack = new AddNewBeanCallBack(this);
-        mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.toString(),
+        mRenderDbService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.toString(),
           mAddNewBeanCallBack);
-        mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.toString(),
+        mRenderDbService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.toString(),
           mAddNewBeanCallBack);
     }
 
@@ -186,9 +192,15 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
 
                 break;
             case com.tt.sharedbaseclass.R.id.left_drawer_feedback_help:
-
+                navigateToFeedbackFragment();
+                onMainMenuClick();
                 break;
         }
+    }
+
+    private void navigateToFeedbackFragment() {
+        FeedbackFragment feedbackFragment = new FeedbackFragment();
+        MainActivity.navigateTo(feedbackFragment, getFragmentManager());
     }
 
     private void navigateToSearchFragment() {
@@ -219,7 +231,6 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         AlertDialog.Builder builder = getDefaultAlertDialogBuilder(title, null);
         View view = LayoutInflater.from(getActivity()).inflate(com.tt.sharedbaseclass.R.layout.shared_dialog_edit_view, null, false);
         final EditText editText = (EditText) view.findViewById(com.tt.sharedbaseclass.R.id.dialog_edit_view);
-        editText.setSingleLine(true);
         builder.setView(view)
           .setNegativeButton(com.tt.sharedbaseclass.R.string.alert_dialog_negative_button_cancel, null)
           .setPositiveButton(com.tt.sharedbaseclass.R.string.alert_dialog_negative_button_save, new DialogInterface.OnClickListener() {
@@ -238,7 +249,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
                 Toast.makeText(getActivity(), R.string.toast_message_group_has_been_exited, Toast.LENGTH_SHORT).show();
                 return;
             }
-            mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.value(),
+            mRenderDbService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.value(),
               Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP, null, groupBean, null,
               Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP);
             if (mLruCache.get(Constant.BundelExtra.EXTRAL_GROUPS_BEANS) != null) {
@@ -254,7 +265,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
     protected void onLeftDrawerGroupFinishedClick() {
         //left drawer group finished
         if (mLeftDrawerGroupsAdapter.getPositionClickedBefore() != RenderRecycleViewAdapter.POSITION_GROUP_FINISHED) {
-            mHeaderViewTitle.setText(Constant.RenderDbHelper.GROUP_NAME_FINISHED);
+            mHeaderViewTitle.setText(getResources().getString(R.string.remder_db_helper_group_finished));
             RenderObjectBeans taskBeans = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_FINISHED);
             if (taskBeans == null) {
                 getTasksByGroupName(Constant.RenderDbHelper.GROUP_NAME_FINISHED, RenderRecycleViewAdapter.POSITION_GROUP_FINISHED);
@@ -291,7 +302,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         if (adapterType == Constant.RENDER_ADAPTER_TYPE.LEFT_DRAWER_TASKS_CATEGORY) {
             GroupBean groupBean = (GroupBean)mRenderObjectBeansGroups.get(position);
 
-            if (groupBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
+            if (position == 0) {
                 return;
             }
             String alertTitle = getResources().getString(R.string.alert_dialog_title_are_you_sure);
@@ -327,7 +338,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         RenderObjectBeans tasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + groupBean.getGroup());
         if (mLeftDrawerGroupsAdapter.getPositionClickedBefore() == requestCode) {
             mTasksContainerAdapter.addAllBeans(new RenderObjectBeans());
-            mHeaderViewTitle.setText(Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+            mHeaderViewTitle.setText(getResources().getString(R.string.render_db_helper_group_my_task));
         }
         if (tasks != null) {
             mLruCache.remove(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN+groupBean.getGroup());
@@ -390,7 +401,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
                     TaskBean newBean = new TaskBean();
                     newBean.setTaskContent(text.get(0));
                     mVoiceInputBean = newBean;
-                    mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.value()
+                    mRenderDbService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.value()
                       ,Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
                       ,null
                       ,newBean
@@ -423,7 +434,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         mLeftDrawerGroupsAdapter.clearAll();
     }
 
-    private static class AddNewBeanCallBack extends RenderCallback {
+    private static class AddNewBeanCallBack extends RenderDbCallback {
 
         TasksContainWithDrawerViewFragment mContext;
         private AddNewBeanCallBack(TasksContainWithDrawerViewFragment context) {

@@ -15,4 +15,14 @@
     <string name="toast_message_please_set_alarm_time">please set alarm time</string>
     <string name="toast_message_please_input_repeat_interval">Please input repeat interval</string>
     <string name="toast_message_group_has_been_exited">group has been existed</string>
+    <string name="notification_ticker_new_message">New message</string>
+    <string name="notification_title_task_at">Task at %1$s %2$s</string>
+    <string name="shared_headerview_title_feedback">Feedback</string>
+    <string name="toast_message_please_input_a_comment">Please input a comment</string>
+    <string name="toast_message_email_address_is_not_correct">Email address is not correct</string>
+    <string name="progres_dialog_title_sending">Sending...</string>
+    <string name="progress_dialog_title_success_to_send">Success to send</string>
+    <string name="progress_dialog_title_fail_to_send">Fail to send</string>
+    <string name="toast_message_network_is_not_available">Network is not available</string>
+    <string name="app_version">Version:%1$s</string>
 </resources>

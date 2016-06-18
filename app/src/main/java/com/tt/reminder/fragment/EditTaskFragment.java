@@ -17,7 +17,7 @@ import com.tt.reminder.notification.RenderAlarm;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.EditTaskFragmentBase;
 import com.tt.sharedbaseclass.model.GroupBean;
-import com.tt.sharedbaseclass.model.RenderCallback;
+import com.tt.sharedbaseclass.model.RenderDbCallback;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
 import com.tt.sharedbaseclass.view.WheelView;
@@ -123,13 +123,13 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
         super.initServices();
         mAddNewGroupCallBack = new AddNewGroupCallBack(this);
         mSaveTaskBeanCallback = new SaveTaskBeanCallback(this);
-        mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.toString(),
+        mRenderDbService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.toString(),
           mAddNewGroupCallBack);
         if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
-            mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.toString(),
+            mRenderDbService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.toString(),
               mSaveTaskBeanCallback);
         } else if(mFragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()) {
-            mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.toString(),
+            mRenderDbService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.toString(),
               mSaveTaskBeanCallback);
         }
     }
@@ -347,7 +347,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
             mTaskBean.setRepeatUnit(Constant.REPEAT_UNIT.NO_REPEAT.value());
         }
         if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
-            mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.value()
+            mRenderDbService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.value()
               ,Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
               ,null
               ,mTaskBean
@@ -358,7 +358,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
             if (mTaskBean.equals(mTaskBeanFromParent)) {
                 finish();
             } else {
-                mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.value()
+                mRenderDbService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.value()
                 , Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
                 , mTaskBeanFromParent
                 , mTaskBean
@@ -394,7 +394,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
                 RenderAlarm.createAlarm(getActivity(), mTaskBean);
             }
         } else if (mFragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()) {
-            if (mTaskBean.isFinished() == TaskBean.VALUE_FINISHED) {
+            if (mTaskBean.isFinished() == TaskBean.VALUE_FINISHED || mTaskBean.isDeadline()) {
                 return;
             }
             if (!mTaskBeanFromParent.isClearedPickedDate()
@@ -405,7 +405,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
               && !mTaskBean.isClearedPickedDate() && !mTaskBean.isDeadline()) {
                 //create
                 RenderAlarm.createAlarm(getActivity(), mTaskBean);
-            } else if ((mTaskBeanFromParent.getTimeInMillis() != mTaskBeanFromParent.getTimeInMillis()
+            } else if ((mTaskBeanFromParent.getTimeInMillis() != mTaskBean.getTimeInMillis()
               || mTaskBeanFromParent.getRepeatIntervalTimeInMillis() != mTaskBean.getRepeatIntervalTimeInMillis())
               && !mTaskBeanFromParent.isClearedPickedDate()
               && !mTaskBean.isClearedPickedDate()) {
@@ -426,7 +426,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
                 return;
             }
             mTaskBean.setGroup(editText.getText().toString());
-            mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.value(),
+            mRenderDbService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION__ADD_NEW_GROUP.value(),
               Constant.RenderDbHelper.EXTRA_TABLE_NAME_GROUP, null, groupBean, null,
               Constant.RenderServiceHelper.REQUEST_CODE__INSERT_NEW_GROUP);
             // TODO: 2016/5/23 show loading view
@@ -450,7 +450,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
         }
     }
 
-    private static class AddNewGroupCallBack extends RenderCallback {
+    private static class AddNewGroupCallBack extends RenderDbCallback {
 
         EditTaskFragment mContext;
         private AddNewGroupCallBack(EditTaskFragment context) {
@@ -479,7 +479,7 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
         }
     }
 
-    private static class SaveTaskBeanCallback extends RenderCallback {
+    private static class SaveTaskBeanCallback extends RenderDbCallback {
         EditTaskFragment mContext;
 
         private SaveTaskBeanCallback(EditTaskFragment context) {

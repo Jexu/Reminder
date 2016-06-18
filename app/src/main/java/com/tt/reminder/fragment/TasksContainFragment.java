@@ -22,7 +22,7 @@ import com.tt.reminder.adapter.RenderRecycleViewAdapter;
 import com.tt.reminder.notification.RenderAlarm;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.FragmentBaseWithSharedHeaderView;
-import com.tt.sharedbaseclass.model.RenderCallback;
+import com.tt.sharedbaseclass.model.RenderDbCallback;
 import com.tt.sharedbaseclass.model.RenderLruCache;
 import com.tt.sharedbaseclass.model.RenderObjectBeans;
 import com.tt.sharedbaseclass.model.TaskBean;
@@ -113,13 +113,13 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
     super.initServices();
     if (mFragmentType == Constant.FRAGMENT_TYPE.TASKS_CONTAIN_SEARCH_FRAGMENT.value()) {
       mSearchBeanCallback = new SearchBeanCallback(this);
-      mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_SEARCH_BEANS.toString()
+      mRenderDbService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_SEARCH_BEANS.toString()
         , mSearchBeanCallback);
     }
     mUpdateBeanCallback = new UpdateBeanCallback(this);
-    mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.toString()
+    mRenderDbService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.toString()
       , mUpdateBeanCallback);
-    mRenderService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_DELETE_TASK.toString(),
+    mRenderDbService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_DELETE_TASK.toString(),
       mUpdateBeanCallback);
   }
 
@@ -190,7 +190,7 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
     if (StringUtil.isEmpty(query)) {
       return false;
     }
-    mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_SEARCH_BEANS.value()
+    mRenderDbService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_SEARCH_BEANS.value()
       , Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
       , null
       , null
@@ -227,7 +227,7 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
       //no repeat
       newTaskBean.setIsFinished(isChecked ? TaskBean.VALUE_FINISHED : TaskBean.VALUE_NOT_FINISHED);
     }
-    mRenderService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.value()
+    mRenderDbService.getOrUpdate(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.value()
       , Constant.RenderDbHelper.EXTRA_TABLE_NAME_TASKS
       , oldTaskBean
       , newTaskBean
@@ -260,7 +260,7 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
   }
 
   protected void deleteBean(int action, String tableName, String[] wheres, int requestCode) {
-    mRenderService.getOrUpdate(action
+    mRenderDbService.getOrUpdate(action
       , tableName
       , null
       , null
@@ -296,8 +296,8 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
         }
       } else {
         RenderObjectBeans tasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + taskBean.getGroup());
-        if (!taskBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
-          RenderObjectBeans myTasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+        if (!taskBean.getGroup().equals(getResources().getString(R.string.render_db_helper_group_my_task))) {
+          RenderObjectBeans myTasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + getResources().getString(R.string.render_db_helper_group_my_task));
           if (myTasks != null) {
             myTasks.remove(myTasks.indexOf(taskBean));
           }
@@ -327,8 +327,8 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
           newTaskBean.setIsFinished(TaskBean.VALUE_NOT_FINISHED);
           //应该根据组信息add两次；myTasks和自身groupName
           RenderObjectBeans tasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + taskBean.getGroup());
-          if (!taskBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
-            RenderObjectBeans myTasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+          if (!taskBean.getGroup().equals(getResources().getString(R.string.render_db_helper_group_my_task))) {
+            RenderObjectBeans myTasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + getString(R.string.render_db_helper_group_my_task));
             if (myTasks != null) {
               myTasks.addBeanInOrder(newTaskBean);
             }
@@ -357,8 +357,8 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
         //应该根据组信息update or remove两次；myTasks和自身groupName
         RenderObjectBeans tasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + taskBean.getGroup());
         RenderObjectBeans myTasks = null;
-        if (!taskBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
-          myTasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+        if (!taskBean.getGroup().equals(getResources().getString(R.string.render_db_helper_group_my_task))) {
+          myTasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + getResources().getString(R.string.render_db_helper_group_my_task));
           if (myTasks != null) {
             myTasks.remove(myTasks.indexOf(taskBean));
           }
@@ -423,12 +423,12 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
       && requestCode == Constant.BundelExtra.FINISH_REQUEST_CODE_NEW_TASK) {
       TaskBean newTaskBean = (TaskBean) bundle.get(Constant.BundelExtra.EXTRA_TASK_BEAN);
       RenderObjectBeans myTasks = mLruCache.getFromCache(
-        Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+        Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + getResources().getString(R.string.render_db_helper_group_my_task));
       RenderObjectBeans tasks;
       if (myTasks != null) {
         myTasks.addBeanInOrder(newTaskBean);
       }
-      if (!newTaskBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
+      if (!newTaskBean.getGroup().equals(getResources().getString(R.string.render_db_helper_group_my_task))) {
         tasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + newTaskBean.getGroup());
         if (tasks != null) {
           tasks.addBeanInOrder(newTaskBean);
@@ -442,14 +442,14 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
       TaskBean newBean = (TaskBean) bundle.get(Constant.BundelExtra.EXTRA_TASK_BEAN);
       TaskBean oldBean = (TaskBean) mTasksContainerAdapter.getBean(requestCode);
       RenderObjectBeans tasksOldBean = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + oldBean.getGroup());
-      RenderObjectBeans myTasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + Constant.RenderDbHelper.GROUP_NAME_MY_TASK);
+      RenderObjectBeans myTasks = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + getResources().getString(R.string.render_db_helper_group_my_task));
 
       if (myTasks != null) {
         myTasks.remove(myTasks.indexOf(oldBean));
         myTasks.addBeanInOrder(newBean);
       }
       if (oldBean.getGroup().equals(newBean.getGroup())) {
-        if (oldBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
+        if (oldBean.getGroup().equals(getResources().getString(R.string.render_db_helper_group_my_task))) {
           //group of oldbean and newbean are equal and are MyTasks
         } else {
           //group of oldbean and newbean are equal and both are not MyTasks
@@ -460,7 +460,7 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
         }
       } else {
         //group of oldben and newbean are not equal
-        if (oldBean.getGroup().equals(Constant.RenderDbHelper.GROUP_NAME_MY_TASK)) {
+        if (oldBean.getGroup().equals(getResources().getString(R.string.render_db_helper_group_my_task))) {
           //group of oldbean is myTasks
           RenderObjectBeans tasksNewBean = mLruCache.getFromCache(Constant.BundelExtra.EXTRA_RENDER_OBJECT_BEAN + newBean.getGroup());
           if (tasksNewBean != null) {
@@ -502,7 +502,7 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
     mTasksContainerAdapter.clearAll();
   }
 
-  private static class UpdateBeanCallback extends RenderCallback {
+  private static class UpdateBeanCallback extends RenderDbCallback {
     private TasksContainFragment mContext;
 
     private UpdateBeanCallback(TasksContainFragment context) {
@@ -527,7 +527,7 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
     }
   }
 
-  private static class SearchBeanCallback extends RenderCallback {
+  private static class SearchBeanCallback extends RenderDbCallback {
     private TasksContainFragment mContext;
     private SearchBeanCallback(TasksContainFragment context) {
       mContext = context;

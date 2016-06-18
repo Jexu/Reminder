@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="start"
     android:background="@android:color/white"
+    android:scrollbars="none"
     android:orientation="vertical">
 
 
@@ -13,24 +14,29 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <include layout="@layout/profile_layout_in_left_drawer"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimaryDark"
-            android:text="My Agenda" />
+            android:text="My Agenda"
+            android:visibility="gone"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/left_drawer_agenda_recycleview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
-        <include layout="@layout/shared_divider_view" />
+        <include layout="@layout/shared_divider_view"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimaryDark"
-            android:text="Category" />
+            android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_10dp"
+            android:text="@string/left_drawer_subtitle_category" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/left_drawer_category_recycleview"
