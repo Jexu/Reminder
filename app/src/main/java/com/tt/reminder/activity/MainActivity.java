@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentRegiste
             mTasksContainWithDrawerViewFragment.setArguments(args);
             transaction.replace(R.id.main_activity_frame_layout, mTasksContainWithDrawerViewFragment
                     , mTasksContainWithDrawerViewFragment.getFragmentTag());
+            transaction.hide(mTasksContainWithDrawerViewFragment);
         } else {
             transaction.add(R.id.main_activity_frame_layout, mTasksContainWithDrawerViewFragment
                     , mTasksContainWithDrawerViewFragment.getFragmentTag());
@@ -84,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentRegiste
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void navigateToForResultCode(RenderFragmentBase fragment, android.app.FragmentManager fragmentManager, int requestCode) {
         android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        //fragmentTransaction.setCustomAnimations(R.animator.fragment_slide_in_bottom,R.animator.fragment_slide_out_top);
         Fragment f = fragmentManager.findFragmentByTag(mSelectedFragment.getFragmentTag());
         if (f != null && f.isAdded()) {
             fragmentTransaction.hide(f);

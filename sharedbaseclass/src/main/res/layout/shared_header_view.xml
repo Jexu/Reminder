@@ -75,7 +75,7 @@
       android:layout_weight="1"
       android:iconifiedByDefault="false"
       android:searchIcon="@drawable/search_24dp"
-      android:queryHint="@string/hint_what_do_you_want_to_search"
+      android:queryHint="@string/hint_search"
       android:id="@+id/header_view_search"
       android:layout_marginRight="@dimen/header_view_main_menu_margin_left"
       android:layout_marginLeft="@dimen/header_view_margin_right_and_left_between_view"

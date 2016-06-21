@@ -4,7 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+import com.google.gson.Gson;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.model.TaskBean;
 
@@ -26,10 +26,12 @@ public class RenderAlarm {
     }
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     Intent intent = new Intent();
-    intent.setClass(context, RenderNotificationService.class);
-    Bundle bundle = new Bundle();
-    bundle.putSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN, taskBean);
-    intent.putExtras(bundle);
+    intent.setAction(RenderNotificationService.ACTION);
+
+    //bug: unable to put a serializable
+    //intent.putExtra(Constant.BundelExtra.EXTRA_TASK_BEAN, taskBean);
+    Gson taskBeanGson = new Gson();
+    intent.putExtra(Constant.BundelExtra.EXTRA_TASK_BEAN, taskBeanGson.toJson(taskBean, TaskBean.class));
     PendingIntent pi = PendingIntent.getService(context, taskBean.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
     if (isRepeating) {
       alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,taskBean.getTimeInMillis(), taskBean.getRepeatIntervalTimeInMillis(), pi);
