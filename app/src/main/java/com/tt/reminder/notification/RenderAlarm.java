@@ -4,9 +4,13 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+import android.net.Uri;
+
+import com.google.gson.Gson;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.model.TaskBean;
+
+import java.net.URI;
 
 /**
  * Created by zhengguo on 6/1/16.
@@ -26,10 +30,14 @@ public class RenderAlarm {
     }
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     Intent intent = new Intent();
+    //bug: intent must set class and data, otherwise it is not able to cancel alarm
     intent.setClass(context, RenderNotificationService.class);
-    Bundle bundle = new Bundle();
-    bundle.putSerializable(Constant.BundelExtra.EXTRA_TASK_BEAN, taskBean);
-    intent.putExtras(bundle);
+    intent.setData(Uri.parse("content:reminder"));
+
+    //bug: unable to put a serializable
+    //intent.putExtra(Constant.BundelExtra.EXTRA_TASK_BEAN, taskBean);
+    Gson taskBeanGson = new Gson();
+    intent.putExtra(Constant.BundelExtra.EXTRA_TASK_BEAN, taskBeanGson.toJson(taskBean, TaskBean.class));
     PendingIntent pi = PendingIntent.getService(context, taskBean.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
     if (isRepeating) {
       alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,taskBean.getTimeInMillis(), taskBean.getRepeatIntervalTimeInMillis(), pi);
@@ -40,7 +48,9 @@ public class RenderAlarm {
 
   public static void removeAlarm(Context context, TaskBean taskBean) {
     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-    Intent intent = new Intent(context, RenderNotificationService.class);
+    Intent intent = new Intent();
+    intent.setClass(context, RenderNotificationService.class);
+    intent.setData(Uri.parse("content:reminder"));
     PendingIntent pi = PendingIntent.getService(context, taskBean.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
     alarmManager.cancel(pi);
   }

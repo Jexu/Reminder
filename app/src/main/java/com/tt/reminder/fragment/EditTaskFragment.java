@@ -107,10 +107,12 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
             }
             if (mTaskBeanFromParent.getRepeatInterval() == TaskBean.DEFAULT_VALUE_OF_INTERVAL) {
                 mTvRepeatInterval.setText(mRepeatUnits[0]);
+                showRepeatView(false);
             } else {
                 mTvRepeatInterval.setText(getResources().getString(R.string.every_interval_unit
                         , mTaskBeanFromParent.getRepeatInterval()
                         , mRepeatUnits[mTaskBeanFromParent.getRepeatUnit() - 1]));
+                showRepeatView(true);
             }
             mGroupList.setText(mTaskBeanFromParent.getGroup());
         } else if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
@@ -127,10 +129,10 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
           mAddNewGroupCallBack);
         if (mFragmentType == Constant.FRAGMENT_TYPE.NEW_EDIT_TASK_FRAGMENT.value()) {
             mRenderDbService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_ADD_NEW_TASK.toString(),
-              mSaveTaskBeanCallback);
+                    mSaveTaskBeanCallback);
         } else if(mFragmentType == Constant.FRAGMENT_TYPE.EDIT_TASK_FRAGMENT.value()) {
             mRenderDbService.addHandler(Constant.RenderServiceHelper.ACTION.ACTION_UPDATE_TASK.toString(),
-              mSaveTaskBeanCallback);
+                    mSaveTaskBeanCallback);
         }
     }
 
@@ -410,6 +412,9 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
               && !mTaskBeanFromParent.isClearedPickedDate()
               && !mTaskBean.isClearedPickedDate()) {
                 //update
+                if (mTaskBeanFromParent.getRepeatIntervalTimeInMillis() != mTaskBean.getRepeatIntervalTimeInMillis()) {
+                    RenderAlarm.removeAlarm(getActivity(), mTaskBeanFromParent);
+                }
                 RenderAlarm.updateAlarm(getActivity(), mTaskBean);
             }
         }
