@@ -42,6 +42,9 @@
     <string name="feedback_button_cancel">取消</string>
     <string name="feedback_button_send">发送</string>
     <string name="left_drawer_subtitle_category">分组</string>
+    <string name="feedback_and_help_button_source_code">源代码</string>
+    <string name="feedback_and_help_button_feedback">反馈</string>
+    <string name="feedback_and_help_button_contact_developer">联系作者</string>
 
 
 

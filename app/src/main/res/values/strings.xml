@@ -25,4 +25,7 @@
     <string name="progress_dialog_title_fail_to_send">Fail to send</string>
     <string name="toast_message_network_is_not_available">Network is not available</string>
     <string name="app_version">Version:%1$s</string>
+    <string name="shared_headerview_title_feedback_and_help"><![CDATA[Feedback & Help]]></string>
+    <string name="toast_message_you_have_no_mail_app">You have no mail app, please install</string>
+    <string name="chooser_title_complete_action_using">Complete action using</string>
 </resources>

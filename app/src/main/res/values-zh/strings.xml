@@ -25,5 +25,8 @@
     <string name="progress_dialog_title_fail_to_send">发送失败</string>
     <string name="toast_message_network_is_not_available">网络不可用</string>
     <string name="app_version">版本:%1$s</string>
+    <string name="shared_headerview_title_feedback_and_help">反馈/帮助</string>
+    <string name="toast_message_you_have_no_mail_app">你没有安装邮件引用，请安装</string>
+    <string name="chooser_title_complete_action_using">请选择</string>
 
 </resources>

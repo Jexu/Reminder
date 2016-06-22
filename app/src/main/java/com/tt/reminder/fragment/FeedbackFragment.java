@@ -2,7 +2,6 @@ package com.tt.reminder.fragment;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -13,14 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.tt.reminder.R;
 import com.tt.sharedbaseclass.constant.Constant;
 import com.tt.sharedbaseclass.fragment.FragmentBaseWithSharedHeaderView;
 import com.tt.sharedbaseclass.model.RenderFeedbackCallback;
 import com.tt.sharedbaseclass.model.RenderFeedbackService;
-import com.tt.sharedutils.AndroidUtil;
 import com.tt.sharedutils.DeviceUtil;
 import com.tt.sharedutils.StringUtil;
 
@@ -33,7 +30,6 @@ public class FeedbackFragment extends FragmentBaseWithSharedHeaderView implement
   private Button mSend;
   private EditText mEditArea;
   private EditText mEmail;
-  private TextView mAppVersionName;
   private ProgressDialog mProgressDialog;
   private SendFeedbackCallback mSendFeedbackCallback;
   private RenderFeedbackService mService;
@@ -70,10 +66,6 @@ public class FeedbackFragment extends FragmentBaseWithSharedHeaderView implement
     mSend.setOnClickListener(this);
     mSend.setClickable(false);
     mSend.setBackgroundResource(R.drawable.shared_button_gray);
-    mAppVersionName = (TextView) view.findViewById(R.id.app_version_name);
-    if (AndroidUtil.getAppVersionName(getActivity()) != null) {
-      mAppVersionName.setText(getResources().getString(R.string.app_version, AndroidUtil.getAppVersionName(getActivity())));
-    }
   }
 
   @Override
