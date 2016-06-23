@@ -28,4 +28,6 @@
     <string name="shared_headerview_title_feedback_and_help"><![CDATA[Feedback & Help]]></string>
     <string name="toast_message_you_have_no_mail_app">You have no mail app, please install</string>
     <string name="chooser_title_complete_action_using">Complete action using</string>
+    <string name="alert_dialog_title_privacy_policy">Privacy policy</string>
+    <string name="alert_dialog_message_reminder_will_not_collect_any_personal_information">Reminder will not collect any personal information.</string>
 </resources>

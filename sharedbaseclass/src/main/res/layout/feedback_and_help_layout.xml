@@ -12,7 +12,7 @@
           android:layout_height="wrap_content"
           android:text="@string/feedback_and_help_button_source_code"
           android:textColor="@color/app_theme"
-          android:padding="@dimen/feedback_and_help_button_padding_14dp"
+          android:padding="@dimen/shared_button_padding_20dp"
           android:background="@drawable/shared_button_selector"/>
   <ImageView android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
           android:layout_height="wrap_content"
           android:text="@string/feedback_and_help_button_feedback"
           android:textColor="@color/app_theme"
-          android:padding="@dimen/feedback_and_help_button_padding_14dp"
+          android:padding="@dimen/shared_button_padding_20dp"
           android:background="@drawable/shared_button_selector"/>
   <ImageView android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
           android:layout_height="wrap_content"
           android:text="@string/feedback_and_help_button_contact_developer"
           android:textColor="@color/app_theme"
-          android:padding="@dimen/feedback_and_help_button_padding_14dp"
+          android:padding="@dimen/shared_button_padding_20dp"
           android:background="@drawable/shared_button_selector"/>
   <ImageView android:layout_width="match_parent"
         android:layout_height="wrap_content"

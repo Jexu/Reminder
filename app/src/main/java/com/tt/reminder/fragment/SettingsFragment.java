@@ -56,6 +56,7 @@ public class SettingsFragment extends FragmentBaseWithSharedHeaderView implement
     mHeaderViewLeftArrow.setOnClickListener(this);
     mIsNotificationEnable.setOnCheckedChangeListener(this);
     mIsNotificationLightDisable.setOnCheckedChangeListener(this);
+    mPrivacyPolicy.setOnClickListener(this);
   }
 
   @Override
@@ -79,7 +80,15 @@ public class SettingsFragment extends FragmentBaseWithSharedHeaderView implement
       case R.id.header_view_left_arrow:
         finish();
         break;
+      case R.id.privacy_policy:
+        showPolicyDialog();
+        break;
     }
+  }
+
+  private void showPolicyDialog() {
+    getDefaultAlertDialogBuilder(getResources().getString(R.string.alert_dialog_title_privacy_policy)
+            , getResources().getString(R.string.alert_dialog_message_reminder_will_not_collect_any_personal_information)).show();
   }
 
   @Override
