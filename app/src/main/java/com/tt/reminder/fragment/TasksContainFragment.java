@@ -241,7 +241,7 @@ public class TasksContainFragment extends FragmentBaseWithSharedHeaderView
     taskBean.setYear(calendar.get(Calendar.YEAR));
     taskBean.setMonth(calendar.get(Calendar.MONTH));
     taskBean.setDayOfMonth(calendar.get(Calendar.DAY_OF_MONTH));
-    taskBean.setHour(calendar.get(Calendar.HOUR));
+    taskBean.setHour(calendar.get(Calendar.HOUR_OF_DAY));
     taskBean.setMinuse(calendar.get(Calendar.MINUTE));
   }
 
