@@ -199,8 +199,9 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
     }
 
     private void navigateToFeedbackFragment() {
-        FeedbackFragment feedbackFragment = new FeedbackFragment();
-        MainActivity.navigateTo(feedbackFragment, getFragmentManager());
+        //FeedbackFragment feedbackFragment = new FeedbackFragment();
+        FeedbackAndHelpFragment feedbackAndHelpFragment = new FeedbackAndHelpFragment();
+        MainActivity.navigateTo(feedbackAndHelpFragment, getFragmentManager());
     }
 
     private void navigateToSearchFragment() {

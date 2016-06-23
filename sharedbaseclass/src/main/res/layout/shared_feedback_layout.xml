@@ -107,14 +107,6 @@
           android:background="@drawable/shared_button_background"
           android:layout_weight="1"/>
       </LinearLayout>
-      <TextView
-          android:id="@+id/app_version_name"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/shared_feedback_layout_margin_top_10dp"
-          android:textColor="@android:color/darker_gray"
-          android:alpha="0.8"
-          android:gravity="center"/>
     </LinearLayout>
   </ScrollView>
 
