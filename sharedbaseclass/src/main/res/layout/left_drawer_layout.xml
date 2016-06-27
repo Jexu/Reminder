@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/left_drawer"
+    android:layout_width="240dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:background="@android:color/white"
+    android:scrollbars="none"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/profile_layout_in_left_drawer"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="My Agenda"
+            android:visibility="gone"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/left_drawer_agenda_recycleview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <include layout="@layout/shared_divider_view"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_10dp"
+            android:text="@string/left_drawer_subtitle_category" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/left_drawer_category_recycleview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:id="@+id/left_drawer_group_finished"
+            style="@style/edit_view_style_in_layout_fragment_edit"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:background="@drawable/shared_button_selector"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/image_button_size_25dp"
+                android:layout_height="@dimen/image_button_size_25dp"
+                android:layout_marginEnd="@dimen/header_view_margin_right_and_left_between_view"
+                android:layout_marginStart="@dimen/header_view_margin_right_and_left_between_view"
+                android:src="@drawable/label_outline2_24dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
+                android:layout_weight="1"
+                android:text="@string/remder_db_helper_group_finished"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/left_drawer_create_new_group"
+            style="@style/edit_view_style_in_layout_fragment_edit"
+            android:clickable="true"
+            android:background="@drawable/shared_button_selector"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/image_button_size_25dp"
+                android:layout_height="@dimen/image_button_size_25dp"
+                android:layout_marginEnd="@dimen/header_view_margin_right_and_left_between_view"
+                android:layout_marginStart="@dimen/header_view_margin_right_and_left_between_view"
+                android:src="@drawable/add_group_list_24dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
+                android:layout_weight="1"
+                android:text="@string/subtitle_in_left_drawer_create_new_group"
+                />
+
+        </LinearLayout>
+
+        <include layout="@layout/shared_divider_view" />
+
+        <LinearLayout
+            android:id="@+id/left_drawer_setting"
+            style="@style/edit_view_style_in_layout_fragment_edit"
+            android:clickable="true"
+            android:background="@drawable/shared_button_selector"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/image_button_size_25dp"
+                android:layout_height="@dimen/image_button_size_25dp"
+                android:layout_marginEnd="@dimen/header_view_margin_right_and_left_between_view"
+                android:layout_marginStart="@dimen/header_view_margin_right_and_left_between_view"
+                android:src="@drawable/settings_24dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
+                android:layout_weight="1"
+                android:text="@string/shared_list_item_in_drawer_subtitle_setting"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/left_drawer_feedback_help"
+            style="@style/edit_view_style_in_layout_fragment_edit"
+            android:clickable="true"
+            android:background="@drawable/shared_button_selector"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/image_button_size_25dp"
+                android:layout_height="@dimen/image_button_size_25dp"
+                android:layout_marginEnd="@dimen/header_view_margin_right_and_left_between_view"
+                android:layout_marginStart="@dimen/header_view_margin_right_and_left_between_view"
+                android:src="@drawable/feedback_24dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginStart="@dimen/shared_list_item_in_drawer_margin_start_20dp"
+                android:layout_weight="1"
+                android:text="@string/shared_list_item_in_drawer_subtitle_feedback_help"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

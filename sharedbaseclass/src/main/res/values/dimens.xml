@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="header_view_main_menu_margin_left">15dp</dimen>
+    <dimen name="header_view_save_task_margin_right">15dp</dimen>
+    <dimen name="header_view_margin_right_and_left_between_view">7dp</dimen>
+    <dimen name="image_button_size">30dp</dimen>
+    <dimen name="header_view_parent_view_padding_top_bottom">10dp</dimen>
+    <dimen name="subtitle_padding_start_in_layout_fragment_edit">5dp</dimen>
+    <dimen name="subtitle_padding_end_in_layout_fragment_edit">5dp</dimen>
+    <dimen name="subtitle_padding_top_in_layout_fragment_edit">10dp</dimen>
+    <dimen name="textview_padding_start_in_layout_fragment_edit">5dp</dimen>
+    <dimen name="top_subtitle_padding_top_in_layout_fragment_edit">15dp</dimen>
+    <dimen name="subtitle_text_size_in_layout_fragment_edit">18sp</dimen>
+    <dimen name="shared_divider_width">1000dp</dimen>
+    <dimen name="shared_divider_height">3dp</dimen>
+    <dimen name="shared_divider_stroke_width">2dp</dimen>
+    <dimen name="subtitle_text_size_in_shared_header_view">18sp</dimen>
+    <dimen name="shared_list_item_text_size">18sp</dimen>
+    <dimen name="shared_list_item_padding_top">2dp</dimen>
+    <dimen name="shared_list_item_padding_bottom">2dp</dimen>
+    <dimen name="shared_list_item_padding_start">5dp</dimen>
+    <dimen name="shared_divider_height_2dp">2dp</dimen>
+    <dimen name="shared_divider_width_1000dp">1000dp</dimen>
+    <dimen name="shared_divider_stroke_width_1dp">1dp</dimen>
+    <dimen name="shared_list_item_left_textview_margin_top">3dp</dimen>
+    <dimen name="shared_list_item_left_textview_margin_bottom">3dp</dimen>
+    <dimen name="shared_list_item_left_textview_margin_start">5dp</dimen>
+    <dimen name="shared_list_item_left_textview_margin_end">1dp</dimen>
+    <dimen name="shared_list_item_left_textview_textsize">12sp</dimen>
+
+    <dimen name="shared_list_item_right_textview_margin_top">2dp</dimen>
+    <dimen name="shared_list_item_right_textview_margin_bottom">2dp</dimen>
+    <dimen name="shared_list_item_right_textview_margin_start">10dp</dimen>
+    <dimen name="shared_list_item_right_textview_margin_end">5dp</dimen>
+    <dimen name="shared_list_item_right_margin_end">10dp</dimen>
+    <dimen name="shared_list_item_task_group_name_margin">10dp</dimen>
+    <dimen name="shared_list_item_task_group_name_textsize">25sp</dimen>
+    <dimen name="shared_spinner_simple_item_margin_2dp">2dp</dimen>
+    <dimen name="shared_spinner_simple_item_margin_left_4dp">2dp</dimen>
+    <dimen name="shared_list_item_in_drawer_margin_start_20dp">20dp</dimen>
+    <dimen name="left_drawer_imageview_margrin_start_11dp">11dp</dimen>
+    <dimen name="image_button_margin_top_5dp">5dp</dimen>
+    <dimen name="image_button_size_25dp">25dp</dimen>
+    <dimen name="shared_header_view_search_view_height_33dp">33dp</dimen>
+    <dimen name="shared_spinner_simple_item_margin_left_right_25dp">25dp</dimen>
+    <dimen name="shared_feedback_layout_padding_20dp">20dp</dimen>
+    <dimen name="shared_feedback_layout_padding_15dp">15dp</dimen>
+    <dimen name="shared_feedback_layout_margin_top_20dp">20dp</dimen>
+    <dimen name="shared_feedback_layout_margin_top_10dp">10dp</dimen>
+    <dimen name="feedback_button_height_40dp">40dp</dimen>
+    <dimen name="feedback_button_margin_start_end_10dp">10dp</dimen>
+    <dimen name="shared_list_item_in_drawer_margin_start_10dp">10dp</dimen>
+    <dimen name="profile_image_width_48dp">48dp</dimen>
+    <dimen name="profile_margin_clock_margin_start_20dp">20dp</dimen>
+    <dimen name="profile_editview_margin_top_10dp">10dp</dimen>
+    <dimen name="profile_layout_margin_top_20dp">20dp</dimen>
+    <dimen name="shared_button_padding_14dp">14dp</dimen>
+    <dimen name="shared_button_padding_20dp">20dp</dimen>
+
+
+</resources>

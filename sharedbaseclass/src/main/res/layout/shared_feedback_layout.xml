@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+  <include
+    android:id="@+id/layer_header_layout"
+    layout="@layout/shared_header_view"/>
+
+  <ScrollView
+    android:id="@+id/feedback_content_scroll_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@id/layer_header_layout"
+    android:fillViewport="true">
+
+    <LinearLayout
+      android:id="@+id/feedback_content_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:padding="@dimen/shared_feedback_layout_padding_20dp">
+
+      <TextView
+        android:id="@+id/feedback_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="@dimen/shared_feedback_layout_padding_20dp"
+        android:drawableStart="@drawable/shared_feedback_title_icon"
+        android:gravity="start|center_vertical"
+        android:text="@string/feedback_subtitle_want_to_share_your_thought"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/colorPrimaryDark"/>
+
+      <TextView
+        android:id="@+id/feedback_help"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="@dimen/shared_feedback_layout_margin_top_20dp"
+        android:gravity="start"
+        android:text="@string/feedback_subtitle_let_me_know_what_you_think_about_reminder"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/app_theme"/>
+
+      <EditText
+        android:id="@+id/feedback_edit_area"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/shared_feedback_text_area"
+        android:gravity="start|top"
+        android:hint="@string/feedback_hint_type_a_comment"
+        android:inputType="textMultiLine"
+        android:minHeight="100dp"
+        android:minLines="5"
+        android:padding="@dimen/shared_feedback_layout_padding_15dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/colorPrimaryDark"
+        android:textCursorDrawable="@null"
+        android:textStyle="italic"/>
+
+      <EditText
+        android:id="@+id/feedback_email_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shared_feedback_layout_margin_top_10dp"
+        android:background="@drawable/shared_feedback_text_area"
+        android:hint="@string/feedback_hint_provider_your_email"
+        android:inputType="textEmailAddress|textAutoComplete"
+        android:padding="@dimen/shared_feedback_layout_padding_15dp"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/colorPrimaryDark"
+        android:textCursorDrawable="@null"
+        android:textStyle="italic"/>
+
+      <LinearLayout
+        android:id="@+id/feedback_button_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shared_feedback_layout_margin_top_20dp"
+        android:orientation="horizontal">
+
+        <Button
+          android:id="@+id/feedback_cancel_btn"
+          android:layout_width="0dp"
+          android:layout_height="@dimen/feedback_button_height_40dp"
+          android:layout_marginEnd="@dimen/feedback_button_margin_start_end_10dp"
+          android:text="@string/feedback_button_cancel"
+          android:textColor="@color/colorPrimaryDark"
+          android:gravity="center"
+          android:background="@drawable/shared_button_background"
+          android:layout_weight="1"/>
+
+        <Button
+          android:id="@+id/feedback_send_btn"
+          android:layout_width="0dp"
+          android:layout_height="@dimen/feedback_button_height_40dp"
+          android:layout_marginStart="@dimen/feedback_button_margin_start_end_10dp"
+          android:text="@string/feedback_button_send"
+          android:textColor="@color/colorPrimaryDark"
+          android:gravity="center"
+          android:background="@drawable/shared_button_background"
+          android:layout_weight="1"/>
+      </LinearLayout>
+    </LinearLayout>
+  </ScrollView>
+
+</RelativeLayout>

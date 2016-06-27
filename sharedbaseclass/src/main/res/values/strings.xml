@@ -1,3 +1,64 @@
 <resources>
     <string name="app_name">SharedBaseClass</string>
+    <string name="header_view_title_new_task">New Task</string>
+    <string name="header_view_title_edit_task">Edit Task</string>
+    <string name="header_view_title_my_tasks">My Tasks</string>
+    <string name="subtitle_what_to_do">WHAT IS TO BE DONE</string>
+    <string name="hint_subtitle_what_to_do">Enter Task Here</string>
+    <string name="subtitle_due_date">DUE DATE</string>
+    <string name="hint_alarm_date_date_not_set">Date not set</string>
+    <string name="subtitle_repeat">REPEAT</string>
+    <string name="subtitle_add_to_list">ADD TO LIST</string>
+    <string name="hint_alarm_time_not_set">Time not set</string>
+    <string name="render_db_helper_group_my_task">My Tasks</string>
+    <string name="remder_db_helper_group_finished">Finished</string>
+    <string name="alert_dialog_negative_button_discard">Discard</string>
+    <string name="alert_dialog_negative_button_save">Save</string>
+    <string name="alert_dialog_title_new_group">New Group</string>
+    <string name="alert_dialog_message_create_new_group">Create a New Group</string>
+    <string name="alert_dialog_negative_button_cancel">Cancel</string>
+    <string name="alert_dialog_negative_button_delete">Delete</string>
+    <string name="edit_task_add_new_group_please_input_new_group_name">Please input new group name</string>
+    <string name="fragment_edit_tasi_no_repeat">No Repeat</string>
+    <string name="set_repeat_interval_dialog_title_set_repeat">Set Repeat</string>
+
+    <string name="toast_double_click_to_exit">double click to exit</string>
+    <string name="shared_list_item_view_date_placeholder">00/00/0000</string>
+
+    <string name="shared_list_item_in_drawer_subtitle_setting">Setting</string>
+    <string name="shared_list_item_in_drawer_subtitle_feedback_help">Feedback/Help</string>
+    <string name="subtitle_in_left_drawer_create_new_group">Create New Group</string>
+    <string name="toast_content_your_device_is_not_support_speech_to_text">Opps! Your device doesn\'t support Speech to
+        Text
+    </string>
+
+    <string name="fragment_tasks_container_there_is_no_task_here">oom...there is no task here</string>
+    <string name="hint_search">Search</string>
+    <string name="hint_enter_repeat_interval_here">Enter repeat interval here</string>
+    <string name="hint_enter_new_group_here">Enter new group here</string>
+    <string name="feedback_subtitle_want_to_share_your_thought">Want to share your thought?</string>
+    <string name="feedback_subtitle_let_me_know_what_you_think_about_reminder">Let me know what you think about Reminder. I\'d love to hear your ideas for future features
+    </string>
+    <string name="feedback_hint_type_a_comment">Type a comment</string>
+    <string name="feedback_hint_provider_your_email">Provide your email (Optional)</string>
+    <string name="feedback_button_cancel">Cancel</string>
+    <string name="feedback_button_send">Send</string>
+    <string name="left_drawer_subtitle_category">Category</string>
+    <string name="feedback_and_help_button_source_code">Source code</string>
+    <string name="feedback_and_help_button_feedback">Feedback</string>
+    <string name="feedback_and_help_button_contact_developer">Contact developer</string>
+    <string name="setting_button_text_privacy_policy">Privacy policy</string>
+    <string name="setting_button_text_notification_light_disable">Notification light disable</string>
+    <string name="setting_button_text_notification_enable">Notification enable</string>
+
+
+    <string-array name="repeat_interval_units">
+        <item>No repeat</item>
+        <item>Year(s)</item>
+        <item>Month(s)</item>
+        <item>Week(s)</item>
+        <item>Day(s)</item>
+        <item>Hour(s)</item>
+        <item>Minute(s)</item>
+    </string-array>
 </resources>

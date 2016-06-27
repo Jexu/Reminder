@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:background="@drawable/shared_button_selector"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <LinearLayout
+      android:id="@+id/shared_list_item_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end|center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/shared_list_item_left_date_from"
+            style="@style/shared_list_item_left_textview_style"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/shared_list_item_left_date_symbol"
+            style="@style/shared_list_item_left_textview_style"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/shared_list_item_view_date_placeholder"
+            android:visibility="invisible"
+            />
+
+        <TextView
+            android:id="@+id/shared_list_item_left_date_to"
+            style="@style/shared_list_item_left_textview_style"
+            android:visibility="gone"
+          />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableRight="@drawable/task_list_item_background_left" />
+
+    <RelativeLayout
+        android:id="@+id/shared_list_item_right"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/shared_list_item_right_margin_end"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:background="@drawable/tasks_list_item_background"
+        >
+
+        <TextView
+            android:id="@+id/shared_list_item_right_task_group_name"
+            style="@style/shared_list_item_right_textview_style"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_margin="@dimen/shared_list_item_task_group_name_margin"
+            android:drawableBottom="@drawable/shared_divider_1dp"
+            android:textSize="@dimen/shared_list_item_task_group_name_textsize" />
+
+        <CheckBox
+            android:id="@+id/shared_list_item_right_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/shared_list_item_right_task_group_name"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:id="@+id/shared_list_item_right_task_content"
+            style="@style/shared_list_item_right_textview_style"
+            android:layout_below="@+id/shared_list_item_right_task_group_name"
+            android:textSize="17sp"/>
+
+        <TextView
+            android:id="@+id/shared_list_item_right_task_time"
+            style="@style/shared_list_item_right_textview_style"
+            android:layout_marginTop="@dimen/shared_list_item_right_textview_margin_top"
+            android:textSize="@dimen/shared_list_item_left_textview_textsize"
+          android:layout_below="@+id/shared_list_item_right_task_content"/>
+
+        <TextView
+            android:id="@+id/shared_list_item_right_repeat"
+            style="@style/shared_list_item_right_textview_style"
+            android:layout_marginTop="@dimen/shared_list_item_right_textview_margin_top"
+            android:textSize="@dimen/shared_list_item_left_textview_textsize"
+            android:layout_toRightOf="@+id/shared_list_item_right_task_time"
+            android:layout_below="@+id/shared_list_item_right_task_content"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

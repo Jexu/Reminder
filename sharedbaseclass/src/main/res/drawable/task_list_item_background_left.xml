@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="36dp"
+    android:height="130dp"
+    android:viewportHeight="100"
+    android:viewportWidth="36">
+    <path
+        android:pathData="M 14 0 l 0 42 Z"
+        android:strokeColor="@color/app_theme"
+        android:strokeWidth="2" />
+    <path
+        android:name="cicle"
+        android:pathData="M4,50,A10,8,0,1,1,4,50.01Z"
+        android:strokeColor="@color/app_theme"
+        android:strokeWidth="2" />
+    <path
+        android:pathData="M 14 58 l 0 100 Z"
+        android:strokeColor="@color/app_theme"
+        android:strokeWidth="2" />
+
+    <path
+        android:name="arrow"
+        android:fillColor="#33D9D9DE"
+        android:pathData="M36 55, l -10 -5, l 10 -5"
+        android:strokeWidth="1" />
+
+
+</vector>
+
