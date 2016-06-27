@@ -12,7 +12,7 @@
           android:layout_height="wrap_content"
           android:text="@string/feedback_and_help_button_source_code"
           android:textColor="@color/app_theme"
-          android:padding="@dimen/feedback_and_help_button_padding_8dp"
+          android:padding="@dimen/shared_button_padding_20dp"
           android:background="@drawable/shared_button_selector"/>
   <ImageView android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
           android:layout_height="wrap_content"
           android:text="@string/feedback_and_help_button_feedback"
           android:textColor="@color/app_theme"
-          android:padding="@dimen/feedback_and_help_button_padding_8dp"
+          android:padding="@dimen/shared_button_padding_20dp"
           android:background="@drawable/shared_button_selector"/>
   <ImageView android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
           android:layout_height="wrap_content"
           android:text="@string/feedback_and_help_button_contact_developer"
           android:textColor="@color/app_theme"
-          android:padding="@dimen/feedback_and_help_button_padding_8dp"
+          android:padding="@dimen/shared_button_padding_20dp"
           android:background="@drawable/shared_button_selector"/>
   <ImageView android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,11 +40,12 @@
   <TextView
     android:id="@+id/app_version_name"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="0dp"
+    android:layout_weight="1"
     android:layout_marginTop="@dimen/shared_feedback_layout_margin_top_10dp"
     android:textColor="@android:color/darker_gray"
     android:alpha="0.8"
     android:layout_gravity="bottom"
-    android:gravity="center"/>
+    android:gravity="bottom|center_horizontal"/>
 
 </LinearLayout>

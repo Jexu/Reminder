@@ -2,6 +2,7 @@ package com.tt.reminder.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ public class FeedbackAndHelpFragment extends FragmentBaseWithSharedHeaderView im
     mHeaderViewVoiceInput.setVisibility(View.GONE);
     mHeaderViewSearchBtn.setVisibility(View.GONE);
     mHeaderViewAddNewTask.setVisibility(View.GONE);
+    mHeaderViewTitle.setGravity(Gravity.START);
     mHeaderViewTitle.setText(R.string.shared_headerview_title_feedback_and_help);
 
     mHeaderViewLeftArrow.setOnClickListener(this);

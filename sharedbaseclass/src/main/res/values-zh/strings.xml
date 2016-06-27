@@ -45,6 +45,9 @@
     <string name="feedback_and_help_button_source_code">源代码</string>
     <string name="feedback_and_help_button_feedback">反馈</string>
     <string name="feedback_and_help_button_contact_developer">联系作者</string>
+    <string name="setting_button_text_privacy_policy">隐私政策</string>
+    <string name="setting_button_text_notification_light_disable">关闭呼吸灯闪烁</string>
+    <string name="setting_button_text_notification_enable">打开提醒功能</string>
 
 
 

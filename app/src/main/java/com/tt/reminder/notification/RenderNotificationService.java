@@ -1,7 +1,10 @@
 package com.tt.reminder.notification;
 
 import android.annotation.SuppressLint;
-import android.app.*;
+import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -11,6 +14,7 @@ import com.google.gson.Gson;
 import com.tt.reminder.activity.MainActivity;
 import com.tt.sharedbaseclass.R;
 import com.tt.sharedbaseclass.constant.Constant;
+import com.tt.sharedbaseclass.model.ConfigBean;
 import com.tt.sharedbaseclass.model.TaskBean;
 
 /**
@@ -49,6 +53,9 @@ public class RenderNotificationService extends IntentService {
     i.putExtras(bundle);
 
     PendingIntent pi = PendingIntent.getActivity(this, taskBean.getId(), i, PendingIntent.FLAG_UPDATE_CURRENT);
+    if (!ConfigBean.isNotificationEnable()) {
+      return;
+    }
     mNotificationBuilder
       .setAutoCancel(true)
       .setTicker(getString(com.tt.reminder.R.string.notification_ticker_new_message))
@@ -58,10 +65,12 @@ public class RenderNotificationService extends IntentService {
       .setContentText(taskBean.getTaskContent())
       //.addAction(android.R.drawable.stat_notify_more, "Finish", null)
       //.addAction(android.R.drawable.stat_notify_more, "Cancel", null)
-      .setDefaults(
+      .setDefaults(ConfigBean.isNotificationLightDisable()?
         Notification.DEFAULT_SOUND
-          | Notification.DEFAULT_LIGHTS
-          | Notification.DEFAULT_VIBRATE)
+          | Notification.DEFAULT_VIBRATE
+          : Notification.DEFAULT_SOUND
+              | Notification.DEFAULT_LIGHTS
+              | Notification.DEFAULT_VIBRATE)
       .setWhen(System.currentTimeMillis()).setContentIntent(pi);
 
     mNotificationManager.notify(taskBean.getId(), mNotificationBuilder.build());

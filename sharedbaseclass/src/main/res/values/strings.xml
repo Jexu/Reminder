@@ -47,6 +47,9 @@
     <string name="feedback_and_help_button_source_code">Source code</string>
     <string name="feedback_and_help_button_feedback">Feedback</string>
     <string name="feedback_and_help_button_contact_developer">Contact developer</string>
+    <string name="setting_button_text_privacy_policy">Privacy policy</string>
+    <string name="setting_button_text_notification_light_disable">Notification light disable</string>
+    <string name="setting_button_text_notification_enable">Notification enable</string>
 
 
     <string-array name="repeat_interval_units">

@@ -111,6 +111,7 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
         mHeaderViewVoiceInput.setOnClickListener(this);
         mHeaderViewAddNewTask.setOnClickListener(this);
         mLeftDrawerFeedback.setOnClickListener(this);
+        mLeftDrawerSetting.setOnClickListener(this);
 
         mLeftDrawerCategoryRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mLeftDrawerCategoryRecycleView.setItemAnimator(new DefaultItemAnimator());
@@ -189,7 +190,9 @@ public class TasksContainWithDrawerViewFragment extends TasksContainerFragmentWi
                 onLeftDrawerCreateNewGroupClick();
                 break;
             case com.tt.sharedbaseclass.R.id.left_drawer_setting:
-
+                SettingsFragment settingsFragment = new SettingsFragment();
+                MainActivity.navigateTo(settingsFragment, getFragmentManager());
+                onMainMenuClick();
                 break;
             case com.tt.sharedbaseclass.R.id.left_drawer_feedback_help:
                 navigateToFeedbackFragment();
