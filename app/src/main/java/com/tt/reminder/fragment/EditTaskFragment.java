@@ -107,7 +107,11 @@ public class EditTaskFragment extends EditTaskFragmentBase implements View.OnCli
             }
             if (mTaskBeanFromParent.getRepeatInterval() == TaskBean.DEFAULT_VALUE_OF_INTERVAL) {
                 mTvRepeatInterval.setText(mRepeatUnits[0]);
-                showRepeatView(false);
+                if ( mTaskBeanFromParent.isDeadline() ) {
+                    showRepeatView(false);
+                } else {
+                    showRepeatView(true);
+                }
             } else {
                 mTvRepeatInterval.setText(getResources().getString(R.string.every_interval_unit
                         , mTaskBeanFromParent.getRepeatInterval()

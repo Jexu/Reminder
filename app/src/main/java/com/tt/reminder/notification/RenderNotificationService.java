@@ -65,10 +65,12 @@ public class RenderNotificationService extends IntentService {
       .setContentText(taskBean.getTaskContent())
       //.addAction(android.R.drawable.stat_notify_more, "Finish", null)
       //.addAction(android.R.drawable.stat_notify_more, "Cancel", null)
-      .setDefaults(
+      .setDefaults(ConfigBean.isNotificationLightDisable()?
         Notification.DEFAULT_SOUND
-          | Notification.DEFAULT_LIGHTS
-          | Notification.DEFAULT_VIBRATE)
+          | Notification.DEFAULT_VIBRATE
+          : Notification.DEFAULT_SOUND
+              | Notification.DEFAULT_LIGHTS
+              | Notification.DEFAULT_VIBRATE)
       .setWhen(System.currentTimeMillis()).setContentIntent(pi);
 
     mNotificationManager.notify(taskBean.getId(), mNotificationBuilder.build());
